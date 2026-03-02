@@ -1,8 +1,16 @@
 
 
-from config.db import conectar_db
+"""
+System Repository
+-----------------
+Provides system ID resolution from database.
+"""
 
-SYSTEM_NAME_MAP = {
+from typing import Dict
+from config.db import conectar_db
+from core.exceptions import ConfigurationError
+
+SYSTEM_NAME_MAP: Dict[str, str] = {
     "price_display_system": "Price Display System",
     "corporate_lighting_system": "Corporate Lighting System",
     "canopy_lighting_system": "Canopy Lighting System",
@@ -16,27 +24,32 @@ SYSTEM_NAME_MAP = {
     "customer_service_kiosk_system - coffee_machine": "Customer Service Kiosk System - Coffee Machine",
 }
 
-def get_systems_map():
-    
-    connection = conectar_db()
-    cursor = connection.cursor()
+def get_systems_map() -> Dict[str, int]:
 
-    cursor.execute("SELECT id, name FROM systems;")
-    systems = cursor.fetchall()
+    try:
+        connection = conectar_db()
+        cursor = connection.cursor()
 
-    cursor.close()
-    connection.close()
+        cursor.execute("SELECT id, name FROM systems;")
+        systems = cursor.fetchall()
+
+    except Exception as exc:
+        raise ConfigurationError("Failed to load systems from database.") from exc
+
+    finally:
+        cursor.close()
+        connection.close()
 
     db_name_to_id = {name: system_id for system_id, name in systems}
 
-    systems_map = {}
+    systems_map: Dict[str, int] = {}
+
     for internal_name, db_name in SYSTEM_NAME_MAP.items():
         system_id = db_name_to_id.get(db_name)
-        if system_id:
+        if system_id is not None:
             systems_map[internal_name] = system_id
 
     return systems_map
-
 
 
 

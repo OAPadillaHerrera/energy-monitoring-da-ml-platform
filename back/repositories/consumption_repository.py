@@ -1,52 +1,86 @@
 
 
-from config.db import conectar_db
+"""
+Consumption Repository
+Handles persistence of hourly consumption records.
+"""
+
 import io
+import datetime
+from typing import List, Tuple, Optional
+from config.db import conectar_db
+from core.exceptions import RepositoryError
 
-
-def insert_hourly_consumption(records):
+def insert_hourly_consumption(
+    records: List[Tuple[int, datetime.datetime, float]]
+) -> None:
 
     if not records:
         return
 
-    connection = conectar_db()
-    cursor = connection.cursor()
+    connection = None
+    cursor = None
 
-    buffer = io.StringIO()
+    try:
+        connection = conectar_db()
+        cursor = connection.cursor()
 
-    for system_id, timestamp, consumption in records:
-        buffer.write(f"{system_id},{timestamp},{consumption}\n")
+        buffer = io.StringIO()
 
-    buffer.seek(0)
+        for system_id, timestamp, consumption in records:
+            buffer.write(f"{system_id},{timestamp},{consumption}\n")
 
-    cursor.execute("""
-        COPY hourly_consumption (system_id, timestamp, consumption_kwh)
-        FROM STDIN WITH (FORMAT CSV)
-    """, stream=buffer)
+        buffer.seek(0)
 
-    connection.commit()
+        cursor.execute(
+            """
+            COPY hourly_consumption (system_id, timestamp, consumption_kwh)
+            FROM STDIN WITH (FORMAT CSV)
+            """,
+            stream=buffer,
+        )
 
-    cursor.close()
-    connection.close()
+        connection.commit()
 
-    print(f"{len(records)} hourly records inserted via COPY")
+    except Exception as exc:
+        if connection:
+            connection.rollback()
+        raise RepositoryError("Failed to insert hourly consumption records.") from exc
 
-def get_latest_consumption_date():
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 
-    connection = conectar_db()
-    cursor = connection.cursor()
+def get_latest_consumption_date() -> Optional[datetime.date]:
 
-    cursor.execute("""
-        SELECT MAX(DATE(timestamp))
-        FROM hourly_consumption;
-    """)
+    connection = None
+    cursor = None
 
-    result = cursor.fetchone()
+    try:
+        connection = conectar_db()
+        cursor = connection.cursor()
 
-    cursor.close()
-    connection.close()
+        cursor.execute(
+            """
+            SELECT MAX(DATE(timestamp))
+            FROM hourly_consumption;
+            """
+        )
 
-    if result and result[0]:
-        return result[0]
+        result = cursor.fetchone()
 
-    return None
+        if result and result[0]:
+            return result[0]
+
+        return None
+
+    except Exception as exc:
+        raise RepositoryError("Failed to fetch latest consumption date.") from exc
+
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()

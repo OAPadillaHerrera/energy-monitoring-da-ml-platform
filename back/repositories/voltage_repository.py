@@ -1,30 +1,52 @@
 
 
+"""
+Voltage Repository
+
+Handles persistence of hourly voltage profile records.
+"""
+
+import datetime
+from typing import List, Tuple
+
 from config.db import conectar_db
+from core.exceptions import RepositoryError
 
+def insert_hourly_voltage_bulk(
+    records: List[Tuple[datetime.datetime, float, float, str]]
+) -> None:
 
-def insert_hourly_voltage_bulk(records):
     if not records:
         return
 
-    connection = conectar_db()
-    cursor = connection.cursor()
+    connection = None
+    cursor = None
 
-    query = """
-        INSERT INTO hourly_voltage_profile (
-            timestamp,
-            voltage_120v,
-            voltage_240v,
-            quality_flag
-        )
-        VALUES (%s, %s, %s, %s)
-    """
+    try:
+        connection = conectar_db()
+        cursor = connection.cursor()
 
-    cursor.executemany(query, records)
-    connection.commit()
+        query = """
+            INSERT INTO hourly_voltage_profile (
+                timestamp,
+                voltage_120v,
+                voltage_240v,
+                quality_flag
+            )
+            VALUES (%s, %s, %s, %s)
+        """
 
-    cursor.close()
-    connection.close()
+        cursor.executemany(query, records)
+        connection.commit()
 
-    print(f"{len(records)} voltage records inserted successfully")
+    except Exception as exc:
+        if connection:
+            connection.rollback()
+        raise RepositoryError("Failed to insert hourly voltage records.") from exc
+
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 

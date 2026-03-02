@@ -1,73 +1,118 @@
 
 
+"""
+System Events Repository
+
+Handles persistence and queries for system events.
+"""
+
+import datetime
+from typing import List, Tuple, Optional
+
 from config.db import conectar_db
+from core.exceptions import RepositoryError
 
-
-def insert_system_events(records):
+def insert_system_events(
+    records: List[Tuple[datetime.datetime, int, str]]
+) -> None:
 
     if not records:
         return
 
-    connection = conectar_db()
-    cursor = connection.cursor()
+    connection = None
+    cursor = None
 
-    query = """
-        INSERT INTO system_events (
-            timestamp,
-            system_id,
-            event_type
-        )
-        VALUES (%s, %s, %s)
-    """
+    try:
+        connection = conectar_db()
+        cursor = connection.cursor()
 
-    cursor.executemany(query, records)
-    connection.commit()
+        query = """
+            INSERT INTO system_events (
+                timestamp,
+                system_id,
+                event_type
+            )
+            VALUES (%s, %s, %s)
+        """
 
-    cursor.close()
-    connection.close()
+        cursor.executemany(query, records)
+        connection.commit()
 
-    print(f"{len(records)} system events inserted successfully")
+    except Exception as exc:
+        if connection:
+            connection.rollback()
+        raise RepositoryError("Failed to insert system events.") from exc
 
-def get_latest_system_event_date():
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 
-    connection = conectar_db()
-    cursor = connection.cursor()
+def get_latest_system_event_date() -> Optional[datetime.date]:
 
-    query = """
-        SELECT MAX(DATE(timestamp))
-        FROM system_events;
-    """
+    connection = None
+    cursor = None
 
-    cursor.execute(query)
-    result = cursor.fetchone()
+    try:
+        connection = conectar_db()
+        cursor = connection.cursor()
 
-    cursor.close()
-    connection.close()
+        query = """
+            SELECT MAX(DATE(timestamp))
+            FROM system_events;
+        """
 
-    if result and result[0]:
-        return result[0]
+        cursor.execute(query)
+        result = cursor.fetchone()
 
-    return None
+        if result and result[0]:
+            return result[0]
 
-def exists_system_event_in_month(year: int, month: int, event_type: str):
+        return None
 
-    connection = conectar_db()
-    cursor = connection.cursor()
+    except Exception as exc:
+        raise RepositoryError("Failed to fetch latest system event date.") from exc
 
-    query = """
-        SELECT 1
-        FROM system_events
-        WHERE event_type = %s
-          AND EXTRACT(YEAR FROM timestamp) = %s
-          AND EXTRACT(MONTH FROM timestamp) = %s
-        LIMIT 1;
-    """
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 
-    cursor.execute(query, (event_type, year, month))
-    result = cursor.fetchone()
+def exists_system_event_in_month(
+    year: int,
+    month: int,
+    event_type: str
+) -> bool:
 
-    cursor.close()
-    connection.close()
+    connection = None
+    cursor = None
 
-    return result is not None
+    try:
+        connection = conectar_db()
+        cursor = connection.cursor()
+
+        query = """
+            SELECT 1
+            FROM system_events
+            WHERE event_type = %s
+              AND EXTRACT(YEAR FROM timestamp) = %s
+              AND EXTRACT(MONTH FROM timestamp) = %s
+            LIMIT 1;
+        """
+
+        cursor.execute(query, (event_type, year, month))
+        result = cursor.fetchone()
+
+        return result is not None
+
+    except Exception as exc:
+        raise RepositoryError("Failed to check system event existence.") from exc
+
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 

@@ -1,24 +1,100 @@
 
 
-from flask import Flask
+"""
+Main Application Entry Point
+
+Initializes Flask application, registers blueprints,
+configures logging, and defines global error handlers.
+"""
+
+import logging
+from flask import Flask, jsonify
+from flask_cors import CORS
 from routes.simulation_routes import simulation_bp
 from analytics import analytics_bp
 from globalanalytics import totales_bp
-from flask_cors import CORS
 
-app = Flask (__name__)
-CORS (app) 
+from core.exceptions import (
+    ApplicationError,
+    SimulationError,
+    RepositoryError,
+    ConfigurationError
+)
 
-app.register_blueprint (simulation_bp, url_prefix = '/simulation')
-app.register_blueprint (analytics_bp, url_prefix = '/api/consumo')
-app.register_blueprint (totales_bp, url_prefix = '/api/totales')
+app = Flask(__name__)
+CORS(app)
 
-@app.route ('/')
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+)
 
-def index ():
-    
-    return "Energy monitoring system working correcty."
+logger = logging.getLogger(__name__)
+
+logger.info("Energy Monitoring System starting up...")
+
+app.register_blueprint(simulation_bp, url_prefix='/simulation')
+app.register_blueprint(analytics_bp, url_prefix='/api/consumo')
+app.register_blueprint(totales_bp, url_prefix='/api/totales')
+
+@app.route('/')
+def index():
+
+    logger.info("Health check accessed.")
+    return "Energy monitoring system working correctly."
+
+@app.errorhandler(SimulationError)
+def handle_simulation_error(error):
+    logger.warning(f"Simulation error: {str(error)}")
+
+    return jsonify({
+        "status": "error",
+        "type": "simulation_error",
+        "message": str(error)
+    }), 400
+
+@app.errorhandler(RepositoryError)
+def handle_repository_error(error):
+    logger.error("Repository error occurred.", exc_info=error)
+
+    return jsonify({
+        "status": "error",
+        "type": "repository_error",
+        "message": "A database error occurred."
+    }), 500
+
+@app.errorhandler(ConfigurationError)
+def handle_configuration_error(error):
+    logger.error("Configuration error occurred.", exc_info=error)
+
+    return jsonify({
+        "status": "error",
+        "type": "configuration_error",
+        "message": str(error)
+    }), 500
+
+@app.errorhandler(ApplicationError)
+def handle_application_error(error):
+    logger.warning(f"Application error: {str(error)}")
+
+    return jsonify({
+        "status": "error",
+        "type": "application_error",
+        "message": str(error)
+    }), 400
+
+@app.errorhandler(Exception)
+def handle_unexpected_error(error):
+    logger.critical("Unexpected server error.", exc_info=error)
+
+    return jsonify({
+        "status": "error",
+        "type": "unexpected_error",
+        "message": "Internal server error."
+    }), 500
 
 if __name__ == '__main__':
-    app.run (host='0.0.0.0', port=5001, debug=True)
-   
+    logger.info("Running in development mode.")
+    app.run(host='0.0.0.0', port=5001, debug=True)
+
+
