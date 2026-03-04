@@ -23,6 +23,7 @@ import datetime
 from schedules.schedule_service import ScheduleService
 from domain_config.working_schedules import WORKING_SCHEDULES
 from electrical.voltage_profile import VoltageProfile
+from core.exceptions import SimulationError
 
 EXCLUDED_SYSTEMS = {
     "submersible_pump_system",
@@ -47,6 +48,10 @@ class MonthlyZeroConsumptionEvent:
         self.end: datetime.datetime | None = None
 
     def reset_month_if_needed(self, simulation_date: datetime.date) -> None:
+
+        if not isinstance(simulation_date, datetime.date):
+            raise SimulationError("simulation_date must be a datetime.date instance")
+
         month_key = (simulation_date.year, simulation_date.month)
 
         if self.current_month != month_key:
@@ -62,16 +67,25 @@ class MonthlyZeroConsumptionEvent:
         schedule_name: str,
     ) -> list[datetime.datetime]:
 
+        if schedule_name not in WORKING_SCHEDULES:
+            raise SimulationError(f"Unknown schedule: {schedule_name}")
+
         schedule = WORKING_SCHEDULES[schedule_name]
         active_days = set(schedule["days"])
         active_hours = set(schedule["hours"])
+
         timestamps: list[datetime.datetime] = []
 
-        for day in range(1, 29):
-            for hour in range(24):
-                ts = datetime.datetime(year, month, day, hour)
-                if ts.weekday() in active_days and ts.hour in active_hours:
-                    timestamps.append(ts)
+        try:
+            for day in range(1, 29):
+                for hour in range(24):
+                    ts = datetime.datetime(year, month, day, hour)
+                    if ts.weekday() in active_days and ts.hour in active_hours:
+                        timestamps.append(ts)
+        except Exception as e:
+            raise SimulationError(
+                "Failed building active timestamps for schedule"
+            ) from e
 
         return timestamps
 
@@ -81,6 +95,9 @@ class MonthlyZeroConsumptionEvent:
         end: datetime.datetime,
         schedule_name: str,
     ) -> bool:
+
+        if schedule_name not in WORKING_SCHEDULES:
+            raise SimulationError(f"Unknown schedule: {schedule_name}")
 
         schedule = WORKING_SCHEDULES[schedule_name]
         active_days = set(schedule["days"])
@@ -101,6 +118,9 @@ class MonthlyZeroConsumptionEvent:
         end: datetime.datetime,
     ) -> bool:
 
+        if not isinstance(voltage_profile, VoltageProfile):
+            raise SimulationError("voltage_profile must be a VoltageProfile instance")
+
         events = [
             (voltage_profile.outage_start, voltage_profile.outage_end),
             (voltage_profile.brownout_start, voltage_profile.brownout_end),
@@ -118,13 +138,26 @@ class MonthlyZeroConsumptionEvent:
 
     def _build_candidates(self) -> list[tuple[str, str]]:
 
+        try:
+            system_names = ScheduleService.get_all_system_names()
+        except Exception as e:
+            raise SimulationError(
+                "Failed retrieving system names from ScheduleService"
+            ) from e
+
         candidates: list[tuple[str, str]] = []
 
-        for system_name in ScheduleService.get_all_system_names():
+        for system_name in system_names:
             if system_name in EXCLUDED_SYSTEMS:
                 continue
 
-            schedule_name = ScheduleService.get_schedule_for_system_name(system_name)
+            try:
+                schedule_name = ScheduleService.get_schedule_for_system_name(system_name)
+            except Exception as e:
+                raise SimulationError(
+                    f"Failed retrieving schedule for system: {system_name}"
+                ) from e
+
             candidates.append((system_name, schedule_name))
 
         return candidates
@@ -135,6 +168,12 @@ class MonthlyZeroConsumptionEvent:
         voltage_profile: VoltageProfile,
     ) -> None:
 
+        if not isinstance(simulation_date, datetime.date):
+            raise SimulationError("simulation_date must be a datetime.date instance")
+
+        if not isinstance(voltage_profile, VoltageProfile):
+            raise SimulationError("voltage_profile must be a VoltageProfile instance")
+
         self.reset_month_if_needed(simulation_date)
 
         if self.start and self.end and self.system_name:
@@ -142,12 +181,14 @@ class MonthlyZeroConsumptionEvent:
 
         year = simulation_date.year
         month = simulation_date.month
+
         candidates = self._build_candidates()
 
         if not candidates:
-            return
+            raise SimulationError("No eligible systems available for zero consumption event")
 
         for _ in range(200):
+
             chosen_system, schedule_name = random.choice(candidates)
 
             active_ts = self._build_active_timestamps_for_month(
@@ -183,15 +224,18 @@ class MonthlyZeroConsumptionEvent:
             self.end = end
             return
 
-        self.system_name = None
-        self.start = None
-        self.end = None
+        raise SimulationError(
+            "Unable to generate valid zero-consumption event after 200 attempts"
+        )
 
     def is_system_down(
         self,
         system_name: str,
         timestamp: datetime.datetime,
     ) -> bool:
+
+        if not isinstance(timestamp, datetime.datetime):
+            raise SimulationError("timestamp must be a datetime.datetime instance")
 
         if not self.system_name or not self.start or not self.end:
             return False

@@ -18,11 +18,11 @@ Designed to be reusable, type-safe, and maintainable.
 
 import datetime
 from typing import List, Tuple, Dict
-
 from systems.system_calculator import SystemCalculator
 from schedules.schedule_service import ScheduleService
 from electrical.zero_consumption_events import MonthlyZeroConsumptionEvent
 from electrical.voltage_profile import VoltageProfile
+from core.exceptions import SimulationError
 
 def _compute_consumption(
     system_name: str,
@@ -31,18 +31,33 @@ def _compute_consumption(
     voltage_240v: float,
     zero_event: MonthlyZeroConsumptionEvent | None
 ) -> float:
+
     if not ScheduleService.is_system_name_active(system_name, timestamp):
         return 0.0
 
     if zero_event and zero_event.is_system_down(system_name, timestamp):
         return 0.0
 
-    return SystemCalculator.calculate(
-        system_name,
-        voltage_120v,
-        voltage_240v,
-        timestamp
-    )
+    try:
+        result = SystemCalculator.calculate(
+            system_name,
+            voltage_120v,
+            voltage_240v,
+            timestamp
+        )
+    except Exception as exc:
+        raise SimulationError(
+            f"Failed to compute consumption for '{system_name}' "
+            f"at {timestamp}: {exc}"
+        ) from exc
+
+    if isinstance(result, dict):
+        raise SimulationError(
+            f"Unexpected multi-component result for '{system_name}'. "
+            f"SystemCalculator returned a dictionary where a float was expected."
+        )
+
+    return result
 
 def generate_hourly_consumption(
     timestamp: datetime.datetime,
@@ -51,6 +66,7 @@ def generate_hourly_consumption(
     voltage_240v: float,
     system_names: List[str]
 ) -> List[Tuple[str, float, datetime.datetime]]:
+
     return [
         (
             system_name,
@@ -76,8 +92,15 @@ def generate_daily_simulation(
     List[Tuple[datetime.datetime, float, float, str]],
     List[Tuple[datetime.datetime, int, str]]
 ]:
-    voltage_profile.generate_daily_profile(simulation_date)
-    zero_event.generate_monthly_event_if_needed(simulation_date, voltage_profile)
+
+    try:
+        voltage_profile.generate_daily_profile(simulation_date)
+        zero_event.generate_monthly_event_if_needed(simulation_date, voltage_profile)
+    except Exception as exc:
+        raise SimulationError(
+            f"Failed to initialize daily simulation for "
+            f"{simulation_date}: {exc}"
+        ) from exc
 
     base_time = datetime.datetime.combine(simulation_date, datetime.time.min)
 
@@ -90,9 +113,15 @@ def generate_daily_simulation(
     for hour in range(24):
         timestamp = base_time.replace(hour=hour)
 
-        voltage_120v = voltage_profile.get_voltage_120v(hour)
-        voltage_240v = voltage_profile.get_voltage_240v(hour)
-        quality_flag = voltage_profile.get_quality_flag(hour)
+        try:
+            voltage_120v = voltage_profile.get_voltage_120v(hour)
+            voltage_240v = voltage_profile.get_voltage_240v(hour)
+            quality_flag = voltage_profile.get_quality_flag(hour)
+        except Exception as exc:
+            raise SimulationError(
+                f"Failed to retrieve voltage data for hour {hour} "
+                f"on {simulation_date}: {exc}"
+            ) from exc
 
         voltage_records.append(
             (timestamp, voltage_120v, voltage_240v, quality_flag)
@@ -105,7 +134,7 @@ def generate_daily_simulation(
             and zero_event.start <= timestamp < zero_event.end
         ):
             system_id = systems_map.get(zero_event.system_name)
-            if system_id:
+            if system_id is not None:
                 event_records.append(
                     (timestamp, system_id, zero_event.EVENT_TYPE)
                 )
@@ -129,6 +158,12 @@ def generate_range_simulation(
     zero_event: MonthlyZeroConsumptionEvent,
     systems_map: Dict[str, int]
 ) -> Dict[str, List[Tuple]]:
+
+    if end_date < start_date:
+        raise SimulationError(
+            f"End date {end_date} cannot be earlier than start date {start_date}."
+        )
+
     all_hourly_data: List[Tuple[str, float, datetime.datetime]] = []
     all_voltage_records: List[Tuple[datetime.datetime, float, float, str]] = []
     all_event_records: List[Tuple[datetime.datetime, int, str]] = []
@@ -136,12 +171,17 @@ def generate_range_simulation(
     for day_offset in range((end_date - start_date).days + 1):
         current_date = start_date + datetime.timedelta(days=day_offset)
 
-        daily_data, voltage_records, event_records = generate_daily_simulation(
-            current_date,
-            voltage_profile,
-            zero_event,
-            systems_map
-        )
+        try:
+            daily_data, voltage_records, event_records = generate_daily_simulation(
+                current_date,
+                voltage_profile,
+                zero_event,
+                systems_map
+            )
+        except Exception as exc:
+            raise SimulationError(
+                f"Failed to generate simulation for {current_date}: {exc}"
+            ) from exc
 
         all_hourly_data.extend(daily_data)
         all_voltage_records.extend(voltage_records)

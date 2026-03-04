@@ -8,7 +8,6 @@ Handles persistence of hourly voltage profile records.
 
 import datetime
 from typing import List, Tuple
-
 from config.db import conectar_db
 from core.exceptions import RepositoryError
 

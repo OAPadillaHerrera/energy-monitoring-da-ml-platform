@@ -21,6 +21,7 @@ This module is intentionally minimal and stable.
 
 import random
 import datetime
+from core.exceptions import SimulationError
 
 MIN_120V = 114
 MAX_120V = 126
@@ -96,6 +97,10 @@ class VoltageProfile:
         return start and end and start <= ts < end
 
     def reset_month_if_needed(self, simulation_date):
+
+        if not isinstance(simulation_date, datetime.date):
+            raise SimulationError("simulation_date must be a datetime.date instance")
+
         month_key = (simulation_date.year, simulation_date.month)
 
         if self.current_month != month_key:
@@ -108,26 +113,43 @@ class VoltageProfile:
             self.severe_overvolt_start = self.severe_overvolt_end = None
 
     def generate_event_once(self):
+
+        if not self.current_month:
+            raise SimulationError(
+                "Month context not initialized before generating events"
+            )
+
         for _ in range(10):
 
             day = random.randint(*EVENT_DAY_RANGE)
             hour = random.randint(*EVENT_HOUR_RANGE)
             duration = random.randint(*EVENT_DURATION_RANGE)
 
-            start = datetime.datetime(
-                self.current_month[0],
-                self.current_month[1],
-                day,
-                hour
-            )
+            try:
+                start = datetime.datetime(
+                    self.current_month[0],
+                    self.current_month[1],
+                    day,
+                    hour
+                )
+            except Exception as e:
+                raise SimulationError(
+                    "Failed to generate event datetime"
+                ) from e
+
             end = start + datetime.timedelta(hours=duration)
 
             if not self.overlaps_any_event(start, end):
                 return start, end
 
-        return start, end  
+        return start, end
 
     def generate_monthly_events_if_needed(self):
+
+        if not self.current_month:
+            raise SimulationError(
+                "Month context not initialized before generating monthly events"
+            )
 
         if not self.outage_start:
             self.outage_start, self.outage_end = self.generate_event_once()
@@ -146,8 +168,15 @@ class VoltageProfile:
 
     def generate_daily_profile(self, simulation_date):
 
+        if not isinstance(simulation_date, datetime.date):
+            raise SimulationError("simulation_date must be a datetime.date instance")
+
         self.reset_month_if_needed(simulation_date)
         self.generate_monthly_events_if_needed()
+
+        self.profile_120v.clear()
+        self.profile_240v.clear()
+        self.quality_flags.clear()
 
         for hour in range(24):
 
@@ -213,14 +242,27 @@ class VoltageProfile:
                 self.quality_flags[hour] = "normal"
 
     def get_voltage_120v(self, hour):
+
+        if hour not in self.profile_120v:
+            raise SimulationError(
+                f"Voltage 120V for hour {hour} not generated"
+            )
         return self.profile_120v[hour]
 
     def get_voltage_240v(self, hour):
+
+        if hour not in self.profile_240v:
+            raise SimulationError(
+                f"Voltage 240V for hour {hour} not generated"
+            )
         return self.profile_240v[hour]
 
     def get_quality_flag(self, hour):
-        return self.quality_flags.get(hour, "normal")
 
-
+        if hour not in self.quality_flags:
+            raise SimulationError(
+                f"Quality flag for hour {hour} not generated"
+            )
+        return self.quality_flags[hour]
 
 

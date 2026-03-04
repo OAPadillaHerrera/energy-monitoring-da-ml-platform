@@ -19,6 +19,7 @@ Design notes:
 
 import datetime
 from typing import TypedDict
+from core.exceptions import SimulationError
 
 class SystemConsumptionConfig(TypedDict):
     consumption: float
@@ -41,9 +42,16 @@ AFFECTED_SYSTEMS: set[str] = {
 }
 
 def get_daily_total_consumption(system_name: str) -> float:
+
+    if system_name not in SYSTEMS_CONSUMPTION_PER_HOUR:
+        raise SimulationError(
+            f"Unknown system for daily consumption: {system_name}"
+        )
+
     config = SYSTEMS_CONSUMPTION_PER_HOUR[system_name]
     base_consumption = config["consumption"]
     duration_hours = config.get("duration_hours", 1.0)
+
     return base_consumption * duration_hours
 
 class TimeSlot(TypedDict):
@@ -75,6 +83,10 @@ TIME_SLOTS: dict[str, list[TimeSlot]] = {
 }
 
 def get_day_type(timestamp: datetime.datetime) -> str:
+
+    if not isinstance(timestamp, datetime.datetime):
+        raise SimulationError("timestamp must be a datetime.datetime instance")
+
     weekday = timestamp.weekday()
 
     if weekday < 5:
@@ -89,19 +101,33 @@ def get_slot_factor(
     timestamp: datetime.datetime,
 ) -> float | None:
 
+    if not isinstance(timestamp, datetime.datetime):
+        raise SimulationError("timestamp must be a datetime.datetime instance")
+
     if system_name not in AFFECTED_SYSTEMS:
         return None
 
     day_type = get_day_type(timestamp)
+
+    if day_type not in TIME_SLOTS:
+        raise SimulationError(f"Invalid day type configuration: {day_type}")
+
     slots = TIME_SLOTS[day_type]
     current_hour = timestamp.hour
 
     for slot in slots:
         if slot["start"] <= current_hour < slot["end"]:
             hours_in_slot = slot["end"] - slot["start"]
+
+            if hours_in_slot <= 0:
+                raise SimulationError(
+                    f"Invalid slot configuration: {slot}"
+                )
+
             slot_factor = slot["percentage"] / hours_in_slot
             return slot_factor
 
-    return None
-
+    raise SimulationError(
+        f"No time slot matched for hour {current_hour} on day type {day_type}"
+    )
 
