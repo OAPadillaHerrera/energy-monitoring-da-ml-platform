@@ -59,6 +59,16 @@ def validate_working_schedules() -> None:
                 f"Schedule '{schedule_name}' must define a non-empty list of hours"
             )
 
+        if len(set(days)) != len(days):
+            raise ConfigurationError(
+                f"Schedule '{schedule_name}' contains duplicate day values"
+            )
+
+        if len(set(hours)) != len(hours):
+            raise ConfigurationError(
+                f"Schedule '{schedule_name}' contains duplicate hour values"
+            )
+
         for day in days:
             if not isinstance(day, int) or day < 0 or day > 6:
                 raise ConfigurationError(

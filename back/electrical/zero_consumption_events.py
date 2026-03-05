@@ -14,8 +14,6 @@ Design notes:
 - One event per month maximum.
 - No persistence logic.
 - Simulation-only module.
-
-This module is intentionally minimal and stable.
 """
 
 import random
@@ -77,7 +75,7 @@ class MonthlyZeroConsumptionEvent:
         timestamps: list[datetime.datetime] = []
 
         try:
-            for day in range(1, 29):
+            for day in range(1, 29):  
                 for hour in range(24):
                     ts = datetime.datetime(year, month, day, hour)
                     if ts.weekday() in active_days and ts.hour in active_hours:
@@ -96,10 +94,10 @@ class MonthlyZeroConsumptionEvent:
         schedule_name: str,
     ) -> bool:
 
-        if schedule_name not in WORKING_SCHEDULES:
+        schedule = WORKING_SCHEDULES.get(schedule_name)
+        if not schedule:
             raise SimulationError(f"Unknown schedule: {schedule_name}")
 
-        schedule = WORKING_SCHEDULES[schedule_name]
         active_days = set(schedule["days"])
         active_hours = set(schedule["hours"])
 
@@ -185,32 +183,48 @@ class MonthlyZeroConsumptionEvent:
         candidates = self._build_candidates()
 
         if not candidates:
-            raise SimulationError("No eligible systems available for zero consumption event")
+            raise SimulationError("No eligible systems available")
+
+        schedule_cache: dict[str, list[datetime.datetime]] = {}
+
+        for _, schedule_name in candidates:
+            if schedule_name not in schedule_cache:
+                schedule_cache[schedule_name] = (
+                    self._build_active_timestamps_for_month(
+                        year,
+                        month,
+                        schedule_name,
+                    )
+                )
 
         for _ in range(200):
 
             chosen_system, schedule_name = random.choice(candidates)
-
-            active_ts = self._build_active_timestamps_for_month(
-                year,
-                month,
-                schedule_name,
-            )
+            active_ts = schedule_cache.get(schedule_name, [])
 
             if not active_ts:
                 continue
 
             start = random.choice(active_ts)
 
-            duration_range = DURATION_BY_SCHEDULE.get(schedule_name, (1, 2))
-            duration_hours = random.randint(
-                duration_range[0],
-                duration_range[1],
-            )
+            duration_range = DURATION_BY_SCHEDULE.get(schedule_name)
+            if not duration_range:
+                raise SimulationError(
+                    f"No duration configuration for schedule: {schedule_name}"
+                )
+
+            min_dur, max_dur = duration_range
+
+            if min_dur <= 0 or max_dur <= 0 or min_dur > max_dur:
+                raise SimulationError(
+                    f"Invalid duration range for schedule: {schedule_name}"
+                )
+
+            duration_hours = random.randint(min_dur, max_dur)
 
             end = start + datetime.timedelta(hours=duration_hours)
 
-            if end.day > 28:
+            if end.month != month:
                 continue
 
             if not self._is_range_within_schedule(start, end, schedule_name):
@@ -258,3 +272,4 @@ class MonthlyZeroConsumptionEvent:
             ts += datetime.timedelta(hours=1)
 
         return timestamps
+

@@ -18,42 +18,54 @@ from core.exceptions import ConfigurationError
 
 class ScheduleService:
 
+    COMPONENT_SEPARATOR = " - "
+
     @staticmethod
     def get_all_system_names() -> List[str]:
 
         names: List[str] = []
 
         for system_name, config in SYSTEMS_CONFIG.items():
+
             components = config["components"]
 
             if len(components) == 1:
                 names.append(system_name)
+
             else:
-                for component_name in components.keys():
-                    names.append(f"{system_name} - {component_name}")
+                for component_name in components:
+                    names.append(
+                        f"{system_name}{ScheduleService.COMPONENT_SEPARATOR}{component_name}"
+                    )
 
         return names
 
     @staticmethod
     def get_schedule_for_system_name(system_name: str) -> str:
 
-        if not isinstance(system_name, str) or not system_name:
+        if not isinstance(system_name, str) or not system_name.strip():
             raise ConfigurationError("system_name must be a non-empty string")
 
         try:
-            if " - " not in system_name:
+
+            if ScheduleService.COMPONENT_SEPARATOR not in system_name:
+
                 components = SYSTEMS_CONFIG[system_name]["components"]
                 component_config = next(iter(components.values()))
+
                 return component_config["schedule"]
 
-            parent_name, component_name = system_name.split(" - ", 1)
+            parent_name, component_name = system_name.split(
+                ScheduleService.COMPONENT_SEPARATOR, 1
+            )
 
             return SYSTEMS_CONFIG[parent_name]["components"][component_name]["schedule"]
 
-        except KeyError:
+        except KeyError as exc:
+
             raise ConfigurationError(
                 f"Invalid system name or component reference: '{system_name}'"
-            )
+            ) from exc
 
     @staticmethod
     def is_system_active(
@@ -61,7 +73,7 @@ class ScheduleService:
         timestamp: datetime.datetime
     ) -> bool:
 
-        if not isinstance(schedule_name, str) or not schedule_name:
+        if not isinstance(schedule_name, str) or not schedule_name.strip():
             raise ConfigurationError("schedule_name must be a non-empty string")
 
         if not isinstance(timestamp, datetime.datetime):
@@ -69,10 +81,12 @@ class ScheduleService:
 
         try:
             schedule = WORKING_SCHEDULES[schedule_name]
-        except KeyError:
+
+        except KeyError as exc:
+
             raise ConfigurationError(
                 f"Schedule '{schedule_name}' is not defined"
-            )
+            ) from exc
 
         return (
             timestamp.weekday() in schedule["days"]
@@ -86,4 +100,5 @@ class ScheduleService:
     ) -> bool:
 
         schedule_name = ScheduleService.get_schedule_for_system_name(system_name)
+
         return ScheduleService.is_system_active(schedule_name, timestamp)

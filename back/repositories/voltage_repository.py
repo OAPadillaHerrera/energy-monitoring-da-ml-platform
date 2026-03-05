@@ -3,7 +3,8 @@
 """
 Voltage Repository
 
-Handles persistence of hourly voltage profile records.
+Handles persistence of hourly voltage profile records generated
+by the simulation engine.
 """
 
 import datetime
@@ -36,16 +37,22 @@ def insert_hourly_voltage_bulk(
         """
 
         cursor.executemany(query, records)
+
         connection.commit()
 
     except Exception as exc:
+
         if connection:
             connection.rollback()
-        raise RepositoryError("Failed to insert hourly voltage records.") from exc
+
+        raise RepositoryError(
+            "Failed to insert hourly voltage records."
+        ) from exc
 
     finally:
+
         if cursor:
             cursor.close()
+
         if connection:
             connection.close()
-

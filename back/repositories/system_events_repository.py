@@ -8,7 +8,6 @@ Handles persistence and queries for system events.
 
 import datetime
 from typing import List, Tuple, Optional
-
 from config.db import conectar_db
 from core.exceptions import RepositoryError
 
@@ -36,16 +35,21 @@ def insert_system_events(
         """
 
         cursor.executemany(query, records)
+
         connection.commit()
 
     except Exception as exc:
         if connection:
             connection.rollback()
-        raise RepositoryError("Failed to insert system events.") from exc
+
+        raise RepositoryError(
+            "Failed to insert system event records."
+        ) from exc
 
     finally:
         if cursor:
             cursor.close()
+
         if connection:
             connection.close()
 
@@ -72,11 +76,14 @@ def get_latest_system_event_date() -> Optional[datetime.date]:
         return None
 
     except Exception as exc:
-        raise RepositoryError("Failed to fetch latest system event date.") from exc
+        raise RepositoryError(
+            "Failed to fetch latest system event date."
+        ) from exc
 
     finally:
         if cursor:
             cursor.close()
+
         if connection:
             connection.close()
 
@@ -108,11 +115,14 @@ def exists_system_event_in_month(
         return result is not None
 
     except Exception as exc:
-        raise RepositoryError("Failed to check system event existence.") from exc
+        raise RepositoryError(
+            "Failed to check system event existence."
+        ) from exc
 
     finally:
         if cursor:
             cursor.close()
+
         if connection:
             connection.close()
 

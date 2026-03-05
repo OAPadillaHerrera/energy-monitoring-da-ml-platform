@@ -9,6 +9,7 @@ It coordinates domain services, repositories, and data persistence.
 
 import datetime
 import time
+from typing import Dict, List, Tuple
 
 from services.simulation_service import (
     generate_daily_simulation,
@@ -28,10 +29,12 @@ from electrical.voltage_profile import VoltageProfile
 from electrical.zero_consumption_events import MonthlyZeroConsumptionEvent
 from core.exceptions import SimulationError
 
-def _create_simulation_context():
+def _create_simulation_context() -> Tuple[VoltageProfile, MonthlyZeroConsumptionEvent]:
+   
     return VoltageProfile(), MonthlyZeroConsumptionEvent()
 
-def _get_next_simulation_date():
+def _get_next_simulation_date() -> datetime.date:
+   
     today = datetime.date.today()
     latest_date = get_latest_consumption_date()
 
@@ -41,14 +44,27 @@ def _get_next_simulation_date():
         else today
     )
 
-def _build_hourly_records(daily_data, systems_map):
-    return [
-        (systems_map[system_name], timestamp, consumption)
-        for system_name, consumption, timestamp in daily_data
-        if system_name in systems_map
-    ]
+def _build_hourly_records(
+    daily_data: List[Tuple[str, float, datetime.datetime]],
+    systems_map: Dict[str, int]
+) -> List[Tuple[int, datetime.datetime, float]]:
 
-def run_daily_simulation():
+    hourly_records: List[Tuple[int, datetime.datetime, float]] = []
+
+    for system_name, consumption, timestamp in daily_data:
+
+        system_id = systems_map.get(system_name)
+
+        if system_id is None:
+            continue
+
+        hourly_records.append(
+            (system_id, timestamp, consumption)
+        )
+
+    return hourly_records
+
+def run_daily_simulation() -> Dict:
 
     voltage_profile, zero_event = _create_simulation_context()
     systems_map = get_systems_map()
@@ -69,6 +85,7 @@ def run_daily_simulation():
         insert_system_events(event_records)
 
     hourly_records = _build_hourly_records(daily_data, systems_map)
+
     insert_hourly_consumption(hourly_records)
 
     daily_records = build_daily_consumption_records(hourly_records)
@@ -81,7 +98,10 @@ def run_daily_simulation():
         "daily_records_inserted": len(daily_records)
     }
 
-def run_range_simulation(start_date, end_date):
+def run_range_simulation(
+    start_date: datetime.date,
+    end_date: datetime.date
+) -> Dict:
 
     if start_date > end_date:
         raise SimulationError("start_date cannot be after end_date.")
@@ -137,9 +157,10 @@ def run_range_simulation(start_date, end_date):
     insert_hourly_consumption(all_hourly_consumption)
 
     end_insert = time.time()
-    end_total = time.time()
 
     all_daily_records = build_daily_consumption_records(all_hourly_consumption)
+
+    end_total = time.time()
 
     return {
         "status": "ok",

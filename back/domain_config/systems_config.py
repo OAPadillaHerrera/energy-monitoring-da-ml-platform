@@ -9,6 +9,9 @@ and optional duration-based behavior.
 
 This configuration acts as the domain definition layer for
 SystemCalculator and ScheduleService.
+
+Nominal consumption values represent total hourly system consumption,
+not per-unit consumption (units are informational unless otherwise specified).
 """
 
 from typing import Dict, TypedDict
@@ -98,7 +101,7 @@ SYSTEMS_CONFIG: Dict[str, SystemConfig] = {
                 "nominal_consumption_kwh": 0.0275,
                 "schedule": "24_7",
                 "duration_hours": 2.05 / 24,
-                "voltage": 120,
+                "voltage": 240,
             }
         }
     },
@@ -185,11 +188,17 @@ def validate_systems_config() -> None:
                     f"{system_name}.{component_name} voltage must be a positive integer"
                 )
 
+            schedule = component.get("schedule")
+            if schedule is None or not isinstance(schedule, str):
+                raise ConfigurationError(
+                    f"{system_name}.{component_name} must define a valid schedule"
+                )
+
             if "duration_hours" in component:
                 duration = component["duration_hours"]
-                if not isinstance(duration, (int, float)) or duration < 0:
+                if not isinstance(duration, (int, float)) or duration <= 0:
                     raise ConfigurationError(
-                        f"{system_name}.{component_name} duration_hours must be >= 0"
+                        f"{system_name}.{component_name} duration_hours must be > 0"
                     )
 
             if "units" in component:
@@ -200,6 +209,3 @@ def validate_systems_config() -> None:
                     )
 
 validate_systems_config()
-
-
-

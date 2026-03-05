@@ -3,12 +3,12 @@
 """
 System Repository
 
-Provides system ID resolution from database.
+Provides system ID resolution from the database.
 """
 
 from typing import Dict
 from config.db import conectar_db
-from core.exceptions import ConfigurationError
+from core.exceptions import RepositoryError
 
 SYSTEM_NAME_MAP: Dict[str, str] = {
     "price_display_system": "Price Display System",
@@ -26,6 +26,9 @@ SYSTEM_NAME_MAP: Dict[str, str] = {
 
 def get_systems_map() -> Dict[str, int]:
 
+    connection = None
+    cursor = None
+
     try:
         connection = conectar_db()
         cursor = connection.cursor()
@@ -34,11 +37,16 @@ def get_systems_map() -> Dict[str, int]:
         systems = cursor.fetchall()
 
     except Exception as exc:
-        raise ConfigurationError("Failed to load systems from database.") from exc
+        raise RepositoryError(
+            "Failed to load systems from database."
+        ) from exc
 
     finally:
-        cursor.close()
-        connection.close()
+        if cursor:
+            cursor.close()
+
+        if connection:
+            connection.close()
 
     db_name_to_id = {name: system_id for system_id, name in systems}
 
@@ -46,6 +54,7 @@ def get_systems_map() -> Dict[str, int]:
 
     for internal_name, db_name in SYSTEM_NAME_MAP.items():
         system_id = db_name_to_id.get(db_name)
+
         if system_id is not None:
             systems_map[internal_name] = system_id
 

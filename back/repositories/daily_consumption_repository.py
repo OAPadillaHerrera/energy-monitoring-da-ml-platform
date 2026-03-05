@@ -33,18 +33,21 @@ def insert_daily_consumption(
             )
             VALUES (%s, %s, %s)
         """
-
         cursor.executemany(query, records)
+
         connection.commit()
 
     except Exception as exc:
         if connection:
             connection.rollback()
-        raise RepositoryError("Failed to insert daily consumption records.") from exc
+
+        raise RepositoryError(
+            "Failed to insert daily consumption records."
+        ) from exc
 
     finally:
         if cursor:
             cursor.close()
+
         if connection:
             connection.close()
-

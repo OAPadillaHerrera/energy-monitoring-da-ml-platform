@@ -20,23 +20,29 @@ def build_daily_consumption_records(
     if not isinstance(hourly_records, list):
         raise ConfigurationError("hourly_records must be a list of tuples")
 
+    if not hourly_records:
+        raise ConfigurationError("hourly_records list is empty")
+
     totals: defaultdict[Tuple[int, date], float] = defaultdict(float)
 
     for record in hourly_records:
+        if not isinstance(record, tuple) or len(record) != 3:
+            raise ConfigurationError(f"Invalid hourly record format (must be tuple of 3 elements): {record}")
+
         try:
             system_id, timestamp, consumption = record
-            if not isinstance(system_id, int):
-                raise ConfigurationError(f"Invalid system_id: {system_id}")
-            if not isinstance(timestamp, datetime):
-                raise ConfigurationError(f"Invalid timestamp: {timestamp}")
-            if not isinstance(consumption, (int, float)):
-                raise ConfigurationError(f"Invalid consumption value: {consumption}")
+        except TypeError:
+            raise ConfigurationError(f"Unable to unpack hourly record: {record}")
 
-            key = (system_id, timestamp.date())
-            totals[key] += consumption
+        if not isinstance(system_id, int):
+            raise ConfigurationError(f"Invalid system_id: {system_id}")
+        if not isinstance(timestamp, datetime):
+            raise ConfigurationError(f"Invalid timestamp: {timestamp}")
+        if not isinstance(consumption, (int, float)):
+            raise ConfigurationError(f"Invalid consumption value: {consumption}")
 
-        except ValueError:
-            raise ConfigurationError(f"Invalid hourly record format: {record}")
+        key = (system_id, timestamp.date())
+        totals[key] += consumption
 
     daily_records: List[Tuple[int, date, float]] = [
         (system_id, day, total) for (system_id, day), total in totals.items()

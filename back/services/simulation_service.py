@@ -12,8 +12,6 @@ It supports hourly, daily, and range-based simulations, taking into account:
 
 Functions return structured data for hourly consumption, voltage records, and event logs, 
 and can calculate daily totals for all systems.
-
-Designed to be reusable, type-safe, and maintainable.
 """
 
 import datetime
@@ -37,6 +35,12 @@ def _compute_consumption(
 
     if zero_event and zero_event.is_system_down(system_name, timestamp):
         return 0.0
+
+    if voltage_120v < 0 or voltage_240v < 0:
+        raise SimulationError(
+            f"Invalid voltage detected at {timestamp}: "
+            f"V120={voltage_120v}, V240={voltage_240v}"
+        )
 
     try:
         result = SystemCalculator.calculate(
@@ -109,6 +113,12 @@ def generate_daily_simulation(
     event_records: List[Tuple[datetime.datetime, int, str]] = []
 
     system_names = ScheduleService.get_all_system_names()
+
+    missing_systems = [s for s in system_names if s not in systems_map]
+    if missing_systems:
+        raise SimulationError(
+            f"The following systems are missing from systems_map: {missing_systems}"
+        )
 
     for hour in range(24):
         timestamp = base_time.replace(hour=hour)

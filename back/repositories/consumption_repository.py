@@ -45,7 +45,9 @@ def insert_hourly_consumption(
     except Exception as exc:
         if connection:
             connection.rollback()
-        raise RepositoryError("Failed to insert hourly consumption records.") from exc
+        raise RepositoryError(
+            "Failed to insert hourly consumption records."
+        ) from exc
 
     finally:
         if cursor:
@@ -70,14 +72,13 @@ def get_latest_consumption_date() -> Optional[datetime.date]:
         )
 
         result = cursor.fetchone()
-
-        if result and result[0]:
-            return result[0]
-
-        return None
+        
+        return result[0] if result and result[0] else None
 
     except Exception as exc:
-        raise RepositoryError("Failed to fetch latest consumption date.") from exc
+        raise RepositoryError(
+            "Failed to fetch latest consumption date."
+        ) from exc
 
     finally:
         if cursor:

@@ -4,10 +4,12 @@
 Main Application Entry Point
 
 Initializes Flask application, registers blueprints,
-configures logging, and defines global error handlers.
+configures logging, loads environment variables,
+and defines global error handlers.
 """
 
 import logging
+from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_cors import CORS
 from routes.simulation_routes import simulation_bp
@@ -21,8 +23,7 @@ from core.exceptions import (
     ConfigurationError
 )
 
-app = Flask(__name__)
-CORS(app)
+load_dotenv()
 
 logging.basicConfig(
     level=logging.INFO,
@@ -30,21 +31,28 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-
 logger.info("Energy Monitoring System starting up...")
 
-app.register_blueprint(simulation_bp, url_prefix='/simulation')
-app.register_blueprint(analytics_bp, url_prefix='/api/consumo')
-app.register_blueprint(totales_bp, url_prefix='/api/totales')
+app = Flask(__name__)
+CORS(app)
 
-@app.route('/')
+app.register_blueprint(simulation_bp, url_prefix="/simulation")
+app.register_blueprint(analytics_bp, url_prefix="/api/consumo")
+app.register_blueprint(totales_bp, url_prefix="/api/totales")
+
+@app.route("/")
 def index():
 
     logger.info("Health check accessed.")
-    return "Energy monitoring system working correctly."
+
+    return jsonify({
+        "status": "ok",
+        "service": "energy-monitoring-system"
+    })
 
 @app.errorhandler(SimulationError)
 def handle_simulation_error(error):
+
     logger.warning(f"Simulation error: {str(error)}")
 
     return jsonify({
@@ -55,6 +63,7 @@ def handle_simulation_error(error):
 
 @app.errorhandler(RepositoryError)
 def handle_repository_error(error):
+
     logger.error("Repository error occurred.", exc_info=error)
 
     return jsonify({
@@ -65,6 +74,7 @@ def handle_repository_error(error):
 
 @app.errorhandler(ConfigurationError)
 def handle_configuration_error(error):
+
     logger.error("Configuration error occurred.", exc_info=error)
 
     return jsonify({
@@ -75,6 +85,7 @@ def handle_configuration_error(error):
 
 @app.errorhandler(ApplicationError)
 def handle_application_error(error):
+
     logger.warning(f"Application error: {str(error)}")
 
     return jsonify({
@@ -85,6 +96,7 @@ def handle_application_error(error):
 
 @app.errorhandler(Exception)
 def handle_unexpected_error(error):
+
     logger.critical("Unexpected server error.", exc_info=error)
 
     return jsonify({
@@ -93,8 +105,13 @@ def handle_unexpected_error(error):
         "message": "Internal server error."
     }), 500
 
-if __name__ == '__main__':
-    logger.info("Running in development mode.")
-    app.run(host='0.0.0.0', port=5001, debug=True)
+if __name__ == "__main__":
 
+    logger.info("Running in development mode.")
+
+    app.run(
+        host="0.0.0.0",
+        port=5001,
+        debug=True
+    )
 

@@ -5,6 +5,12 @@ SystemCalculator Service
 
 Calculates energy consumption for systems and their components,
 handling outages and zero-consumption events (voltages may be zero).
+
+Design notes:
+- Handles per-component and per-system calculation.
+- Accounts for slot-based consumption if duration_hours is defined.
+- Robust against zero voltage (system down).
+- Raises ConfigurationError for invalid configurations.
 """
 
 import datetime
@@ -30,6 +36,7 @@ class SystemCalculator:
             raise ConfigurationError("timestamp must be a datetime object")
 
         try:
+
             if " - " in system_name:
                 parent_name, component_name = system_name.split(" - ", 1)
                 config = SYSTEMS_CONFIG[parent_name]["components"][component_name]
@@ -52,7 +59,6 @@ class SystemCalculator:
 
         if len(components_config) > 1:
             results: Dict[str, float] = {}
-
             for component_name, component_config in components_config.items():
                 results[component_name] = SystemCalculator._calculate_single(
                     component_config,
@@ -62,7 +68,6 @@ class SystemCalculator:
                     voltage_240v,
                     timestamp,
                 )
-
             return results
 
         component_name, component_config = next(iter(components_config.items()))
@@ -102,10 +107,17 @@ class SystemCalculator:
         applied_voltage: float = voltage_240v if nominal_voltage == 240 else voltage_120v
 
         if applied_voltage <= 0:
-            return 0.0  
+            return 0.0
 
         if "duration_hours" in config:
-            equivalent_daily_hours: float = config["duration_hours"] * 24
+            duration_hours = config["duration_hours"]
+
+            if duration_hours <= 0:
+                raise ConfigurationError(
+                    f"{parent_name}.{component_name} has invalid duration_hours={duration_hours}. Must be > 0."
+                )
+
+            equivalent_daily_hours: float = duration_hours * 24
             daily_energy: float = nominal_power * equivalent_daily_hours
 
             slot_factor = get_slot_factor(parent_name, timestamp)

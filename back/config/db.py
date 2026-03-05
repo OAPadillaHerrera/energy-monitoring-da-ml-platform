@@ -4,16 +4,12 @@
 Database Connection Module
 
 Provides database connection handling using environment configuration.
-Designed for structured error handling and enterprise-ready architecture.
 """
 
 import os
 import logging
 import pg8000
-from dotenv import load_dotenv
 from core.exceptions import ConfigurationError, RepositoryError
-
-load_dotenv()
 
 logger = logging.getLogger(__name__)
 
