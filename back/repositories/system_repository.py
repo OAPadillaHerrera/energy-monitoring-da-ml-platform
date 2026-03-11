@@ -6,9 +6,17 @@ System Repository
 Provides system ID resolution from the database.
 """
 
+import logging
 from typing import Dict
-from config.db import conectar_db
+from config.db import get_db_connection
 from core.exceptions import RepositoryError
+
+logger = logging.getLogger(__name__)
+
+SQL_GET_SYSTEMS = """
+SELECT id, name
+FROM systems;
+"""
 
 SYSTEM_NAME_MAP: Dict[str, str] = {
     "price_display_system": "Price Display System",
@@ -30,33 +38,53 @@ def get_systems_map() -> Dict[str, int]:
     cursor = None
 
     try:
-        connection = conectar_db()
+        connection = get_db_connection()
         cursor = connection.cursor()
 
-        cursor.execute("SELECT id, name FROM systems;")
+        cursor.execute(SQL_GET_SYSTEMS)
+
         systems = cursor.fetchall()
 
     except Exception as exc:
+
+        logger.error(
+            "Failed loading systems from database.",
+            exc_info=exc,
+        )
+
         raise RepositoryError(
             "Failed to load systems from database."
         ) from exc
 
     finally:
+
         if cursor:
             cursor.close()
 
         if connection:
             connection.close()
 
-    db_name_to_id = {name: system_id for system_id, name in systems}
+    db_name_to_id: Dict[str, int] = {}
+
+    for system_id, name in systems:
+        db_name_to_id[name] = system_id
 
     systems_map: Dict[str, int] = {}
 
     for internal_name, db_name in SYSTEM_NAME_MAP.items():
+
         system_id = db_name_to_id.get(db_name)
 
-        if system_id is not None:
-            systems_map[internal_name] = system_id
+        if system_id is None:
+
+            logger.warning(
+                "System '%s' not found in database.",
+                db_name,
+            )
+
+            continue
+
+        systems_map[internal_name] = system_id
 
     return systems_map
 

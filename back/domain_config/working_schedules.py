@@ -6,79 +6,110 @@ Working Schedules Configuration
 Defines the allowed working days and active hours for each schedule.
 Used by ScheduleService to determine whether a system is active
 at a given timestamp.
+
+Design principles
+-----------------
+- Schedules define when a system is allowed to operate.
+- Days follow Python's weekday convention: Monday=0, Sunday=6.
+- Hours are expressed using 24-hour format (0–23).
+- Configuration is validated at import time to detect errors early.
 """
 
-from typing import Dict, List, TypedDict
+from typing import Dict, Sequence, TypedDict
 from core.exceptions import ConfigurationError
 
+VALID_DAYS = set(range(7))
+VALID_HOURS = set(range(24))
+
 class ScheduleConfig(TypedDict):
-    days: List[int]
-    hours: List[int]
+    days: Sequence[int]
+    hours: Sequence[int]
 
 WORKING_SCHEDULES: Dict[str, ScheduleConfig] = {
+
     "24_7": {
-        "days": [0, 1, 2, 3, 4, 5, 6],
-        "hours": list(range(0, 24)),
+        "days": list(range(7)),
+        "hours": list(range(24)),
     },
+
     "office_hours": {
         "days": [0, 1, 2, 3, 4],
         "hours": list(range(8, 12)) + list(range(13, 17)),
     },
+
     "nighttime": {
-        "days": [0, 1, 2, 3, 4, 5, 6],
+        "days": list(range(7)),
         "hours": list(range(18, 24)) + list(range(0, 6)),
     },
+
     "coffee_machine": {
-        "days": [0, 1, 2, 3, 4, 5, 6],
-        "hours": list(range(6, 7)),
+        "days": list(range(7)),
+        "hours": [6],
     },
 }
+
+def _validate_days(schedule_name: str, days: Sequence[int]) -> None:
+
+    if not isinstance(days, Sequence) or not days:
+        raise ConfigurationError(
+            f"Schedule '{schedule_name}' must define a non-empty sequence of days"
+        )
+
+    if len(set(days)) != len(days):
+        raise ConfigurationError(
+            f"Schedule '{schedule_name}' contains duplicate day values"
+        )
+
+    for day in days:
+        if day not in VALID_DAYS:
+            raise ConfigurationError(
+                f"Schedule '{schedule_name}' has invalid day value: {day}"
+            )
+
+def _validate_hours(schedule_name: str, hours: Sequence[int]) -> None:
+
+    if not isinstance(hours, Sequence) or not hours:
+        raise ConfigurationError(
+            f"Schedule '{schedule_name}' must define a non-empty sequence of hours"
+        )
+
+    if len(set(hours)) != len(hours):
+        raise ConfigurationError(
+            f"Schedule '{schedule_name}' contains duplicate hour values"
+        )
+
+    for hour in hours:
+        if hour not in VALID_HOURS:
+            raise ConfigurationError(
+                f"Schedule '{schedule_name}' has invalid hour value: {hour}"
+            )
 
 def validate_working_schedules() -> None:
 
     if not isinstance(WORKING_SCHEDULES, dict) or not WORKING_SCHEDULES:
         raise ConfigurationError("WORKING_SCHEDULES must be a non-empty dictionary")
 
-    for schedule_name, schedule in WORKING_SCHEDULES.items():
+    for schedule_name, schedule_config in WORKING_SCHEDULES.items():
 
-        if not isinstance(schedule, dict):
+        if not isinstance(schedule_config, dict):
             raise ConfigurationError(
                 f"Schedule '{schedule_name}' definition must be a dictionary"
             )
 
-        days = schedule.get("days")
-        hours = schedule.get("hours")
+        days = schedule_config.get("days")
+        hours = schedule_config.get("hours")
 
-        if not isinstance(days, list) or not days:
+        if days is None:
             raise ConfigurationError(
-                f"Schedule '{schedule_name}' must define a non-empty list of days"
+                f"Schedule '{schedule_name}' missing 'days' definition"
             )
 
-        if not isinstance(hours, list) or not hours:
+        if hours is None:
             raise ConfigurationError(
-                f"Schedule '{schedule_name}' must define a non-empty list of hours"
+                f"Schedule '{schedule_name}' missing 'hours' definition"
             )
 
-        if len(set(days)) != len(days):
-            raise ConfigurationError(
-                f"Schedule '{schedule_name}' contains duplicate day values"
-            )
-
-        if len(set(hours)) != len(hours):
-            raise ConfigurationError(
-                f"Schedule '{schedule_name}' contains duplicate hour values"
-            )
-
-        for day in days:
-            if not isinstance(day, int) or day < 0 or day > 6:
-                raise ConfigurationError(
-                    f"Schedule '{schedule_name}' has invalid day value: {day}"
-                )
-
-        for hour in hours:
-            if not isinstance(hour, int) or hour < 0 or hour > 23:
-                raise ConfigurationError(
-                    f"Schedule '{schedule_name}' has invalid hour value: {hour}"
-                )
+        _validate_days(schedule_name, days)
+        _validate_hours(schedule_name, hours)
 
 validate_working_schedules()

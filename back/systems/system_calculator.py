@@ -3,54 +3,59 @@
 """
 SystemCalculator Service
 
-Calculates energy consumption for systems and their components,
-handling outages and zero-consumption events (voltages may be zero).
+Calculates energy consumption for systems and their components.
 
-Design notes:
-- Handles per-component and per-system calculation.
-- Accounts for slot-based consumption if duration_hours is defined.
-- Robust against zero voltage (system down).
-- Raises ConfigurationError for invalid configurations.
+Handles:
+- Per-system and per-component calculations
+- Voltage-based scaling
+- Duration-based consumption using slot factors
+- Zero-voltage scenarios (grid outage or zero event)
+
+Design principles
+-----------------
+- Deterministic calculations
+- Strict configuration validation
+- Explicit error handling
+- Support for both aggregated and component-level queries
 """
 
 import datetime
-from typing import Dict, Union
+from typing import Dict, Union, Tuple
 from domain_config.systems_config import SYSTEMS_CONFIG
 from electrical.consumption_slots import get_slot_factor
 from core.exceptions import ConfigurationError
 
 class SystemCalculator:
 
+    COMPONENT_SEPARATOR = " - "
+
     @staticmethod
     def calculate(
         system_name: str,
         voltage_120v: float,
         voltage_240v: float,
-        timestamp: datetime.datetime
+        timestamp: datetime.datetime,
     ) -> Union[float, Dict[str, float]]:
 
-        if not isinstance(system_name, str) or not system_name:
-            raise ConfigurationError("system_name must be a non-empty string")
-
-        if not isinstance(timestamp, datetime.datetime):
-            raise ConfigurationError("timestamp must be a datetime object")
+        SystemCalculator._validate_inputs(system_name, timestamp)
 
         try:
 
-            if " - " in system_name:
-                parent_name, component_name = system_name.split(" - ", 1)
-                config = SYSTEMS_CONFIG[parent_name]["components"][component_name]
+            system, component = SystemCalculator._parse_system_name(system_name)
 
-                return SystemCalculator._calculate_single(
+            if component is not None:
+                config = SYSTEMS_CONFIG[system]["components"][component]
+
+                return SystemCalculator._calculate_component(
                     config,
-                    parent_name,
-                    component_name,
+                    system,
+                    component,
                     voltage_120v,
                     voltage_240v,
                     timestamp,
                 )
 
-            components_config = SYSTEMS_CONFIG[system_name]["components"]
+            components_config = SYSTEMS_CONFIG[system]["components"]
 
         except KeyError:
             raise ConfigurationError(
@@ -58,23 +63,27 @@ class SystemCalculator:
             )
 
         if len(components_config) > 1:
+
             results: Dict[str, float] = {}
+
             for component_name, component_config in components_config.items():
-                results[component_name] = SystemCalculator._calculate_single(
+
+                results[component_name] = SystemCalculator._calculate_component(
                     component_config,
-                    system_name,
+                    system,
                     component_name,
                     voltage_120v,
                     voltage_240v,
                     timestamp,
                 )
+
             return results
 
         component_name, component_config = next(iter(components_config.items()))
 
-        return SystemCalculator._calculate_single(
+        return SystemCalculator._calculate_component(
             component_config,
-            system_name,
+            system,
             component_name,
             voltage_120v,
             voltage_240v,
@@ -82,51 +91,77 @@ class SystemCalculator:
         )
 
     @staticmethod
-    def _calculate_single(
+    def _calculate_component(
         config: dict,
-        parent_name: str,
+        system_name: str,
         component_name: str,
         voltage_120v: float,
         voltage_240v: float,
         timestamp: datetime.datetime,
     ) -> float:
 
-        if "nominal_consumption_kwh" not in config:
+        nominal_power = config.get("nominal_consumption_kwh")
+
+        if nominal_power is None:
             raise ConfigurationError(
-                f"{parent_name}.{component_name} missing nominal_consumption_kwh"
+                f"{system_name}.{component_name} missing nominal_consumption_kwh"
             )
 
-        nominal_power: float = config["nominal_consumption_kwh"]
-        nominal_voltage: int = config["voltage"]
+        nominal_voltage = config.get("voltage")
 
-        if nominal_voltage <= 0:
+        if not isinstance(nominal_voltage, int) or nominal_voltage <= 0:
             raise ConfigurationError(
-                f"{parent_name}.{component_name} invalid nominal voltage"
+                f"{system_name}.{component_name} invalid nominal voltage"
             )
 
-        applied_voltage: float = voltage_240v if nominal_voltage == 240 else voltage_120v
+        applied_voltage = (
+            voltage_240v if nominal_voltage == 240 else voltage_120v
+        )
 
         if applied_voltage <= 0:
             return 0.0
 
         if "duration_hours" in config:
+
             duration_hours = config["duration_hours"]
 
             if duration_hours <= 0:
                 raise ConfigurationError(
-                    f"{parent_name}.{component_name} has invalid duration_hours={duration_hours}. Must be > 0."
+                    f"{system_name}.{component_name} has invalid duration_hours={duration_hours}. Must be > 0."
                 )
 
-            equivalent_daily_hours: float = duration_hours * 24
-            daily_energy: float = nominal_power * equivalent_daily_hours
+            equivalent_daily_hours = duration_hours * 24
+            daily_energy = nominal_power * equivalent_daily_hours
 
-            slot_factor = get_slot_factor(parent_name, timestamp)
+            slot_factor = get_slot_factor(system_name, timestamp)
 
             if slot_factor is None:
                 raise ConfigurationError(
-                    f"Missing consumption slot for {parent_name}.{component_name} at {timestamp}"
+                    f"Missing consumption slot for {system_name}.{component_name} at {timestamp}"
                 )
 
             return daily_energy * (applied_voltage / nominal_voltage) * slot_factor
 
         return nominal_power * (applied_voltage / nominal_voltage)
+
+    @staticmethod
+    def _parse_system_name(system_name: str) -> Tuple[str, str | None]:
+
+        if SystemCalculator.COMPONENT_SEPARATOR not in system_name:
+            return system_name, None
+
+        parent_name, component_name = system_name.split(
+            SystemCalculator.COMPONENT_SEPARATOR,
+            1,
+        )
+
+        return parent_name, component_name
+
+    @staticmethod
+    def _validate_inputs(system_name: str, timestamp: datetime.datetime) -> None:
+
+        if not isinstance(system_name, str) or not system_name.strip():
+            raise ConfigurationError("system_name must be a non-empty string")
+
+        if not isinstance(timestamp, datetime.datetime):
+            raise ConfigurationError("timestamp must be a datetime object")

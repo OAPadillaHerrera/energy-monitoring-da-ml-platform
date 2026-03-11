@@ -8,9 +8,22 @@ by the simulation engine.
 """
 
 import datetime
+import logging
 from typing import List, Tuple
-from config.db import conectar_db
+from config.db import get_db_connection
 from core.exceptions import RepositoryError
+
+logger = logging.getLogger(__name__)
+
+SQL_INSERT_HOURLY_VOLTAGE = """
+INSERT INTO hourly_voltage_profile (
+    timestamp,
+    voltage_120v,
+    voltage_240v,
+    quality_flag
+)
+VALUES (%s, %s, %s, %s)
+"""
 
 def insert_hourly_voltage_bulk(
     records: List[Tuple[datetime.datetime, float, float, str]]
@@ -23,20 +36,10 @@ def insert_hourly_voltage_bulk(
     cursor = None
 
     try:
-        connection = conectar_db()
+        connection = get_db_connection()
         cursor = connection.cursor()
 
-        query = """
-            INSERT INTO hourly_voltage_profile (
-                timestamp,
-                voltage_120v,
-                voltage_240v,
-                quality_flag
-            )
-            VALUES (%s, %s, %s, %s)
-        """
-
-        cursor.executemany(query, records)
+        cursor.executemany(SQL_INSERT_HOURLY_VOLTAGE, records)
 
         connection.commit()
 
@@ -44,6 +47,11 @@ def insert_hourly_voltage_bulk(
 
         if connection:
             connection.rollback()
+
+        logger.error(
+            "Failed inserting hourly voltage records.",
+            exc_info=exc,
+        )
 
         raise RepositoryError(
             "Failed to insert hourly voltage records."

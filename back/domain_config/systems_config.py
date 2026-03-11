@@ -3,19 +3,29 @@
 """
 Systems Configuration
 
-Defines the static configuration of all systems and their components,
-including nominal energy consumption, schedules, voltage levels,
-and optional duration-based behavior.
+Defines the static configuration of all electrical systems and their components.
 
-This configuration acts as the domain definition layer for
-SystemCalculator and ScheduleService.
+This module acts as the domain definition layer for:
+- SystemCalculator
+- ScheduleService
 
-Nominal consumption values represent total hourly system consumption,
-not per-unit consumption (units are informational unless otherwise specified).
+Design principles
+-----------------
+- Configuration is declarative and validated at import time.
+- Nominal consumption values represent TOTAL hourly consumption per component.
+- The `units` field is informational only and does NOT affect energy calculations.
+- Systems may optionally define duration-based behavior via `duration_hours`.
+
+Validation ensures that configuration errors are detected early during
+application startup rather than at runtime.
 """
 
-from typing import Dict, TypedDict
+from typing import Dict, Mapping, TypedDict, Final
+from types import MappingProxyType
 from core.exceptions import ConfigurationError
+
+VOLTAGE_120V: Final = 120
+VOLTAGE_240V: Final = 240
 
 class ComponentConfig(TypedDict, total=False):
     description: str
@@ -24,31 +34,35 @@ class ComponentConfig(TypedDict, total=False):
     schedule: str
     voltage: int
     duration_hours: float
+    slot_distribution: bool
 
 class SystemConfig(TypedDict):
     components: Dict[str, ComponentConfig]
 
-SYSTEMS_CONFIG: Dict[str, SystemConfig] = {
+SYSTEMS_CONFIG: Final[Mapping[str, SystemConfig]] = MappingProxyType({
+
     "price_display_system": {
         "components": {
             "price_display_modules": {
                 "description": "LED price display modules",
                 "nominal_consumption_kwh": 2.04,
                 "schedule": "24_7",
-                "voltage": 120,
+                "voltage": VOLTAGE_120V,
             }
         }
     },
+
     "corporate_lighting_system": {
         "components": {
             "corporate_signage": {
                 "description": "LED signage and corporate logo",
                 "nominal_consumption_kwh": 0.84,
                 "schedule": "nighttime",
-                "voltage": 120,
+                "voltage": VOLTAGE_120V,
             }
         }
     },
+
     "canopy_lighting_system": {
         "components": {
             "canopy_lamps": {
@@ -56,10 +70,11 @@ SYSTEMS_CONFIG: Dict[str, SystemConfig] = {
                 "units": 27,
                 "nominal_consumption_kwh": 2.052,
                 "schedule": "nighttime",
-                "voltage": 120,
+                "voltage": VOLTAGE_120V,
             }
         }
     },
+
     "perimeter_lighting_system": {
         "components": {
             "perimeter_luminaires": {
@@ -67,20 +82,22 @@ SYSTEMS_CONFIG: Dict[str, SystemConfig] = {
                 "units": 5,
                 "nominal_consumption_kwh": 0.275,
                 "schedule": "nighttime",
-                "voltage": 120,
+                "voltage": VOLTAGE_120V,
             }
         }
     },
+
     "office_and_general_services": {
         "components": {
             "office_services": {
                 "description": "Office equipment and general services",
                 "nominal_consumption_kwh": 1.1,
                 "schedule": "office_hours",
-                "voltage": 120,
+                "voltage": VOLTAGE_120V,
             }
         }
     },
+
     "submersible_pump_system": {
         "components": {
             "pumps": {
@@ -89,10 +106,12 @@ SYSTEMS_CONFIG: Dict[str, SystemConfig] = {
                 "nominal_consumption_kwh": 0.577,
                 "schedule": "24_7",
                 "duration_hours": 2.04 / 24,
-                "voltage": 240,
+                "slot_distribution": True,
+                "voltage": VOLTAGE_240V,
             }
         }
     },
+
     "fuel_dispenser_system": {
         "components": {
             "dispensers": {
@@ -101,26 +120,29 @@ SYSTEMS_CONFIG: Dict[str, SystemConfig] = {
                 "nominal_consumption_kwh": 0.0275,
                 "schedule": "24_7",
                 "duration_hours": 2.05 / 24,
-                "voltage": 240,
+                "slot_distribution": True,
+                "voltage": VOLTAGE_240V,
             }
         }
     },
+
     "air_conditioning_system": {
         "components": {
             "server_room": {
                 "description": "Server room air conditioning",
                 "nominal_consumption_kwh": 0.09183,
                 "schedule": "24_7",
-                "voltage": 120,
+                "voltage": VOLTAGE_120V,
             },
             "office_area": {
                 "description": "Office area air conditioning",
                 "nominal_consumption_kwh": 0.09183,
                 "schedule": "office_hours",
-                "voltage": 120,
+                "voltage": VOLTAGE_120V,
             },
         }
     },
+
     "customer_service_kiosk_system": {
         "components": {
             "refrigeration": {
@@ -128,21 +150,62 @@ SYSTEMS_CONFIG: Dict[str, SystemConfig] = {
                 "units": 3,
                 "nominal_consumption_kwh": 0.125,
                 "schedule": "24_7",
-                "voltage": 120,
+                "voltage": VOLTAGE_120V,
             },
             "coffee_machine": {
                 "description": "Coffee machine",
                 "nominal_consumption_kwh": 0.5,
                 "schedule": "coffee_machine",
-                "voltage": 120,
+                "voltage": VOLTAGE_120V,
             },
         }
     },
-}
+})
+
+def _validate_nominal_consumption(system: str, component: str, value: float) -> None:
+    if not isinstance(value, (int, float)) or value <= 0:
+        raise ConfigurationError(
+            f"{system}.{component} nominal_consumption_kwh must be > 0"
+        )
+
+def _validate_voltage(system: str, component: str, value: int) -> None:
+    if not isinstance(value, int) or value <= 0:
+        raise ConfigurationError(
+            f"{system}.{component} voltage must be a positive integer"
+        )
+
+def _validate_schedule(system: str, component: str, value: str) -> None:
+    if not isinstance(value, str) or not value:
+        raise ConfigurationError(
+            f"{system}.{component} must define a valid schedule"
+        )
+
+def _validate_optional_fields(system: str, component: str, config: ComponentConfig) -> None:
+
+    if "duration_hours" in config:
+        duration = config["duration_hours"]
+        if not isinstance(duration, (int, float)) or duration <= 0:
+            raise ConfigurationError(
+                f"{system}.{component} duration_hours must be > 0"
+            )
+
+    if "units" in config:
+        units = config["units"]
+        if not isinstance(units, int) or units <= 0:
+            raise ConfigurationError(
+                f"{system}.{component} units must be a positive integer (informational field)"
+            )
+
+    if "slot_distribution" in config:
+        slot_distribution = config["slot_distribution"]
+        if not isinstance(slot_distribution, bool):
+            raise ConfigurationError(
+                f"{system}.{component} slot_distribution must be a boolean"
+            )
 
 def validate_systems_config() -> None:
 
-    if not isinstance(SYSTEMS_CONFIG, dict) or not SYSTEMS_CONFIG:
+    if not SYSTEMS_CONFIG:
         raise ConfigurationError("SYSTEMS_CONFIG must be a non-empty dictionary")
 
     for system_name, system in SYSTEMS_CONFIG.items():
@@ -171,41 +234,22 @@ def validate_systems_config() -> None:
                 raise ConfigurationError(
                     f"{system_name}.{component_name} missing nominal_consumption_kwh"
                 )
-
-            if not isinstance(nominal, (int, float)) or nominal <= 0:
-                raise ConfigurationError(
-                    f"{system_name}.{component_name} nominal_consumption_kwh must be > 0"
-                )
+            _validate_nominal_consumption(system_name, component_name, nominal)
 
             voltage = component.get("voltage")
             if voltage is None:
                 raise ConfigurationError(
                     f"{system_name}.{component_name} missing voltage"
                 )
-
-            if not isinstance(voltage, int) or voltage <= 0:
-                raise ConfigurationError(
-                    f"{system_name}.{component_name} voltage must be a positive integer"
-                )
+            _validate_voltage(system_name, component_name, voltage)
 
             schedule = component.get("schedule")
-            if schedule is None or not isinstance(schedule, str):
+            if schedule is None:
                 raise ConfigurationError(
-                    f"{system_name}.{component_name} must define a valid schedule"
+                    f"{system_name}.{component_name} missing schedule"
                 )
+            _validate_schedule(system_name, component_name, schedule)
 
-            if "duration_hours" in component:
-                duration = component["duration_hours"]
-                if not isinstance(duration, (int, float)) or duration <= 0:
-                    raise ConfigurationError(
-                        f"{system_name}.{component_name} duration_hours must be > 0"
-                    )
-
-            if "units" in component:
-                units = component["units"]
-                if not isinstance(units, int) or units <= 0:
-                    raise ConfigurationError(
-                        f"{system_name}.{component_name} units must be a positive integer"
-                    )
+            _validate_optional_fields(system_name, component_name, component)
 
 validate_systems_config()

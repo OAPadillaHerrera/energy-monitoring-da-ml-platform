@@ -2,7 +2,7 @@
 
 from flask import Blueprint, jsonify
 import requests
-from config.db import conectar_db  
+from config.db import get_db_connection 
 import pandas as pd
 
 from flask import Blueprint, jsonify
@@ -203,7 +203,7 @@ def suma_totales_por_fecha ():
     Calcula la suma total de consumos agrupados por fecha y hora desde la base de datos.
     """
 
-    conexion = conectar_db ()
+    conexion = get_db_connection()
 
     if conexion:
         try:

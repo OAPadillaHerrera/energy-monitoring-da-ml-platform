@@ -3,7 +3,7 @@
 from flask import Blueprint, jsonify, request
 import pandas as pd
 import numpy as np
-from config.db import conectar_db
+from config.db import get_db_connection
 
 analytics_bp = Blueprint('analytics', __name__)
 
@@ -16,7 +16,7 @@ def obtener_datos_filtrados(conexion):
 def consumo_promedio():
     start = request.args.get('start')
     end = request.args.get('end')
-    conexion = conectar_db()
+    conexion = get_db_connection()
 
     if conexion:
         try:
@@ -39,7 +39,7 @@ def consumo_promedio():
 def consumo_max_min():
     start = request.args.get('start')
     end = request.args.get('end')
-    conexion = conectar_db()
+    conexion = get_db_connection()
 
     if conexion:
         try:
@@ -62,7 +62,7 @@ def consumo_max_min():
 def consumo_total():
     start = request.args.get('start')
     end = request.args.get('end')
-    conexion = conectar_db()
+    conexion = get_db_connection()
 
     if conexion:
         try:
@@ -85,7 +85,7 @@ def consumo_total():
 def deteccion_picos():
     start = request.args.get('start')
     end = request.args.get('end')
-    conexion = conectar_db()
+    conexion = get_db_connection()
 
     if conexion:
         try:
@@ -112,8 +112,7 @@ def deteccion_picos():
 def promedio_movil():
     start = request.args.get('start')
     end = request.args.get('end')
-    conexion = conectar_db()
-
+    conexion = get_db_connection()
     if conexion:
         try:
             df = obtener_datos_filtrados(conexion)
@@ -138,7 +137,7 @@ def promedio_movil():
 
 @analytics_bp.route('/sistema', methods=['GET'])
 def consumo_por_sistema():
-    conexion = conectar_db()
+    conexion = get_db_connection()
 
     if conexion:
         try:

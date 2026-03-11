@@ -58,6 +58,18 @@ class MonthlyZeroConsumptionEvent:
             self.start = None
             self.end = None
 
+    def _get_schedule(self, schedule_name: str):
+
+        schedule = WORKING_SCHEDULES.get(schedule_name)
+
+        if not schedule:
+            raise SimulationError(f"Unknown schedule: {schedule_name}")
+
+        active_days = set(schedule["days"])
+        active_hours = set(schedule["hours"])
+
+        return active_days, active_hours
+
     def _build_active_timestamps_for_month(
         self,
         year: int,
@@ -65,21 +77,19 @@ class MonthlyZeroConsumptionEvent:
         schedule_name: str,
     ) -> list[datetime.datetime]:
 
-        if schedule_name not in WORKING_SCHEDULES:
-            raise SimulationError(f"Unknown schedule: {schedule_name}")
-
-        schedule = WORKING_SCHEDULES[schedule_name]
-        active_days = set(schedule["days"])
-        active_hours = set(schedule["hours"])
+        active_days, active_hours = self._get_schedule(schedule_name)
 
         timestamps: list[datetime.datetime] = []
 
         try:
-            for day in range(1, 29):  
+            for day in range(1, 29):
                 for hour in range(24):
+
                     ts = datetime.datetime(year, month, day, hour)
+
                     if ts.weekday() in active_days and ts.hour in active_hours:
                         timestamps.append(ts)
+
         except Exception as e:
             raise SimulationError(
                 "Failed building active timestamps for schedule"
@@ -94,17 +104,15 @@ class MonthlyZeroConsumptionEvent:
         schedule_name: str,
     ) -> bool:
 
-        schedule = WORKING_SCHEDULES.get(schedule_name)
-        if not schedule:
-            raise SimulationError(f"Unknown schedule: {schedule_name}")
-
-        active_days = set(schedule["days"])
-        active_hours = set(schedule["hours"])
+        active_days, active_hours = self._get_schedule(schedule_name)
 
         ts = start
+
         while ts < end:
+
             if ts.weekday() not in active_days or ts.hour not in active_hours:
                 return False
+
             ts += datetime.timedelta(hours=1)
 
         return True
@@ -128,6 +136,7 @@ class MonthlyZeroConsumptionEvent:
         ]
 
         for ev_start, ev_end in events:
+
             if ev_start and ev_end:
                 if start < ev_end and end > ev_start:
                     return True
@@ -146,6 +155,7 @@ class MonthlyZeroConsumptionEvent:
         candidates: list[tuple[str, str]] = []
 
         for system_name in system_names:
+
             if system_name in EXCLUDED_SYSTEMS:
                 continue
 
@@ -188,7 +198,9 @@ class MonthlyZeroConsumptionEvent:
         schedule_cache: dict[str, list[datetime.datetime]] = {}
 
         for _, schedule_name in candidates:
+
             if schedule_name not in schedule_cache:
+
                 schedule_cache[schedule_name] = (
                     self._build_active_timestamps_for_month(
                         year,
@@ -200,6 +212,7 @@ class MonthlyZeroConsumptionEvent:
         for _ in range(200):
 
             chosen_system, schedule_name = random.choice(candidates)
+
             active_ts = schedule_cache.get(schedule_name, [])
 
             if not active_ts:
@@ -208,6 +221,7 @@ class MonthlyZeroConsumptionEvent:
             start = random.choice(active_ts)
 
             duration_range = DURATION_BY_SCHEDULE.get(schedule_name)
+
             if not duration_range:
                 raise SimulationError(
                     f"No duration configuration for schedule: {schedule_name}"
@@ -265,6 +279,7 @@ class MonthlyZeroConsumptionEvent:
             return []
 
         timestamps: list[datetime.datetime] = []
+
         ts = self.start
 
         while ts < self.end:
@@ -272,4 +287,3 @@ class MonthlyZeroConsumptionEvent:
             ts += datetime.timedelta(hours=1)
 
         return timestamps
-

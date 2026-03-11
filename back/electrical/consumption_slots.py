@@ -3,63 +3,27 @@
 """
 Fuel & Pump Consumption Profile
 
-Defines:
+Defines the temporal distribution of energy consumption for
+specific systems using configurable time slots.
 
-- Daily fixed consumption for specific systems.
-- Time-slot distribution factors by day type.
-- Utility functions to compute daily totals and
-  hourly slot consumption factors.
+Responsibilities
+----------------
+- Define hourly distribution profiles for selected systems.
+- Validate slot configuration at application startup.
+- Provide slot-based consumption factors used by SystemCalculator.
 
-  Design notes: 
-  - Configuration-driven. 
-  - No persistence logic. 
-  - Deterministic behavior. 
+Design notes
+------------
+- This module DOES NOT define energy consumption values.
+- Nominal consumption and duration are defined in systems_config.
+- Only the time distribution (slot factors) is handled here.
+- Deterministic behavior. No persistence logic.
 """
 
 import datetime
 from typing import TypedDict
 from core.exceptions import SimulationError
-
-class SystemConsumptionConfig(TypedDict):
-    consumption: float
-    duration_hours: float
-
-SYSTEMS_CONSUMPTION_PER_HOUR: dict[str, SystemConsumptionConfig] = {
-    "submersible_pump_system": {
-        "consumption": 0.577,
-        "duration_hours": 2.04,
-    },
-    "fuel_dispenser_system": {
-        "consumption": 0.0275,
-        "duration_hours": 2.05,
-    },
-}
-
-AFFECTED_SYSTEMS: set[str] = set(SYSTEMS_CONSUMPTION_PER_HOUR.keys())
-
-def get_daily_total_consumption(system_name: str) -> float:
-
-    if system_name not in SYSTEMS_CONSUMPTION_PER_HOUR:
-        raise SimulationError(
-            f"Unknown system for daily consumption: {system_name}"
-        )
-
-    config = SYSTEMS_CONSUMPTION_PER_HOUR[system_name]
-
-    base_consumption = config["consumption"]
-    duration_hours = config.get("duration_hours", 1.0)
-
-    if base_consumption < 0:
-        raise SimulationError(
-            f"Negative consumption configured for {system_name}"
-        )
-
-    if duration_hours <= 0:
-        raise SimulationError(
-            f"Invalid duration_hours for {system_name}"
-        )
-
-    return base_consumption * duration_hours
+from domain_config.systems_config import SYSTEMS_CONFIG
 
 class TimeSlot(TypedDict):
     name: str
@@ -85,9 +49,35 @@ TIME_SLOTS: dict[str, list[TimeSlot]] = {
     ],
 
     "sunday": [
-        {"name": "low",    "start": 0,  "end": 24, "percentage": 1.00},
+        {"name": "low", "start": 0, "end": 24, "percentage": 1.00},
     ],
 }
+
+def _validate_slot_structure(day_type: str, slot: TimeSlot) -> None:
+
+    start = slot["start"]
+    end = slot["end"]
+    percentage = slot["percentage"]
+
+    if not (0 <= start < 24):
+        raise SimulationError(
+            f"Invalid start hour in {day_type}: {slot}"
+        )
+
+    if not (0 < end <= 24):
+        raise SimulationError(
+            f"Invalid end hour in {day_type}: {slot}"
+        )
+
+    if start >= end:
+        raise SimulationError(
+            f"start must be < end in {day_type}: {slot}"
+        )
+
+    if not (0 <= percentage <= 1):
+        raise SimulationError(
+            f"Invalid percentage in {day_type}: {slot}"
+        )
 
 def _validate_time_slots() -> None:
 
@@ -96,31 +86,8 @@ def _validate_time_slots() -> None:
         total_percentage = 0.0
 
         for slot in slots:
-            start = slot["start"]
-            end = slot["end"]
-            percentage = slot["percentage"]
-
-            if not (0 <= start < 24):
-                raise SimulationError(
-                    f"Invalid start hour in {day_type}: {slot}"
-                )
-
-            if not (0 < end <= 24):
-                raise SimulationError(
-                    f"Invalid end hour in {day_type}: {slot}"
-                )
-
-            if start >= end:
-                raise SimulationError(
-                    f"start must be < end in {day_type}: {slot}"
-                )
-
-            if not (0 <= percentage <= 1):
-                raise SimulationError(
-                    f"Invalid percentage in {day_type}: {slot}"
-                )
-
-            total_percentage += percentage
+            _validate_slot_structure(day_type, slot)
+            total_percentage += slot["percentage"]
 
         if round(total_percentage, 8) != 1.0:
             raise SimulationError(
@@ -130,10 +97,30 @@ def _validate_time_slots() -> None:
 
 _validate_time_slots()
 
+def _system_uses_slot_profile(system_name: str) -> bool:
+    """
+    Determines if any component of the system uses slot distribution.
+    """
+
+    config = SYSTEMS_CONFIG.get(system_name)
+
+    if not config:
+        return False
+
+    components = config.get("components", {})
+
+    for component in components.values():
+        if component.get("slot_distribution", False):
+            return True
+
+    return False
+
 def get_day_type(timestamp: datetime.datetime) -> str:
 
     if not isinstance(timestamp, datetime.datetime):
-        raise SimulationError("timestamp must be a datetime.datetime instance")
+        raise SimulationError(
+            "timestamp must be a datetime.datetime instance"
+        )
 
     weekday = timestamp.weekday()
 
@@ -150,9 +137,11 @@ def get_slot_factor(
 ) -> float | None:
 
     if not isinstance(timestamp, datetime.datetime):
-        raise SimulationError("timestamp must be a datetime.datetime instance")
+        raise SimulationError(
+            "timestamp must be a datetime.datetime instance"
+        )
 
-    if system_name not in AFFECTED_SYSTEMS:
+    if not _system_uses_slot_profile(system_name):
         return None
 
     day_type = get_day_type(timestamp)
@@ -162,8 +151,8 @@ def get_slot_factor(
             f"Invalid day type configuration: {day_type}"
         )
 
-    slots = TIME_SLOTS[day_type]
     current_hour = timestamp.hour
+    slots = TIME_SLOTS[day_type]
 
     for slot in slots:
 
@@ -182,5 +171,3 @@ def get_slot_factor(
         f"No time slot matched for hour {current_hour} "
         f"on day type {day_type}"
     )
-
-

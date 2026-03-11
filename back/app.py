@@ -8,6 +8,7 @@ configures logging, loads environment variables,
 and defines global error handlers.
 """
 
+import os
 import logging
 from dotenv import load_dotenv
 from flask import Flask, jsonify
@@ -53,7 +54,7 @@ def index():
 @app.errorhandler(SimulationError)
 def handle_simulation_error(error):
 
-    logger.warning(f"Simulation error: {str(error)}")
+    logger.warning("Simulation error: %s", error)
 
     return jsonify({
         "status": "error",
@@ -86,7 +87,7 @@ def handle_configuration_error(error):
 @app.errorhandler(ApplicationError)
 def handle_application_error(error):
 
-    logger.warning(f"Application error: {str(error)}")
+    logger.warning("Application error: %s", error)
 
     return jsonify({
         "status": "error",
@@ -107,11 +108,12 @@ def handle_unexpected_error(error):
 
 if __name__ == "__main__":
 
-    logger.info("Running in development mode.")
+    debug_mode = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+
+    logger.info("Running Flask application.")
 
     app.run(
         host="0.0.0.0",
         port=5001,
-        debug=True
+        debug=debug_mode
     )
-

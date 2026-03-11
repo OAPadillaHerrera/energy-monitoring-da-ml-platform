@@ -9,6 +9,7 @@ It coordinates domain services, repositories, and data persistence.
 
 import datetime
 import time
+import logging
 from typing import Dict, List, Tuple
 
 from services.simulation_service import (
@@ -29,12 +30,14 @@ from electrical.voltage_profile import VoltageProfile
 from electrical.zero_consumption_events import MonthlyZeroConsumptionEvent
 from core.exceptions import SimulationError
 
+logger = logging.getLogger(__name__)
+
 def _create_simulation_context() -> Tuple[VoltageProfile, MonthlyZeroConsumptionEvent]:
-   
+
     return VoltageProfile(), MonthlyZeroConsumptionEvent()
 
 def _get_next_simulation_date() -> datetime.date:
-   
+
     today = datetime.date.today()
     latest_date = get_latest_consumption_date()
 
@@ -56,6 +59,12 @@ def _build_hourly_records(
         system_id = systems_map.get(system_name)
 
         if system_id is None:
+
+            logger.warning(
+                "Unknown system name encountered during simulation: %s",
+                system_name
+            )
+
             continue
 
         hourly_records.append(
@@ -64,112 +73,158 @@ def _build_hourly_records(
 
     return hourly_records
 
-def run_daily_simulation() -> Dict:
+def run_daily_simulation() -> Dict[str, object]:
 
-    voltage_profile, zero_event = _create_simulation_context()
-    systems_map = get_systems_map()
+    logger.info("Starting daily simulation.")
 
-    simulation_date = _get_next_simulation_date()
+    try:
 
-    daily_data, voltage_records, event_records = generate_daily_simulation(
-        simulation_date,
-        voltage_profile,
-        zero_event,
-        systems_map
-    )
+        voltage_profile, zero_event = _create_simulation_context()
+        systems_map = get_systems_map()
 
-    if voltage_records:
-        insert_hourly_voltage_bulk(voltage_records)
+        simulation_date = _get_next_simulation_date()
 
-    if event_records:
-        insert_system_events(event_records)
+        daily_data, voltage_records, event_records = generate_daily_simulation(
+            simulation_date,
+            voltage_profile,
+            zero_event,
+            systems_map
+        )
 
-    hourly_records = _build_hourly_records(daily_data, systems_map)
+        if voltage_records:
+            insert_hourly_voltage_bulk(voltage_records)
 
-    insert_hourly_consumption(hourly_records)
+        if event_records:
+            insert_system_events(event_records)
 
-    daily_records = build_daily_consumption_records(hourly_records)
+        hourly_records = _build_hourly_records(daily_data, systems_map)
 
-    return {
-        "status": "ok",
-        "simulation_date": simulation_date.isoformat(),
-        "hours_generated": 24,
-        "hourly_records_inserted": len(hourly_records),
-        "daily_records_inserted": len(daily_records)
-    }
+        insert_hourly_consumption(hourly_records)
+
+        daily_records = build_daily_consumption_records(hourly_records)
+
+        logger.info(
+            "Daily simulation completed successfully for %s.",
+            simulation_date
+        )
+
+        return {
+            "status": "ok",
+            "simulation_date": simulation_date.isoformat(),
+            "hours_generated": 24,
+            "hourly_records_inserted": len(hourly_records),
+            "daily_records_inserted": len(daily_records)
+        }
+
+    except Exception as exc:
+
+        logger.error(
+            "Daily simulation failed.",
+            exc_info=exc
+        )
+
+        raise
 
 def run_range_simulation(
     start_date: datetime.date,
     end_date: datetime.date
-) -> Dict:
+) -> Dict[str, object]:
 
     if start_date > end_date:
         raise SimulationError("start_date cannot be after end_date.")
 
+    logger.info(
+        "Starting range simulation from %s to %s.",
+        start_date,
+        end_date
+    )
+
     start_total = time.time()
 
-    voltage_profile, zero_event = _create_simulation_context()
-    systems_map = get_systems_map()
+    try:
 
-    latest_date = get_latest_consumption_date()
+        voltage_profile, zero_event = _create_simulation_context()
+        systems_map = get_systems_map()
 
-    first_missing_date = (
-        latest_date + datetime.timedelta(days=1)
-        if latest_date
-        else start_date
-    )
+        latest_date = get_latest_consumption_date()
 
-    effective_start = max(start_date, first_missing_date)
+        first_missing_date = (
+            latest_date + datetime.timedelta(days=1)
+            if latest_date
+            else start_date
+        )
 
-    if effective_start > end_date:
+        effective_start = max(start_date, first_missing_date)
+
+        if effective_start > end_date:
+
+            logger.info(
+                "Range simulation skipped: no new days to generate."
+            )
+
+            return {
+                "status": "ok",
+                "message": "No new days generated.",
+                "hourly_records_inserted": 0,
+                "daily_records_inserted": 0
+            }
+
+        start_sim = time.time()
+
+        result = generate_range_simulation(
+            effective_start,
+            end_date,
+            voltage_profile,
+            zero_event,
+            systems_map
+        )
+
+        end_sim = time.time()
+
+        if result["voltage_records"]:
+            insert_hourly_voltage_bulk(result["voltage_records"])
+
+        if result["event_records"]:
+            insert_system_events(result["event_records"])
+
+        all_hourly_consumption = _build_hourly_records(
+            result["hourly_data"],
+            systems_map
+        )
+
+        start_insert = time.time()
+
+        insert_hourly_consumption(all_hourly_consumption)
+
+        end_insert = time.time()
+
+        all_daily_records = build_daily_consumption_records(all_hourly_consumption)
+
+        end_total = time.time()
+
+        logger.info(
+            "Range simulation completed successfully. "
+            "Hours inserted: %s",
+            len(all_hourly_consumption)
+        )
+
         return {
             "status": "ok",
-            "message": "No new days generated.",
-            "hourly_records_inserted": 0,
-            "daily_records_inserted": 0
+            "start_date": start_date.isoformat(),
+            "end_date": end_date.isoformat(),
+            "effective_start_date": effective_start.isoformat(),
+            "hourly_records_inserted": len(all_hourly_consumption),
+            "daily_records_inserted": len(all_daily_records),
+            "simulation_time_seconds": round(end_sim - start_sim, 4),
+            "insert_time_seconds": round(end_insert - start_insert, 4),
+            "total_time_seconds": round(end_total - start_total, 4)
         }
 
-    start_sim = time.time()
+    except Exception as exc:
 
-    result = generate_range_simulation(
-        effective_start,
-        end_date,
-        voltage_profile,
-        zero_event,
-        systems_map
-    )
+        logger.error(
+            "Range simulation failed.",
+            exc_info=exc
+        )
 
-    end_sim = time.time()
-
-    if result["voltage_records"]:
-        insert_hourly_voltage_bulk(result["voltage_records"])
-
-    if result["event_records"]:
-        insert_system_events(result["event_records"])
-
-    all_hourly_consumption = _build_hourly_records(
-        result["hourly_data"],
-        systems_map
-    )
-
-    start_insert = time.time()
-
-    insert_hourly_consumption(all_hourly_consumption)
-
-    end_insert = time.time()
-
-    all_daily_records = build_daily_consumption_records(all_hourly_consumption)
-
-    end_total = time.time()
-
-    return {
-        "status": "ok",
-        "start_date": start_date.isoformat(),
-        "end_date": end_date.isoformat(),
-        "effective_start_date": effective_start.isoformat(),
-        "hourly_records_inserted": len(all_hourly_consumption),
-        "daily_records_inserted": len(all_daily_records),
-        "simulation_time_seconds": round(end_sim - start_sim, 4),
-        "insert_time_seconds": round(end_insert - start_insert, 4),
-        "total_time_seconds": round(end_total - start_total, 4)
-    }
+        raise
