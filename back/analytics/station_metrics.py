@@ -36,3 +36,10 @@ def daily_energy(dataset):
 
     return daily
 
+def avg_daily_energy(dataset):
+
+    dataset["date"] = dataset["timestamp"].dt.date
+
+    daily = dataset.groupby("date")["consumption_kwh"].sum()
+
+    return daily.mean()
