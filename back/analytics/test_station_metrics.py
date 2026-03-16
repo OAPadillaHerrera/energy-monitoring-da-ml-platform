@@ -6,8 +6,11 @@ from station_metrics import (
     total_energy,
     avg_hourly_consumption,
     peak_demand,
-    min_demand
+    min_demand,
+    energy_by_hour
 )
+
+dataset = load_dataset()
 
 print("\nSTATION ENERGY ANALYTICS TEST\n")
 
@@ -24,3 +27,9 @@ print("Total energy:", total, "kWh")
 print("Average hourly consumption:", average, "kWh")
 print("Peak demand:", peak, "kWh")
 print("Minimum demand:", minimum, "kWh")
+
+print("\nEnergy by hour\n")
+
+hourly = energy_by_hour(dataset)
+
+print(hourly)
