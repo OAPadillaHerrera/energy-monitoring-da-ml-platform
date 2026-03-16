@@ -27,3 +27,12 @@ def energy_by_hour(dataset):
     hourly = dataset.groupby("timestamp")["consumption_kwh"].sum()
 
     return hourly
+
+def daily_energy(dataset):
+
+    dataset["date"] = dataset["timestamp"].dt.date
+
+    daily = dataset.groupby("date")["consumption_kwh"].sum()
+
+    return daily
+

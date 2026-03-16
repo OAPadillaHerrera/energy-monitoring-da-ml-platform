@@ -10,7 +10,7 @@ def load_dataset():
     hourly_file = DATA_PATH / "hourly_consumption.csv"
     systems_file = DATA_PATH / "systems.csv"
 
-    hourly_df = pd.read_csv(hourly_file)
+    hourly_df = pd.read_csv(hourly_file, parse_dates=["timestamp"])
     systems_df = pd.read_csv(systems_file)
 
     dataset = hourly_df.merge(
