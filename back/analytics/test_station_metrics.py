@@ -37,41 +37,34 @@ print("Minimum demand:", minimum, "kWh")
 print("\nEnergy by hour\n")
 
 hourly = energy_by_hour(dataset)
-
 print(hourly)
 
 print("\nDaily energy\n")
 
 daily = daily_energy(dataset)
-
 print(daily)
 
 print("\nAverage daily energy\n")
 
 avg_daily = avg_daily_energy(dataset)
-
 print(avg_daily)
 
 print("\nEnergy by system\n")
 
 by_system = energy_by_system(dataset)
-
 print(by_system)
 
 print("\nEnergy share (%)\n")
 
 share = energy_share(dataset)
-
 print(share)
 
 print("\nHourly profile by system\n")
 
 profile = hourly_profile_by_system(dataset)
-
 print(profile)
 
 print("\nConsumption variability (std)\n")
 
 std = std_consumption(dataset)
-
 print(std)
