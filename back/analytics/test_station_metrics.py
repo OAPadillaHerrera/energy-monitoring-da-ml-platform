@@ -9,7 +9,9 @@ from station_metrics import (
     min_demand,
     energy_by_hour,
     daily_energy,
-    avg_daily_energy
+    avg_daily_energy,
+    energy_by_system,
+    energy_share
 )
 
 dataset = load_dataset()
@@ -47,3 +49,15 @@ print("\nAverage daily energy\n")
 avg_daily = avg_daily_energy(dataset)
 
 print(avg_daily)
+
+print("\nEnergy by system\n")
+
+by_system = energy_by_system(dataset)
+
+print(by_system)
+
+print("\nEnergy share (%)\n")
+
+share = energy_share(dataset)
+
+print(share)

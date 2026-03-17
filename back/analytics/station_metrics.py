@@ -43,3 +43,19 @@ def avg_daily_energy(dataset):
     daily = dataset.groupby("date")["consumption_kwh"].sum()
 
     return daily.mean()
+
+def energy_by_system(dataset):
+
+    system_energy = dataset.groupby("system_name")["consumption_kwh"].sum()
+
+    return system_energy
+
+def energy_share(dataset):
+
+    system_energy = dataset.groupby("system_name")["consumption_kwh"].sum()
+
+    total = system_energy.sum()
+
+    share = (system_energy / total ) * 100
+
+    return share
