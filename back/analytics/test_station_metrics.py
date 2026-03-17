@@ -11,7 +11,9 @@ from station_metrics import (
     daily_energy,
     avg_daily_energy,
     energy_by_system,
-    energy_share
+    energy_share,
+    hourly_profile_by_system,
+    std_consumption
 )
 
 dataset = load_dataset()
@@ -61,3 +63,15 @@ print("\nEnergy share (%)\n")
 share = energy_share(dataset)
 
 print(share)
+
+print("\nHourly profile by system\n")
+
+profile = hourly_profile_by_system(dataset)
+
+print(profile)
+
+print("\nConsumption variability (std)\n")
+
+std = std_consumption(dataset)
+
+print(std)

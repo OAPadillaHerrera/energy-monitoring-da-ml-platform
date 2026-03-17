@@ -59,3 +59,20 @@ def energy_share(dataset):
     share = (system_energy / total ) * 100
 
     return share
+
+def hourly_profile_by_system(dataset):
+
+    profile = dataset.pivot_table(
+        index = "timestamp",
+        columns = "system_name",
+        values = "consumption_kwh",
+        aggfunc = "sum"
+    )
+
+    return profile
+
+def std_consumption(dataset):
+
+    hourly = dataset.groupby("timestamp")["consumption_kwh"].sum()
+
+    return hourly.std()
