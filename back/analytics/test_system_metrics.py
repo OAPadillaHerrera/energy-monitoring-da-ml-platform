@@ -8,7 +8,9 @@ from system_metrics import (
     min_consumption_by_system,
     energy_by_hour_by_system,
     daily_energy_by_system,
-    std_consumption_by_system
+    std_consumption_by_system,
+    avg_daily_energy_by_system,
+    avg_hourly_profile_by_system
 )
 
 dataset = load_dataset()
@@ -61,3 +63,15 @@ for system in systems:
     std = std_consumption_by_system(dataset, system)
     print(f"{system}: {std} kWh")
 
+print("\nAverage daily energy by system\n")
+
+for system in systems:
+    avg_daily = avg_daily_energy_by_system(dataset, system)
+    print(f"{system}: {avg_daily} kWh")
+
+print("\nAverage hourly profile by system\n")
+
+for system in systems:
+    print(f"\n{system}")
+    profile = avg_hourly_profile_by_system(dataset, system)
+    print(profile)

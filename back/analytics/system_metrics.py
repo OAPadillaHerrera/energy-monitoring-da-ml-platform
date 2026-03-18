@@ -48,3 +48,20 @@ def std_consumption_by_system(dataset, system_name):
 
     return hourly.std()
 
+def avg_daily_energy_by_system(dataset, system_name):
+
+    daily = daily_energy_by_system(dataset, system_name)
+
+    return daily.mean()
+
+def avg_hourly_profile_by_system(dataset, system_name):
+
+    hourly = energy_by_hour_by_system(dataset, system_name)
+
+    hourly.index = pd.to_datetime(hourly.index)
+
+    hourly = hourly.to_frame()
+
+    hourly["hour"] = hourly.index.hour
+
+    return hourly.groupby("hour")["consumption_kwh"].mean()
