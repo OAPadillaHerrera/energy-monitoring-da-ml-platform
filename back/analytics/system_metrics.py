@@ -1,7 +1,7 @@
 
 
 import pandas as pd
-from filters import filter_by_system
+from analytics.filters import filter_by_system
 
 def total_energy_by_system(dataset, system_name):
 
