@@ -1,6 +1,7 @@
 
 
 import pandas as pd
+from analytics.filters import filter_by_system
 
 def load_factor(dataset):
 
@@ -47,3 +48,36 @@ def detect_anomalies(dataset, threshold=2):
     anomalies = z_scores[abs(z_scores) > threshold]
 
     return anomalies
+
+def z_score_by_system(dataset, system_name):
+
+    system_data = filter_by_system(dataset, system_name)
+
+    hourly = system_data.groupby("timestamp")["consumption_kwh"].sum()
+
+    mean = hourly.mean()
+    std = hourly.std()
+
+    return (hourly - mean) / std
+
+def detect_anomalies_by_system(dataset, system_name, threshold=2):
+
+    z_scores = z_score_by_system(dataset, system_name)
+
+    anomalies = z_scores[abs(z_scores) > threshold]
+
+    return anomalies
+
+def detect_anomalies_all_systems(dataset, threshold=2):
+
+    systems = dataset["system_name"].unique()
+
+    results = {}
+
+    for system in systems:
+        anomalies = detect_anomalies_by_system(dataset, system, threshold)
+
+        if not anomalies.empty:
+            results[system] = anomalies
+
+    return results
