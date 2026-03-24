@@ -121,3 +121,79 @@ def classify_anomalies_all_systems(dataset, threshold=2):
 
     return results
 
+def determine_root_cause(
+    anomaly_type,
+    voltage_status,
+    voltage_120v=None,
+    voltage_240v=None
+):
+
+    if voltage_120v == 0 and voltage_240v == 0:
+        return "grid_outage"
+
+    if voltage_status in ["brownout", "brownout_severe"]:
+        return "grid_issue"
+
+    if voltage_status in ["overvoltage", "overvoltage_severe"]:
+        return "voltage_instability"
+
+    if anomaly_type == "drop":
+        return "equipment_issue"
+
+    if anomaly_type == "spike":
+        return "demand_spike"
+
+    return "normal"
+
+def classify_anomalies_with_context(dataset, system_name, threshold=2):
+
+    from analytics.diagnostic_metrics import detect_anomalies_by_system
+
+    anomalies = detect_anomalies_by_system(dataset, system_name, threshold)
+
+    if anomalies.empty:
+        return anomalies
+
+    result = anomalies.to_frame(name="z_score")
+
+    system_data = dataset[dataset["system_name"] == system_name]
+
+    result = result.merge(
+        system_data[["timestamp", "voltage_120v", "voltage_240v", "quality_flag"]],
+        left_index=True,
+        right_on="timestamp",
+        how="left"
+    )
+
+    result["anomaly_type"] = result["z_score"].apply(
+        lambda z: classify_anomaly(z, threshold)
+    )
+
+    result["root_cause"] = result.apply(
+        lambda row: determine_root_cause(
+            row["anomaly_type"],
+            row["quality_flag"],
+            row["voltage_120v"],
+            row["voltage_240v"]
+        ),
+        axis=1
+    )
+
+    result.set_index("timestamp", inplace=True)
+
+    return result
+
+def classify_anomalies_with_context_all_systems(dataset, threshold=2):
+
+    systems = dataset["system_name"].unique()
+
+    results = {}
+
+    for system in systems:
+
+        classified = classify_anomalies_with_context(dataset, system, threshold)
+
+        if not classified.empty:
+            results[system] = classified
+
+    return results

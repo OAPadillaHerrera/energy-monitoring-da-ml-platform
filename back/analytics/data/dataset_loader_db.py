@@ -11,9 +11,14 @@ def load_dataset_from_db():
     SELECT 
         hc.timestamp,
         s.name AS system_name,
-        hc.consumption_kwh
+        hc.consumption_kwh,
+        hvp.voltage_120v,
+        hvp.voltage_240v,
+        hvp.quality_flag
     FROM hourly_consumption hc
     JOIN systems s ON hc.system_id = s.id
+    LEFT JOIN hourly_voltage_profile hvp
+        ON hc.timestamp = hvp.timestamp
     """
 
     df = pd.read_sql(query, engine)
