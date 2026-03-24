@@ -1,0 +1,24 @@
+
+
+from analytics.data.dataset_loader_db import load_dataset_from_db
+from analytics.diagnostic_metrics import classify_anomalies_all_systems
+
+
+def test_classified_anomalies():
+
+    df = load_dataset_from_db()
+
+    results = classify_anomalies_all_systems(df)
+
+    if not results:
+        print("No anomalies detected.")
+        return
+
+    for system, anomalies in results.items():
+
+        print(f"\n=== {system} ===")
+        print(anomalies)
+
+
+if __name__ == "__main__":
+    test_classified_anomalies()

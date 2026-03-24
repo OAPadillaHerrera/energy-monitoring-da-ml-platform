@@ -81,3 +81,43 @@ def detect_anomalies_all_systems(dataset, threshold=2):
             results[system] = anomalies
 
     return results
+
+def classify_anomaly(z_score, threshold=2):
+
+    if z_score >= threshold:
+        return "spike"
+    
+    elif z_score <= -threshold:
+        return "drop"
+    
+    return "normal"
+
+def classify_anomalies_by_system(dataset, system_name, threshold=2):
+
+    anomalies = detect_anomalies_by_system(dataset, system_name, threshold)
+
+    if anomalies.empty:
+        return anomalies
+
+    result = anomalies.to_frame(name="z_score")
+
+    result["anomaly_type"] = result["z_score"].apply(
+        lambda z: classify_anomaly(z, threshold)
+    )
+
+    return result
+
+def classify_anomalies_all_systems(dataset, threshold=2):
+
+    systems = dataset["system_name"].unique()
+
+    results = {}
+
+    for system in systems:
+        classified = classify_anomalies_by_system(dataset, system, threshold)
+
+        if not classified.empty:
+            results[system] = classified
+
+    return results
+
