@@ -9,6 +9,7 @@ import pandas as pd
 from analytics.data.dataset_loader_db import load_dataset_from_db
 
 def test_load_dataset():
+
     df = load_dataset_from_db()
 
     print("\n=== DATAFRAME HEAD ===")
