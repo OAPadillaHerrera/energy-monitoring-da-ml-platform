@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
 from analytics.data.build_ml_dataset import build_ml_dataset
+import joblib
 
 def train_root_cause_model():
 
@@ -96,4 +97,6 @@ def train_root_cause_model():
     return model
 
 if __name__ == "__main__":
-    train_root_cause_model()
+    model = train_root_cause_model()
+    joblib.dump(model, "root_cause_model.pkl")
+    print("\nModel saved as root_cause_model.pkl")

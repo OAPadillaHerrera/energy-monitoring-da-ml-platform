@@ -9,3 +9,4 @@ requests
 python-dotenv==1.0.0
 SQLAlchemy>=2.0
 scikit-learn==1.4.0
+joblib
