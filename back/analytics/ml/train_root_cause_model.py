@@ -53,12 +53,37 @@ def train_root_cause_model():
 
     model = RandomForestClassifier(
         n_estimators=100,
-        random_state=42
+        random_state=42,
+        class_weight="balanced"
     )
 
     model.fit(X_train, y_train)
 
     y_pred = model.predict(X_test)
+
+    y_proba = model.predict_proba(X_test)
+
+    classes = model.classes_
+
+    print("\n=== NON-NORMAL PREDICTIONS ANALYSIS ===")
+
+    count = 0
+
+    for i in range(len(y_pred)):
+
+        if y_test.iloc[i] != "normal":
+
+            probs = dict(zip(classes, y_proba[i]))
+
+            print(f"\nSample {i}:")
+            print("Actual:", y_test.iloc[i])
+            print("Predicted:", y_pred[i])
+            print("Probabilities:", probs)
+
+            count += 1
+
+        if count == 10:
+            break
 
     print("\n=== MODEL PERFORMANCE ===")
 
