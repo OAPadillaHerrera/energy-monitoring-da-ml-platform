@@ -1,5 +1,6 @@
 
 
+import os
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
@@ -98,5 +99,6 @@ def train_root_cause_model():
 
 if __name__ == "__main__":
     model = train_root_cause_model()
-    joblib.dump(model, "root_cause_model.pkl")
+    os.makedirs("models", exist_ok=True)
+    joblib.dump(model, "/app/root_cause_model.pkl")
     print("\nModel saved as root_cause_model.pkl")
