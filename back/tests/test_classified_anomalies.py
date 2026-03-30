@@ -3,7 +3,6 @@
 from analytics.data.dataset_loader_db import load_dataset_from_db
 from analytics.diagnostic_metrics import classify_anomalies_all_systems
 
-
 def test_classified_anomalies():
 
     df = load_dataset_from_db()
