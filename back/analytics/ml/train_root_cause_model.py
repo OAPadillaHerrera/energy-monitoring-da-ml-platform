@@ -100,5 +100,5 @@ def train_root_cause_model():
 if __name__ == "__main__":
     model = train_root_cause_model()
     os.makedirs("models", exist_ok=True)
-    joblib.dump(model, "/app/root_cause_model.pkl")
+    joblib.dump(model, "models/root_cause_model.pkl")
     print("\nModel saved as root_cause_model.pkl")

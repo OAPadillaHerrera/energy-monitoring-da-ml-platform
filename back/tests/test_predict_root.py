@@ -1,9 +1,17 @@
 
 
 from analytics.ml.predict_root_cause import predict_root_cause
+from analytics.data.build_ml_dataset import build_ml_dataset
 
 def test_predict_root_cause():
-    results = predict_root_cause("root_cause_model.pkl", "ml_ready_dataset.csv", n_samples=5)
+    
+    df = build_ml_dataset()
+
+    results = predict_root_cause(
+        "models/root_cause_model.pkl",
+        df,
+        n_samples=5
+    )
     
     assert not results.empty
     assert "predicted" in results.columns

@@ -4,6 +4,7 @@ import joblib
 import pandas as pd
 
 from analytics.ml.alerting import evaluate_alert
+from analytics.data.build_ml_dataset import build_ml_dataset
 
 def evaluate_risk(prob):
     if prob > 0.8:
@@ -15,11 +16,9 @@ def evaluate_risk(prob):
     else:
         return "LOW"
 
-def predict_root_cause(model_path: str, dataset_path: str, n_samples: int = 5):
+def predict_root_cause(model_path: str, df: pd.DataFrame, n_samples: int = 5):
     
-    model = joblib.load("/app/" + model_path)
-
-    df_new = pd.read_csv(dataset_path)
+    model = joblib.load(model_path)
 
     feature_columns = [
         "consumption_kwh",
@@ -31,7 +30,8 @@ def predict_root_cause(model_path: str, dataset_path: str, n_samples: int = 5):
         "delta_consumption",
         "voltage_diff",
     ]
-    X_new = df_new[feature_columns]
+
+    X_new = df[feature_columns]
 
     y_pred = model.predict(X_new)
     y_proba = model.predict_proba(X_new)
@@ -50,7 +50,7 @@ def predict_root_cause(model_path: str, dataset_path: str, n_samples: int = 5):
     })
 
     results["risk_level"] = results["probabilities"].apply(
-    lambda p: evaluate_risk(p.get("grid_outage", 0))
+        lambda p: evaluate_risk(p.get("grid_outage", 0))
     )
 
     def map_action(risk_level):
@@ -65,28 +65,16 @@ def predict_root_cause(model_path: str, dataset_path: str, n_samples: int = 5):
 
     results["action"] = results["risk_level"].apply(map_action)
 
-    anomalies = results[results["predicted"] != "normal"]
-    print(anomalies.head(10))
-
-    print(f"\n=== First {n_samples} predictions ===")
-    for i in range(min(n_samples, len(results))):
-       
-        print(f"\nSample {i}:")
-        print("Predicted:", results["predicted"].iloc[i])
-        print("Probabilities:", results["probabilities"].iloc[i])
-        print(f"Risk Level: {results['risk_level'].iloc[i]}")
-        print("Alerts:", results["alerts"].iloc[i])
-
-    high_risk = results[
-        results["probabilities"].apply(
-            lambda p: p.get("grid_outage", 0) > 0.3
-        )
-    ]
-
-    print("\n=== POTENTIAL RISKS (NO ALERT YET) ===")
-    print(high_risk.head(10))
-
     return results
 
 if __name__ == "__main__":
-    predict_root_cause("root_cause_model.pkl", "ml_ready_dataset.csv", n_samples=5)
+    
+    df = build_ml_dataset()
+
+    results = predict_root_cause(
+        "models/root_cause_model.pkl",
+        df,
+        n_samples=5
+    )
+
+    print(results.head())
