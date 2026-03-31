@@ -9,8 +9,7 @@ def test_predict_root_cause():
 
     results = predict_root_cause(
         "models/root_cause_model.pkl",
-        df,
-        n_samples=5
+        df
     )
     
     assert not results.empty

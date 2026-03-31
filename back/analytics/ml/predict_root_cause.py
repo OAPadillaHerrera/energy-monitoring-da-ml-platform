@@ -1,23 +1,14 @@
-
+    
 
 import joblib
 import pandas as pd
 
 from analytics.ml.alerting import evaluate_alert
 from analytics.data.build_ml_dataset import build_ml_dataset
+from analytics.ml.business_logic import evaluate_risk, map_action
 
-def evaluate_risk(prob):
-    if prob > 0.8:
-        return "CRITICAL"
-    elif prob > 0.5:
-        return "HIGH"
-    elif prob > 0.3:
-        return "MEDIUM"
-    else:
-        return "LOW"
+def predict_root_cause(model_path: str, df: pd.DataFrame):
 
-def predict_root_cause(model_path: str, df: pd.DataFrame, n_samples: int = 5):
-    
     model = joblib.load(model_path)
 
     feature_columns = [
@@ -38,6 +29,13 @@ def predict_root_cause(model_path: str, df: pd.DataFrame, n_samples: int = 5):
 
     probabilities_list = [dict(zip(model.classes_, p)) for p in y_proba]
 
+    risk_levels = [
+        evaluate_risk(p.get("grid_outage", 0))
+        for p in probabilities_list
+    ]
+
+    actions = [map_action(r) for r in risk_levels]
+
     alerts_list = [
         evaluate_alert(pred, probs)
         for pred, probs in zip(y_pred, probabilities_list)
@@ -46,35 +44,23 @@ def predict_root_cause(model_path: str, df: pd.DataFrame, n_samples: int = 5):
     results = pd.DataFrame({
         "predicted": y_pred,
         "probabilities": probabilities_list,
-        "alerts": alerts_list
+        "alerts": alerts_list,
+        "risk_level": risk_levels,
+        "action": actions
     })
-
-    results["risk_level"] = results["probabilities"].apply(
-        lambda p: evaluate_risk(p.get("grid_outage", 0))
-    )
-
-    def map_action(risk_level):
-        if risk_level == "CRITICAL":
-            return "trigger_alert"
-        elif risk_level == "HIGH":
-            return "log_warning"
-        elif risk_level == "MEDIUM":
-            return "monitor"
-        else:
-            return "none"
-
-    results["action"] = results["risk_level"].apply(map_action)
 
     return results
 
 if __name__ == "__main__":
-    
+
     df = build_ml_dataset()
 
     results = predict_root_cause(
         "models/root_cause_model.pkl",
-        df,
-        n_samples=5
+        df
     )
 
-    print(results.head())
+    n_samples = 5
+
+    print(f"\n=== First {n_samples} predictions ===")
+    print(results.head(n_samples))
