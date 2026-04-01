@@ -13,12 +13,12 @@ def test_predict_root_cause():
     )
     
     assert not results.empty
-    assert "predicted" in results.columns
+    assert "prediction" in results.columns
     assert "probabilities" in results.columns
     assert len(results) > 0
     
     valid_classes = ["normal", "demand_spike", "grid_outage"]
-    for pred in results["predicted"].iloc[:5]:
+    for pred in results["prediction"].iloc[:5]:
         assert pred in valid_classes
 
     print("\nPredict root cause test passed successfully")

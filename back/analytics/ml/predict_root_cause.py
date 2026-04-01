@@ -2,10 +2,10 @@
 
 import joblib
 import pandas as pd
-
 from analytics.ml.alerting import evaluate_alert
 from analytics.data.build_ml_dataset import build_ml_dataset
 from analytics.ml.business_logic import evaluate_risk, map_action
+from analytics.ml.postprocessing import format_prediction_output
 
 def predict_root_cause(model_path: str, df: pd.DataFrame):
 
@@ -41,13 +41,13 @@ def predict_root_cause(model_path: str, df: pd.DataFrame):
         for pred, probs in zip(y_pred, probabilities_list)
     ]
 
-    results = pd.DataFrame({
-        "predicted": y_pred,
-        "probabilities": probabilities_list,
-        "alerts": alerts_list,
-        "risk_level": risk_levels,
-        "action": actions
-    })
+    results = format_prediction_output(
+        y_pred,
+        probabilities_list,
+        risk_levels,
+        actions,
+        alerts_list
+    )
 
     return results
 
