@@ -1,7 +1,7 @@
 
 
 import pandas as pd
-from analytics.data.dataset_loader_db import load_dataset_from_db
+from data.db_loader import load_dataset_from_db
 from analytics.diagnostic_metrics import (
     classify_anomalies_with_context_all_systems
 )
