@@ -1,6 +1,6 @@
 
 
-from analytics.ml.train_root_cause_model import train_root_cause_model
+from analytics.ml.training.train_root_cause_model import train_root_cause_model
 import pandas as pd
 
 def test_train_root_cause_model():

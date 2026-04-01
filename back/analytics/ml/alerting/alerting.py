@@ -16,6 +16,7 @@ def evaluate_alert(prediction, probabilities):
         alerts.append({
             "level": "WARNING",
             "message": "High demand spike detected"
-        })
+
+           })
 
     return alerts

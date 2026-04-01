@@ -1,6 +1,6 @@
 
 
-from analytics.ml.alerting import evaluate_alert
+from analytics.ml.alerting.alerting import evaluate_alert
 
 def test_grid_outage_critical_alert():
     prediction = "grid_outage"

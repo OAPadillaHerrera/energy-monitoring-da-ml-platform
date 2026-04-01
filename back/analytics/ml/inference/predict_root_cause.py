@@ -2,10 +2,10 @@
 
 import joblib
 import pandas as pd
-from analytics.ml.alerting import evaluate_alert
+from analytics.ml.alerting.alerting import evaluate_alert
 from analytics.data.build_ml_dataset import build_ml_dataset
-from analytics.ml.business_logic import evaluate_risk, map_action
-from analytics.ml.postprocessing import format_prediction_output
+from analytics.ml.business.business_logic import evaluate_risk, map_action
+from analytics.ml.postprocessing.postprocessing import format_prediction_output
 
 def predict_root_cause(model_path: str, df: pd.DataFrame):
 
