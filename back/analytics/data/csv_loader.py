@@ -3,12 +3,18 @@
 from pathlib import Path
 import pandas as pd
 
-DATA_PATH = Path(__file__).parent / "datasets"
+DATA_PATH = Path(__file__).parent.parent / "datasets"
 
-def load_dataset():
+def load_energy_dataset() -> pd.DataFrame:
 
     hourly_file = DATA_PATH / "hourly_consumption.csv"
     systems_file = DATA_PATH / "systems.csv"
+
+    if not hourly_file.exists():
+        raise FileNotFoundError(f"Missing file: {hourly_file}")
+
+    if not systems_file.exists():
+        raise FileNotFoundError(f"Missing file: {systems_file}")
 
     hourly_df = pd.read_csv(hourly_file, parse_dates=["timestamp"])
     systems_df = pd.read_csv(systems_file)
@@ -22,6 +28,7 @@ def load_dataset():
 
     dataset = dataset.rename(columns={"name": "system_name"})
 
-    dataset = dataset[["timestamp", "system_name", "consumption_kwh"]]
+    required_columns = ["timestamp", "system_name", "consumption_kwh"]
+    dataset = dataset[required_columns]
 
     return dataset

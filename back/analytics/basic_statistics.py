@@ -1,7 +1,7 @@
 
 
 import pandas as pd
-from dataset_loader import load_dataset
+from data.csv_loader import load_dataset
 
 def total_consumption():
 
