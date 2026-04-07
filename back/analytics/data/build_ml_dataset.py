@@ -1,14 +1,15 @@
 
 
 import pandas as pd
-from data.db_loader import load_dataset_from_db
+from analytics.data.db_loader import load_energy_dataset_from_db
+
 from analytics.diagnostic_metrics import (
     classify_anomalies_with_context_all_systems
 )
 
-def build_ml_dataset():
+def build_ml_dataset() -> pd.DataFrame:
 
-    df = load_dataset_from_db()
+    df = load_energy_dataset_from_db()
 
     anomalies_dict = classify_anomalies_with_context_all_systems(df)
 
@@ -77,7 +78,7 @@ def build_ml_dataset():
     print("\n=== DISTRIBUCIÓN ANOMALY TYPE ===")
     print(df_full["anomaly_type"].value_counts())
 
-    return df_full  
+    return df_full
 
 if __name__ == "__main__":
     build_ml_dataset()
