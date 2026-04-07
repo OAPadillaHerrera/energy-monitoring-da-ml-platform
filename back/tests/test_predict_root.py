@@ -1,7 +1,7 @@
 
 
 from analytics.ml.inference.predict_root_cause import predict_root_cause
-from analytics.data.build_ml_dataset import build_ml_dataset
+from analytics.data.processing.build_ml_dataset import build_ml_dataset
 
 def test_predict_root_cause():
     

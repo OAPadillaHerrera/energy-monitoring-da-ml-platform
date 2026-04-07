@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from data.db_loader import load_dataset_from_db
+from data.loaaders.db_loader import load_dataset_from_db
 from analytics.station_metrics import (
     total_energy,
     avg_hourly_consumption,

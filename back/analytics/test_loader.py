@@ -1,6 +1,6 @@
 
 
-from analytics.data.csv_loader import load_energy_dataset
+from data.loaaders.csv_loader import load_energy_dataset
 
 def test_load_energy_dataset():
     df = load_energy_dataset()

@@ -4,7 +4,7 @@ import os
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
-from analytics.data.build_ml_dataset import build_ml_dataset
+from analytics.data.processing.build_ml_dataset import build_ml_dataset
 import joblib
 
 def train_root_cause_model():

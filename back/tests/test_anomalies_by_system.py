@@ -1,6 +1,6 @@
 
 
-from data.db_loader import load_dataset_from_db
+from data.loaaders.db_loader import load_dataset_from_db
 from analytics.diagnostic_metrics import detect_anomalies_by_system
 
 def test_anomalies_by_system():

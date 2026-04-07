@@ -1,6 +1,6 @@
 
 
-from analytics.data.build_ml_dataset import build_ml_dataset
+from data.processing.build_ml_dataset import build_ml_dataset
 
 def test_build_ml_dataset():
 

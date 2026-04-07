@@ -1,6 +1,6 @@
 
 
-from data.db_loader import load_dataset_from_db
+from data.loaaders.db_loader import load_dataset_from_db
 from analytics.system_metrics import (
     total_energy_by_system,
     avg_consumption_by_system,
