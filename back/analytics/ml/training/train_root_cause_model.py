@@ -1,6 +1,6 @@
 
 
-import os
+from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
@@ -62,7 +62,6 @@ def train_root_cause_model():
     model.fit(X_train, y_train)
 
     y_pred = model.predict(X_test)
-
     y_proba = model.predict_proba(X_test)
 
     classes = model.classes_
@@ -98,7 +97,15 @@ def train_root_cause_model():
     return model
 
 if __name__ == "__main__":
+
     model = train_root_cause_model()
-    os.makedirs("models", exist_ok=True)
-    joblib.dump(model, "models/root_cause_model.pkl")
-    print("\nModel saved as root_cause_model.pkl")
+
+    BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+    MODEL_DIR = BASE_DIR / "models"
+    MODEL_DIR.mkdir(exist_ok=True)
+
+    model_path = MODEL_DIR / "root_cause_model.pkl"
+
+    joblib.dump(model, model_path)
+
+    print(f"\nModel saved at {model_path}")
