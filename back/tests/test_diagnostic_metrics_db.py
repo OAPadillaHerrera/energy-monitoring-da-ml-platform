@@ -2,11 +2,14 @@
 
 from analytics.data.loaders.db_loader import load_energy_dataset_from_db
 from analytics.diagnostic_metrics import (
+    z_score_consumption,
+    detect_anomalies,
+)
+
+from analytics.metrics.energy_metrics import (
     load_factor,
     load_factor_by_system,
     system_ranking,
-    z_score_consumption,
-    detect_anomalies,
 )
 
 def test_diagnostic_metrics():
@@ -23,10 +26,12 @@ def test_diagnostic_metrics():
     print(system_ranking(df))
 
     print("\n=== Z-SCORE ===")
-    print(z_score_consumption(df).head())
+    z_scores = z_score_consumption(df)
+    print(z_scores.head())
 
     print("\n=== ANOMALIES ===")
-    print(detect_anomalies(df))
+    anomalies = detect_anomalies(z_scores)
+    print(anomalies)
 
     assert not df.empty
 
