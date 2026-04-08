@@ -1,6 +1,6 @@
 
 
-from data.loaaders.db_loader import load_dataset_from_db
+from analytics.data.loaders.db_loader import load_energy_dataset_from_db
 from analytics.diagnostic_metrics import (
     load_factor,
     load_factor_by_system,
@@ -11,7 +11,7 @@ from analytics.diagnostic_metrics import (
 
 def test_diagnostic_metrics():
 
-    df = load_dataset_from_db()
+    df = load_energy_dataset_from_db()
 
     print("\n=== LOAD FACTOR (TOTAL) ===")
     print(load_factor(df))

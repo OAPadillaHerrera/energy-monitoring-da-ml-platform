@@ -1,6 +1,6 @@
 
 
-from config.alerting_config import ALERT_THRESHOLDS
+from back.config.settings import ALERT_THRESHOLDS
 
 def evaluate_alert(prediction, probabilities):
 
