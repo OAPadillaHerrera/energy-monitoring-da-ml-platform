@@ -2,71 +2,8 @@
 
 import pandas as pd
 from typing import Dict
-from analytics.filters import filter_by_system
 from config.settings import ANOMALY_Z_THRESHOLD
-
-def load_factor(dataset: pd.DataFrame) -> float:
-    hourly = dataset.groupby("timestamp")["consumption_kwh"].sum()
-    return hourly.mean() / hourly.max()
-
-def load_factor_by_system(dataset: pd.DataFrame) -> pd.Series:
-    grouped = dataset.groupby(["timestamp", "system_name"])["consumption_kwh"].sum().reset_index()
-
-    results = {}
-
-    for system in grouped["system_name"].unique():
-        df_sys = grouped[grouped["system_name"] == system]
-        avg = df_sys["consumption_kwh"].mean()
-        peak = df_sys["consumption_kwh"].max()
-
-        results[system] = avg / peak if peak != 0 else 0
-
-    return pd.Series(results, name="load_factor")
-
-def system_ranking(dataset: pd.DataFrame) -> pd.Series:
-    return dataset.groupby("system_name")["consumption_kwh"].sum().sort_values(ascending=False)
-
-def compute_z_score(series: pd.Series) -> pd.Series:
-    mean = series.mean()
-    std = series.std()
-    return (series - mean) / std
-
-def z_score_consumption(dataset: pd.DataFrame) -> pd.Series:
-    hourly = dataset.groupby("timestamp")["consumption_kwh"].sum()
-    return compute_z_score(hourly)
-
-def z_score_by_system(dataset: pd.DataFrame, system_name: str) -> pd.Series:
-    system_data = filter_by_system(dataset, system_name)
-    hourly = system_data.groupby("timestamp")["consumption_kwh"].sum()
-    return compute_z_score(hourly)
-
-def detect_anomalies(z_scores: pd.Series, threshold: float = ANOMALY_Z_THRESHOLD) -> pd.Series:
-    z_scores = pd.to_numeric(z_scores, errors="coerce")
-    return z_scores[abs(z_scores) > threshold]
-
-def detect_anomalies_by_system(
-    dataset: pd.DataFrame,
-    system_name: str,
-    threshold: float = ANOMALY_Z_THRESHOLD
-) -> pd.Series:
-
-    z_scores = z_score_by_system(dataset, system_name)
-    return detect_anomalies(z_scores, threshold)
-
-def detect_anomalies_all_systems(
-    dataset: pd.DataFrame,
-    threshold: float = ANOMALY_Z_THRESHOLD
-) -> Dict[str, pd.Series]:
-
-    results = {}
-
-    for system in dataset["system_name"].unique():
-        anomalies = detect_anomalies_by_system(dataset, system, threshold)
-
-        if not anomalies.empty:
-            results[system] = anomalies
-
-    return results
+from analytics.anomaly.detection import detect_anomalies_by_system
 
 def classify_anomaly(z_score: float, threshold: float = ANOMALY_Z_THRESHOLD) -> str:
     if z_score >= threshold:
@@ -187,3 +124,17 @@ def classify_anomalies_with_context_all_systems(
             results[system] = classified
 
     return results
+
+def anomaly_classification(
+    dataset: pd.DataFrame,
+    threshold: float = ANOMALY_Z_THRESHOLD
+) -> pd.DataFrame:
+
+    results = classify_anomalies_with_context_all_systems(dataset, threshold)
+
+    if not results:
+        return pd.DataFrame()
+
+    df = pd.concat(results.values())
+
+    return df

@@ -1,16 +1,15 @@
 
 
 from analytics.data.loaders.db_loader import load_energy_dataset_from_db
-from analytics.diagnostic_metrics import (
-    z_score_consumption,
-    detect_anomalies,
-)
 
 from analytics.metrics.energy_metrics import (
     load_factor,
     load_factor_by_system,
     system_ranking,
 )
+
+from analytics.anomaly.zscore import z_score_consumption
+from analytics.anomaly.detection import detect_anomalies
 
 def test_diagnostic_metrics():
 

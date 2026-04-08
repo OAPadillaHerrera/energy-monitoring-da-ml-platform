@@ -1,11 +1,11 @@
 
 
-from data.loaaders.db_loader import load_dataset_from_db
-from analytics.diagnostic_metrics import classify_anomalies_all_systems
+from analytics.data.loaders.db_loader import load_energy_dataset_from_db
+from analytics.anomaly.classification import classify_anomalies_all_systems
 
 def test_classified_anomalies():
 
-    df = load_dataset_from_db()
+    df = load_energy_dataset_from_db()
 
     results = classify_anomalies_all_systems(df)
 
@@ -17,7 +17,6 @@ def test_classified_anomalies():
 
         print(f"\n=== {system} ===")
         print(anomalies)
-
 
 if __name__ == "__main__":
     test_classified_anomalies()
