@@ -1,6 +1,7 @@
 
 
 import pandas as pd
+
 from analytics.metrics.basic_metrics import (
     total_consumption,
     average_consumption,

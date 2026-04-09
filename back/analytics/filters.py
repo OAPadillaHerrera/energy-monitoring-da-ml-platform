@@ -2,22 +2,29 @@
 
 import pandas as pd
 
-def filter_by_date_range(df, start_date, end_date):
+def filter_by_date_range(
+    df: pd.DataFrame,
+    start_date: str | pd.Timestamp,
+    end_date: str | pd.Timestamp
+) -> pd.DataFrame:
 
-    df["timestamp"] = pd.to_datetime(df["timestamp"])
+    df_copy = df.copy()
+
+    df_copy["timestamp"] = pd.to_datetime(df_copy["timestamp"])
 
     start_date = pd.to_datetime(start_date)
     end_date = pd.to_datetime(end_date) + pd.Timedelta(days=1)
 
-    filtered_df = df[
-        (df["timestamp"] >= start_date) &
-        (df["timestamp"] < end_date)
+    filtered_df = df_copy[
+        (df_copy["timestamp"] >= start_date) &
+        (df_copy["timestamp"] < end_date)
     ]
 
     return filtered_df
 
-def filter_by_system(df, system_name):
+def filter_by_system(
+    df: pd.DataFrame,
+    system_name: str
+) -> pd.DataFrame:
 
-    filtered_df = df[df["system_name"] == system_name]
-
-    return filtered_df
+    return df[df["system_name"] == system_name]
