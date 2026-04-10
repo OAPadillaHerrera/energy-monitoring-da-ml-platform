@@ -3,7 +3,8 @@
 from pathlib import Path
 import pandas as pd
 
-DATA_PATH = Path(__file__).parent.parent / "datasets"
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+DATA_PATH = PROJECT_ROOT / "analytics" / "data" / "datasets"
 
 def load_energy_dataset() -> pd.DataFrame:
 
