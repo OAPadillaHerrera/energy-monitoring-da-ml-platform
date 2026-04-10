@@ -2,7 +2,7 @@
 
 from analytics.data.loaders.csv_loader import load_energy_dataset
 
-from metrics.system_metrics import (
+from analytics.metrics.system_metrics import (
     total_energy_by_system,
     avg_consumption_by_system,
     peak_consumption_by_system,
