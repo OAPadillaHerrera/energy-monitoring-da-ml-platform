@@ -13,7 +13,7 @@ import logging
 from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_cors import CORS
-from routes.simulation_routes import simulation_bp
+from api.routes.simulation import simulation_bp
 #from analytics import analytics_bp
 #from globalanalytics import totales_bp
 
