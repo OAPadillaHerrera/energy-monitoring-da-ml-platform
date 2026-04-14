@@ -3,7 +3,7 @@
 import pandas as pd
 
 from analytics.data.loaders.csv_loader import load_energy_dataset
-from analytics.filters import filter_by_date_range
+from data.filters import filter_by_date_range
 
 from analytics.metrics.station_metrics import (
     total_energy,
