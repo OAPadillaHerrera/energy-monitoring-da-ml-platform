@@ -33,16 +33,18 @@ from analytics.metrics.station_metrics import (
     avg_daily_energy
 )
 
+from analytics.metrics.energy_metrics import (
+    load_factor,
+    load_factor_by_system,
+    system_ranking
+)
+
 metrics_bp = Blueprint("metrics", __name__)
 
 def serialize_series(series):
-
     series = series.copy()
-
     series.index = series.index.map(lambda x: str(x))
-
     series = series.astype(float)
-
     return dict(series)
 
 @metrics_bp.route("/basic", methods=["GET"])
@@ -118,6 +120,28 @@ def get_system_metrics():
         "avg_hourly_profile": serialize_series(
             avg_hourly_profile_by_system(df, system_name)
         )
+    }
+
+    return jsonify(result)
+
+@metrics_bp.route("/energy", methods=["GET"])
+def get_energy_metrics():
+
+    df = load_energy_dataset_from_db()
+
+    df["system_name"] = df["system_name"].str.strip()
+
+    result = {
+        "load_factor": float(load_factor(df)),
+
+        "load_factor_by_system": serialize_series(
+            load_factor_by_system(df)
+        ),
+
+        "system_ranking": [
+            {"system": k, "energy": float(v)}
+            for k, v in system_ranking(df).items()
+        ]
     }
 
     return jsonify(result)
