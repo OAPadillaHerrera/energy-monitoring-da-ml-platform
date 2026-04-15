@@ -22,6 +22,17 @@ from analytics.metrics.system_metrics import (
     avg_hourly_profile_by_system
 )
 
+from analytics.metrics.station_metrics import (
+    total_energy,
+    avg_hourly_consumption,
+    peak_demand,
+    min_demand,
+    energy_by_hour,
+    daily_energy,
+    std_consumption,
+    avg_daily_energy
+)
+
 metrics_bp = Blueprint("metrics", __name__)
 
 def serialize_series(series):
@@ -44,6 +55,30 @@ def get_basic_metrics():
         "average_consumption": float(average_consumption(df)),
         "consumption_by_system": serialize_series(consumption_by_system(df)),
         "consumption_by_hour": serialize_series(consumption_by_hour(df))
+    }
+
+    return jsonify(result)
+
+@metrics_bp.route("/station", methods=["GET"])
+def get_station_metrics():
+
+    df = load_energy_dataset_from_db()
+
+    result = {
+        "total_energy": float(total_energy(df)),
+        "average_consumption": float(avg_hourly_consumption(df)),
+        "peak_consumption": float(peak_demand(df)),
+        "min_consumption": float(min_demand(df)),
+        "std_consumption": float(std_consumption(df)),
+        "avg_daily_energy": float(avg_daily_energy(df)),
+
+        "energy_by_hour": serialize_series(
+            energy_by_hour(df)
+        ),
+
+        "daily_energy": serialize_series(
+            daily_energy(df)
+        )
     }
 
     return jsonify(result)
