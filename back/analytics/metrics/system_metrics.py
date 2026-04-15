@@ -1,7 +1,7 @@
 
 
 import pandas as pd
-from data.filters import filter_by_system
+from analytics.data.filters import filter_by_system
 
 def total_energy_by_system(dataset: pd.DataFrame, system_name: str) -> float:
     system_data = filter_by_system(dataset, system_name)
