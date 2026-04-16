@@ -10,6 +10,12 @@ from analytics.anomaly.zscore import (
     z_score_by_system
 )
 
+from analytics.anomaly.detection import (
+    detect_anomalies,
+    detect_anomalies_by_system,
+    detect_anomalies_all_systems
+)
+
 from analytics.anomaly.classification import (
     classify_anomaly,
     classify_anomalies_by_system,
@@ -27,7 +33,6 @@ def serialize_df(df):
 
     df = df.copy()
     df.index = df.index.map(str)
-
     return df.reset_index().to_dict(orient="records")
 
 def serialize_series(series):
@@ -36,7 +41,6 @@ def serialize_series(series):
 
     series = series.copy()
     series.index = series.index.map(str)
-
     return series.astype(object).to_dict()
 
 @anomaly_bp.route("/zscore", methods=["GET"])
@@ -67,6 +71,39 @@ def get_zscore():
         )
     else:
         result["z_score_by_system"] = {}
+
+    return jsonify(result)
+
+@anomaly_bp.route("/detection", methods=["GET"])
+def get_anomaly_detection():
+
+    system_name = request.args.get("name")
+
+    df = load_energy_dataset_from_db()
+    df["system_name"] = df["system_name"].str.strip()
+
+    result = {
+        "detect_anomalies_example": {
+            str(x): "anomaly" if detect_anomalies(pd.Series([x])) is not None else "normal"
+            for x in [-3, -2, -1, 0, 1, 2, 3]
+        },
+
+        "all_systems_detection": {
+            system: serialize_series(series)
+            for system, series in detect_anomalies_all_systems(df).items()
+        }
+    }
+
+    if system_name:
+        if system_name not in df["system_name"].unique():
+            return jsonify({"error": "System not found"}), 404
+
+        result["system"] = system_name
+        result["by_system"] = serialize_series(
+            detect_anomalies_by_system(df, system_name)
+        )
+    else:
+        result["by_system"] = {}
 
     return jsonify(result)
 
@@ -110,3 +147,4 @@ def get_anomaly_classification():
     }
 
     return jsonify(result)
+
