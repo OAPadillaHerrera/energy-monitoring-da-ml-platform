@@ -1,7 +1,7 @@
 
 
 import pandas as pd
-from data.filters import filter_by_system
+from analytics.data.filters import filter_by_system
 
 def compute_z_score(series: pd.Series) -> pd.Series:
     mean = series.mean()

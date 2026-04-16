@@ -15,6 +15,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from api.routes.simulation import simulation_bp
 from api.routes.metrics import metrics_bp
+from api.routes.anomaly import anomaly_bp
 
 #from analytics import analytics_bp
 #from globalanalytics import totales_bp
@@ -41,6 +42,7 @@ CORS(app)
 
 app.register_blueprint(simulation_bp, url_prefix="/simulation")
 app.register_blueprint(metrics_bp, url_prefix="/metrics")
+app.register_blueprint(anomaly_bp, url_prefix="/anomaly")
 
 #app.register_blueprint(analytics_bp, url_prefix="/api/consumo")
 #app.register_blueprint(totales_bp, url_prefix="/api/totales")
