@@ -1,13 +1,12 @@
 
 
 from pathlib import Path
-
 from flask import Blueprint, jsonify, request
 from analytics.ml.inference.run_root_cause_pipeline import run_root_cause_pipeline
 from analytics.data.processing.build_ml_dataset import build_ml_dataset
+from analytics.ml.alerting.alerting import evaluate_alert
 
 ml_bp = Blueprint("ml", __name__)
-
 
 def serialize_df(df):
     if df is None or df.empty:
@@ -17,7 +16,6 @@ def serialize_df(df):
     df.index = df.index.map(str)
     return df.reset_index().to_dict(orient="records")
 
-
 def serialize_series(series):
     if series is None or series.empty:
         return {}
@@ -25,7 +23,6 @@ def serialize_series(series):
     series = series.copy()
     series.index = series.index.map(str)
     return series.astype(object).to_dict()
-
 
 @ml_bp.route("/root-cause", methods=["GET"])
 def get_root_cause_pipeline():
@@ -65,5 +62,49 @@ def get_root_cause_pipeline():
 
     else:
         result["by_system"] = {}
+
+    return jsonify(result)
+
+@ml_bp.route("/alerting", methods=["GET"])
+def get_alerting():
+
+    df = build_ml_dataset()
+
+    result = {
+        "alert_examples": {
+            "grid_outage_high": evaluate_alert(
+                "grid_outage",
+                {"grid_outage": 0.9}
+            ),
+            "demand_spike_high": evaluate_alert(
+                "demand_spike",
+                {"demand_spike": 0.8}
+            ),
+            "no_alert_case": evaluate_alert(
+                "normal",
+                {"normal": 0.99}
+            )
+        },
+
+        "dataset_alerts_sample": []
+    }
+
+    sample_df = df.head(10)
+
+    alerts_output = []
+
+    for idx, _ in sample_df.iterrows():
+
+        alerts = evaluate_alert(
+            "normal",
+            {"normal": 1.0}
+        )
+
+        alerts_output.append({
+            "index": str(idx),
+            "alerts": alerts
+        })
+
+    result["dataset_alerts_sample"] = alerts_output
 
     return jsonify(result)
