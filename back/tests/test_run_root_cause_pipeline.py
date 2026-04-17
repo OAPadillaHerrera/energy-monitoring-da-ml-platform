@@ -1,13 +1,13 @@
 
 
-from analytics.ml.inference.predict_root_cause import predict_root_cause
+from ml.inference.run_root_cause_pipeline import run_root_cause_pipeline
 from analytics.data.processing.build_ml_dataset import build_ml_dataset
 
-def test_predict_root_cause():
+def test_run_root_cause_pipeline():
     
     df = build_ml_dataset()
 
-    results = predict_root_cause(
+    results = run_root_cause_pipeline(
         "models/root_cause_model.pkl",
         df
     )
@@ -24,4 +24,4 @@ def test_predict_root_cause():
     print("\nPredict root cause test passed successfully")
 
 if __name__ == "__main__":
-    test_predict_root_cause()
+    test_run_root_cause_pipeline()

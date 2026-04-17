@@ -3,7 +3,7 @@
 import pandas as pd
 from analytics.data.loaders.db_loader import load_energy_dataset_from_db
 
-from analytics.diagnostic_metrics import (
+from analytics.anomaly.classification import (
     classify_anomalies_with_context_all_systems
 )
 

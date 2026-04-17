@@ -7,7 +7,7 @@ from analytics.data.processing.build_ml_dataset import build_ml_dataset
 from analytics.ml.business.business_logic import evaluate_risk, map_action
 from analytics.ml.postprocessing.postprocessing import format_prediction_output
 
-def predict_root_cause(model_path: str, df: pd.DataFrame):
+def run_root_cause_pipeline(model_path: str, df: pd.DataFrame):
 
     model = joblib.load(model_path)
 
@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
     df = build_ml_dataset()
 
-    results = predict_root_cause(
+    results = run_root_cause_pipeline(
         "models/root_cause_model.pkl",
         df
     )
