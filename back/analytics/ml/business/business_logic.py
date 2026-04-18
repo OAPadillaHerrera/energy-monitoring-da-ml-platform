@@ -1,11 +1,15 @@
 
 
-def evaluate_risk(prob: float) -> str:
-    if prob > 0.8:
+def evaluate_risk(pred: str, probs: dict) -> str:
+    p = probs.get(pred, 0)
+
+    if pred == "normal":
+        return "LOW"
+    elif p > 0.8:
         return "CRITICAL"
-    elif prob > 0.5:
+    elif p > 0.5:
         return "HIGH"
-    elif prob > 0.3:
+    elif p > 0.3:
         return "MEDIUM"
     else:
         return "LOW"

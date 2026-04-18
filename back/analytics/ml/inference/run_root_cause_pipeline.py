@@ -1,4 +1,4 @@
-    
+
 
 import joblib
 import pandas as pd
@@ -27,14 +27,20 @@ def run_root_cause_pipeline(model_path: str, df: pd.DataFrame):
     y_pred = model.predict(X_new)
     y_proba = model.predict_proba(X_new)
 
-    probabilities_list = [dict(zip(model.classes_, p)) for p in y_proba]
-
-    risk_levels = [
-        evaluate_risk(p.get("grid_outage", 0))
-        for p in probabilities_list
+    probabilities_list = [
+        dict(zip(model.classes_, p))
+        for p in y_proba
     ]
 
-    actions = [map_action(r) for r in risk_levels]
+    risk_levels = [
+        evaluate_risk(pred, probs)
+        for pred, probs in zip(y_pred, probabilities_list)
+    ]
+
+    actions = [
+        map_action(r)
+        for r in risk_levels
+    ]
 
     alerts_list = [
         evaluate_alert(pred, probs)
