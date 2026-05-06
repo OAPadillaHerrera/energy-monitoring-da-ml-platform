@@ -1,12 +1,16 @@
 
 
-# Node
 node_modules/
 
-# Python
 venv/
 __pycache__/
 *.pyc
 
-# Env
 .env
+
+dist/
+build/
+
+.vscode/
+.DS_Store
+Thumbs.db
