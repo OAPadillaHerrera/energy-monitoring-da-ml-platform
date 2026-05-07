@@ -1,22 +1,9 @@
 
 
-function App() {
-  return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        fontFamily: "Arial, sans-serif",
-        flexDirection: "column",
-      }}
-    >
-      <h1>Energy Monitoring DA/ML Platform</h1>
+import Login from "./pages/Login/Login";
 
-      <p>Frontend rebuilt successfully with React + Vite + TypeScript.</p>
-    </main>
-  );
+function App() {
+  return <Login />;
 }
 
 export default App;
