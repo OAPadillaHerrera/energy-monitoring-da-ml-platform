@@ -1,9 +1,9 @@
 
 
-import styles from "./Login.module.css";
-import logo from "../../assets/logos/logo_ENERGON_gif.gif";
+import styles from "./Register.module.css";
+import logo from "../../assets/logos/logo_ENERGON.png";
 
-function Login() {
+function Register() {
   return (
     <main className={styles.container}>
       <div className={styles.overlay}></div>
@@ -16,10 +16,10 @@ function Login() {
         />
       </section>
 
-      <section className={styles.loginContent}>
+      <section className={styles.registerContent}>
 
         <p className={styles.subtitle}>
-          System Access
+          User Registration
         </p>
 
         <form className={styles.form}>
@@ -37,6 +37,17 @@ function Login() {
 
           <div className={styles.field}>
             <input
+              type="email"
+              className={`${styles.input} ${styles.emailInput}`}
+            />
+
+            <label className={styles.label}>
+              Email
+            </label>
+          </div>
+
+          <div className={styles.field}>
+            <input
               type="password"
               className={styles.input}
             />
@@ -46,18 +57,29 @@ function Login() {
             </label>
           </div>
 
+          <div className={styles.field}>
+            <input
+              type="password"
+              className={styles.input}
+            />
+
+            <label className={styles.label}>
+              Confirm Password
+            </label>
+          </div>
+
           <button
             type="submit"
             className={styles.button}
           >
-            Login
+            Register
           </button>
 
           <a
             href="#"
-            className={styles.forgot}
+            className={styles.loginLink}
           >
-            Forgot password?
+            Already registered?
           </a>
 
         </form>
@@ -67,4 +89,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;
