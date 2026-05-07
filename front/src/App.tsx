@@ -8,10 +8,19 @@ function App() {
 
 export default App;*/
 
-import Register from "./pages/Register/Register";
+/*import Register from "./pages/Register/Register";
+
+function App() {
+  return <Register />;
+}
+
+export default App;*/
+
+import Register from "./pages/Dashboard/Dashboard";
 
 function App() {
   return <Register />;
 }
 
 export default App;
+
