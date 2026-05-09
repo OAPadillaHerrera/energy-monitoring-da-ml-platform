@@ -16,10 +16,18 @@ function App() {
 
 export default App;*/
 
-import Register from "./pages/Dashboard/Dashboard";
+/*import Register from "./pages/Dashboard/Dashboard";
 
 function App() {
   return <Register />;
+}
+
+export default App;*/
+
+import Simulation from "./pages/Simulation/Simulation";
+
+function App() {
+  return <Simulation />;
 }
 
 export default App;
