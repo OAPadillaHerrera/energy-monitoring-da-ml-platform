@@ -24,11 +24,18 @@ function App() {
 
 export default App;*/
 
-import Simulation from "./pages/Simulation/Simulation";
+/*import Simulation from "./pages/Simulation/Simulation";
 
 function App() {
   return <Simulation />;
 }
 
-export default App;
+export default App;*/
 
+import DAML from "./pages/DAML/DAML";
+
+function App() {
+  return <DAML />;
+}
+
+export default App;
