@@ -40,10 +40,18 @@ function App() {
 
 export default App;*/
 
-import Reports from "./pages/Reports/Reports";
+/*import Reports from "./pages/Reports/Reports";
 
 function App() {
   return <Reports />;
+}
+
+export default App;*/
+
+import About from "./pages/About/About";
+
+function App() {
+  return <About />;
 }
 
 export default App;
