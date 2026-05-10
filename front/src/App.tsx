@@ -32,10 +32,18 @@ function App() {
 
 export default App;*/
 
-import DAML from "./pages/DAML/DAML";
+/*import DAML from "./pages/DAML/DAML";
 
 function App() {
   return <DAML />;
+}
+
+export default App;*/
+
+import Reports from "./pages/Reports/Reports";
+
+function App() {
+  return <Reports />;
 }
 
 export default App;
