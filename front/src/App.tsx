@@ -48,10 +48,18 @@ function App() {
 
 export default App;*/
 
-import About from "./pages/About/About";
+/*import About from "./pages/About/About";
 
 function App() {
   return <About />;
+}
+
+export default App;*/
+
+import SystemEvents from "./pages/Simulation/SystemEvents/SystemEvents";
+
+function App() {
+  return <SystemEvents />;
 }
 
 export default App;
