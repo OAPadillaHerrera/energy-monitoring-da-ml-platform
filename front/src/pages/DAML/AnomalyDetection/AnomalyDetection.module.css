@@ -165,7 +165,6 @@
   font-weight: 700;
   letter-spacing: 1px;
   cursor: pointer;
-  font-family: "Courier New", Consolas, monospace;
 }
 
 .tabButtonActive {
@@ -173,18 +172,13 @@
   padding: 0 16px;
   border-radius: 6px;
   border: 1px solid rgba(0, 194, 255, 0.28);
-  background: linear-gradient(
-    90deg,
-    #008cff,
-    #00c2ff
-  );
+  background: linear-gradient(90deg, #008cff, #00c2ff);
   color: white;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 1px;
   box-shadow: 0 0 14px rgba(0, 194, 255, 0.35);
   cursor: pointer;
-  font-family: "Courier New", Consolas, monospace;
 }
 
 .navButton {
@@ -205,11 +199,7 @@
   padding: 0 16px;
   border-radius: 6px;
   border: 1px solid rgba(0, 194, 255, 0.28);
-  background: linear-gradient(
-    90deg,
-    #008cff,
-    #00c2ff
-  );
+  background: linear-gradient(90deg, #008cff, #00c2ff);
   color: white;
   font-size: 14px;
   font-weight: 700;
@@ -224,25 +214,16 @@
   width: auto;
   border-radius: 6px;
   border: 1px solid rgba(0, 255, 157, 0.25);
-  background: linear-gradient(
-    90deg,
-    #00b894,
-    #00ff9d
-  );
+  background: linear-gradient(90deg, #00b894, #00ff9d);
   color: #02120d;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 1px;
   box-shadow: 0 0 14px rgba(0, 255, 157, 0.25);
+  cursor: pointer;
+
   flex: 0 0 auto;
   align-self: flex-start;
-  cursor: pointer;
-}
-
-.tabButton:hover,
-.navButton:hover,
-.runButton:hover {
-  opacity: 0.88;
 }
 
 .mainPanel {
@@ -280,15 +261,8 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(
-      rgba(0, 194, 255, 0.04) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(0, 194, 255, 0.04) 1px,
-      transparent 1px
-    );
+    linear-gradient(rgba(0, 194, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 194, 255, 0.04) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
@@ -349,13 +323,3 @@
   font-weight: 700;
   color: rgba(125, 211, 252, 0.62);
 }
-
-
-
-
-
-
-
-
-
-

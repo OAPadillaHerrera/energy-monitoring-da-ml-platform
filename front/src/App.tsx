@@ -64,10 +64,18 @@ function App() {
 
 export default App;*/
 
-import Voltage from "./pages/Simulation/Voltage/Voltage";
+/*import Voltage from "./pages/Simulation/Voltage/Voltage";
 
 function App() {
   return <Voltage />;
+}
+
+export default App;*/
+
+import AnomalyDetetection from "./pages/DAML/AnomalyDetection/AnomalyDetection";
+
+function App() {
+  return <AnomalyDetetection />;
 }
 
 export default App;
