@@ -59,9 +59,9 @@ function AnomalyDetection() {
           <div className={styles.tabs}>
             <button className={styles.tabButton}>Metrics</button>
             <button className={styles.tabButtonActive}>
-              Anomaly Detection
+              Anomaly Detection 
             </button>
-            <button className={styles.tabButton}>ML Intelligence</button>
+            <button className={styles.tabButton}>ML </button>
           </div>
 
           <section className={styles.chartPanel}>
@@ -79,7 +79,7 @@ function AnomalyDetection() {
 
           <section className={styles.controlPanel}>
             <div className={styles.panelHeader}>
-              Anomaly Configuration
+              Anomaly Detection Configuration
             </div>
 
             <div className={styles.controlContent}>

@@ -72,10 +72,18 @@ function App() {
 
 export default App;*/
 
-import AnomalyDetetection from "./pages/DAML/AnomalyDetection/AnomalyDetection";
+/*import AnomalyDetetection from "./pages/DAML/AnomalyDetection/AnomalyDetection";
 
 function App() {
   return <AnomalyDetetection />;
+}
+
+export default App;*/
+
+import ML from "./pages/DAML/ML/ML";
+
+function App() {
+  return <ML />;
 }
 
 export default App;
