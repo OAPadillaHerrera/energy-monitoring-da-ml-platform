@@ -80,10 +80,18 @@ function App() {
 
 export default App;*/
 
-import ML from "./pages/DAML/ML/ML";
+/*import ML from "./pages/DAML/ML/ML";
 
 function App() {
   return <ML />;
+}
+
+export default App;*/
+
+import DAML from "./pages/Reports/DAML/DAML";
+
+function App() {
+  return <DAML />;
 }
 
 export default App;
