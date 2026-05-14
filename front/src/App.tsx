@@ -56,10 +56,18 @@ function App() {
 
 export default App;*/
 
-import SystemEvents from "./pages/Simulation/SystemEvents/SystemEvents";
+/*import SystemEvents from "./pages/Simulation/SystemEvents/SystemEvents";
 
 function App() {
   return <SystemEvents />;
+}
+
+export default App;*/
+
+import Voltage from "./pages/Simulation/Voltage/Voltage";
+
+function App() {
+  return <Voltage />;
 }
 
 export default App;
