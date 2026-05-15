@@ -152,10 +152,18 @@ function App() {
 
 export default App;*/
 
-import VoltageRecords from "./pages/Reports/VoltageRecords/VoltageRecords";
+/*import VoltageRecords from "./pages/Reports/VoltageRecords/VoltageRecords";
 
 function App() {
   return <VoltageRecords />;
+}
+
+export default App;*/
+
+import AnomalyDetection from "./pages/Reports/Anomaly/Anomaly";
+
+function App() {
+  return <AnomalyDetection />;
 }
 
 export default App;
