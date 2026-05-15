@@ -136,10 +136,18 @@ function App() {
 
 export default App;*/
 
-import EventRecords from "./pages/Reports/EventRecords/EventRecords";
+/*import EventRecords from "./pages/Reports/EventRecords/EventRecords";
 
 function App() {
   return <EventRecords />;
+}
+
+export default App;*/
+
+import DailyTotals from "./pages/Reports/DailyTotals/DailyTotals";
+
+function App() {
+  return <DailyTotals />;
 }
 
 export default App;

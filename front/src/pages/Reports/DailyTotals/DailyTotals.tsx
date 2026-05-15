@@ -1,9 +1,9 @@
 
 
-import styles from "./EventRecords.module.css";
+import styles from "./DailyTotals.module.css";
 import logo from "../../../assets/logos/logo_ENERGON.png";
 
-function EventRecord() {
+function DailyTotals() {
   return (
     <main className={styles.container}>
       <div className={styles.overlay}></div>
@@ -24,9 +24,7 @@ function EventRecord() {
 
           <div className={styles.systemStatus}>
             <span className={styles.statusDot}></span>
-            <span className={styles.statusText}>
-              System Online
-            </span>
+            <span className={styles.statusText}>System Online</span>
           </div>
         </div>
       </header>
@@ -46,12 +44,17 @@ function EventRecord() {
             <button className={styles.navButton}>Dashboard</button>
             <button className={styles.navButton}>Simulation</button>
             <button className={styles.navButton}>DA/ML</button>
-            <button className={styles.navButtonActive}>Reports</button>
+
+            <button className={styles.navButtonActive}>
+              Reports
+            </button>
+
             <button className={styles.navButton}>About</button>
           </nav>
         </aside>
 
         <section className={styles.mainPanel}>
+   
           <div className={styles.tabs}>
             <button className={styles.tabButtonActive}>
               Simulation
@@ -67,11 +70,11 @@ function EventRecord() {
               Hourly Data
             </button>
 
-            <button className={styles.subTabButtonActive}>
+            <button className={styles.subTabButton}>
               Event Records
             </button>
 
-            <button className={styles.subTabButton}>
+            <button className={styles.subTabButtonActive}>
               Daily Totals
             </button>
 
@@ -82,7 +85,7 @@ function EventRecord() {
 
           <section className={styles.chartPanel}>
             <div className={styles.panelHeader}>
-              Event Records Chart View
+              Daily Totals Chart View
             </div>
 
             <div className={styles.chartPlaceholder}>
@@ -121,12 +124,10 @@ function EventRecord() {
               </div>
             </div>
           </section>
-
         </section>
       </section>
     </main>
   );
 }
 
-export default EventRecord;
-
+export default DailyTotals;
