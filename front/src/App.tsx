@@ -144,10 +144,18 @@ function App() {
 
 export default App;*/
 
-import DailyTotals from "./pages/Reports/DailyTotals/DailyTotals";
+/*import DailyTotals from "./pages/Reports/DailyTotals/DailyTotals";
 
 function App() {
   return <DailyTotals />;
+}
+
+export default App;*/
+
+import VoltageRecords from "./pages/Reports/VoltageRecords/VoltageRecords";
+
+function App() {
+  return <VoltageRecords />;
 }
 
 export default App;
