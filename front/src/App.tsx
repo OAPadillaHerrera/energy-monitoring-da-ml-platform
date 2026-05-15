@@ -88,10 +88,18 @@ function App() {
 
 export default App;*/
 
-import DAML from "./pages/Reports/DAML/DAML";
+/*import DAML from "./pages/Reports/DAML/DAML";
 
 function App() {
   return <DAML />;
+}
+
+export default App;*/
+
+import DailySimulation from "./pages/Simulation/DailySimulation/DailySimulation";
+
+function App() {
+  return <DailySimulation />;
 }
 
 export default App;
