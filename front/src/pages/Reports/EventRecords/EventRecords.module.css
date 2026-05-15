@@ -170,12 +170,21 @@
 .tabs {
   display: flex;
   gap: 16px;
+
+  flex-wrap: wrap;
+}
+
+.subTabs {
+  display: flex;
+  gap: 12px;
+
   flex-wrap: wrap;
 
-  margin-bottom: 6px;
+  margin-top: -4px;
 }
 
 .tabButton,
+.subTabButton,
 .navButton {
   height: 38px;
   padding: 0 16px;
@@ -195,6 +204,7 @@
 }
 
 .tabButtonActive,
+.subTabButtonActive,
 .navButtonActive {
   height: 38px;
   padding: 0 16px;
@@ -219,11 +229,9 @@
   cursor: pointer;
 }
 
-.runButton {
+.exportButton {
   height: 38px;
   padding: 0 18px;
-
-  width: auto;
 
   border-radius: 6px;
 
@@ -243,15 +251,13 @@
 
   box-shadow: 0 0 14px rgba(0, 255, 157, 0.25);
 
-  flex: 0 0 auto;
-  align-self: flex-start;
-
   cursor: pointer;
 }
 
 .tabButton:hover,
+.subTabButton:hover,
 .navButton:hover,
-.runButton:hover {
+.exportButton:hover {
   opacity: 0.88;
 }
 
@@ -345,20 +351,3 @@
 
   flex-wrap: wrap;
 }
-
-.modeStatus {
-  font-size: 14px;
-  font-weight: 700;
-
-  letter-spacing: 1px;
-
-  color: #00ff9d;
-}
-
-.modeDescription {
-  font-size: 13px;
-  font-weight: 700;
-
-  color: rgba(125, 211, 252, 0.62);
-}
-

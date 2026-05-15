@@ -128,10 +128,18 @@ function App() {
 
 export default App;*/
 
-import Classification from "./pages/DAML/Classification/Classification";
+/*import Classification from "./pages/DAML/Classification/Classification";
 
 function App() {
   return <Classification />;
+}
+
+export default App;*/
+
+import EventRecords from "./pages/Reports/EventRecords/EventRecords";
+
+function App() {
+  return <EventRecords />;
 }
 
 export default App;
