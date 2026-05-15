@@ -104,10 +104,18 @@ function App() {
 
 export default App;*/
 
-import Station from "./pages/DAML/Station/Station";
+/*import Station from "./pages/DAML/Station/Station";
 
 function App() {
   return <Station />;
+}
+
+export default App;*/
+
+import System from "./pages/DAML/System/System";
+
+function App() {
+  return <System />;
 }
 
 export default App;
