@@ -91,7 +91,7 @@ function VoltageRecords() {
               <div className={styles.chartGrid}></div>
 
               <span className={styles.placeholderText}>
-                Waiting for Simulation execution...
+                Waiting for Report generation...
               </span>
             </div>
           </section>

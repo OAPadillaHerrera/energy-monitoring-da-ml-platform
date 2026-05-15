@@ -160,10 +160,18 @@ function App() {
 
 export default App;*/
 
-import AnomalyDetection from "./pages/Reports/Anomaly/Anomaly";
+/*import Anomaly from "./pages/Reports/Anomaly/Anomaly";
 
 function App() {
-  return <AnomalyDetection />;
+  return <Anomaly />;
+}
+
+export default App;*/
+
+import ML from "./pages/Reports/ML/ML";
+
+function App() {
+  return <ML />;
 }
 
 export default App;

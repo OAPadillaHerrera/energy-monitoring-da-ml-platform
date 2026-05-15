@@ -1,9 +1,9 @@
 
 
-import styles from "./Anomaly.module.css";
+import styles from "./ML.module.css";
 import logo from "../../../assets/logos/logo_ENERGON.png";
 
-function Anomaly() {
+function ML() {
   return (
     <main className={styles.container}>
 
@@ -107,11 +107,11 @@ function Anomaly() {
               Metrics
             </button>
 
-            <button className={styles.subTabButtonActive}>
+            <button className={styles.subTabButton}>
               Anomaly 
             </button>
 
-            <button className={styles.subTabButton}>
+            <button className={styles.subTabButtonActive}>
               ML
             </button>
 
@@ -120,7 +120,7 @@ function Anomaly() {
           <section className={styles.chartPanel}>
 
             <div className={styles.panelHeader}>
-              Anomaly Report
+              ML Report
             </div>
 
             <div className={styles.chartPlaceholder}>
@@ -179,4 +179,4 @@ function Anomaly() {
   );
 }
 
-export default Anomaly;
+export default ML;
