@@ -96,10 +96,18 @@ function App() {
 
 export default App;*/
 
-import DailySimulation from "./pages/Simulation/DailySimulation/DailySimulation";
+/*import DailySimulation from "./pages/Simulation/DailySimulation/DailySimulation";
 
 function App() {
   return <DailySimulation />;
+}
+
+export default App;*/
+
+import Station from "./pages/DAML/Station/Station";
+
+function App() {
+  return <Station />;
 }
 
 export default App;
