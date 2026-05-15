@@ -128,10 +128,10 @@ function App() {
 
 export default App;*/
 
-import Detection from "./pages/DAML/Detection/Detection";
+import Classification from "./pages/DAML/Classification/Classification";
 
 function App() {
-  return <Detection />;
+  return <Classification />;
 }
 
 export default App;
