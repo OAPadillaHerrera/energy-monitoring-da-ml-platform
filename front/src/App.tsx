@@ -112,10 +112,10 @@ function App() {
 
 export default App;*/
 
-import System from "./pages/DAML/System/System";
+import Energy from "./pages/DAML/Energy/Energy";
 
 function App() {
-  return <System />;
+  return <Energy />;
 }
 
 export default App;
