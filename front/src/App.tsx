@@ -112,10 +112,26 @@ function App() {
 
 export default App;*/
 
-import Energy from "./pages/DAML/Energy/Energy";
+/*import Energy from "./pages/DAML/Energy/Energy";
 
 function App() {
   return <Energy />;
+}
+
+export default App;*/
+
+/*import Detection from "./pages/DAML/Detection/Detection";
+
+function App() {
+  return <Detection />;
+}
+
+export default App;*/
+
+import Detection from "./pages/DAML/Detection/Detection";
+
+function App() {
+  return <Detection />;
 }
 
 export default App;
