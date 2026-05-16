@@ -2,12 +2,11 @@
 
 import styles from "./MainLayout.module.css";
 import logo from "../../assets/logos/logo_ENERGON.png";
+import { NavLink, Outlet } from "react-router-dom";
 
 function MainLayout() {
   return (
     <main className={styles.container}>
-
-      <div className={styles.overlay}></div>
 
       <header className={styles.topbar}>
 
@@ -25,14 +24,12 @@ function MainLayout() {
           </span>
 
           <div className={styles.systemStatus}>
-
             <span className={styles.statusDot}></span>
-
             <span className={styles.statusText}>
               System Online
             </span>
-
           </div>
+
         </div>
 
       </header>
@@ -50,33 +47,66 @@ function MainLayout() {
             />
 
             <div className={styles.brandContainer}>
-              <div className={styles.brandMain}>
-                ENERGON
-              </div>
-
-              <div className={styles.brandSub}>
-                ANALYTICS
-              </div>
+              <div className={styles.brandMain}>ENERGON</div>
+              <div className={styles.brandSub}>ANALYTICS</div>
             </div>
 
           </div>
 
           <nav className={styles.nav}>
 
-            <button className={styles.navButton}>Dashboard</button>
-            <button className={styles.navButton}>Simulation</button>
-            <button className={styles.navButton}>DA/ML</button>
-            <button className={styles.navButton}>Reports</button>
-            <button className={styles.navButton}>About</button>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive ? styles.navButtonActive : styles.navButton
+              }
+          
+            >
+              Dashboard
+            </NavLink>
+
+            <NavLink
+              to="/simulation"
+              className={({ isActive }) =>
+                isActive ? styles.navButtonActive : styles.navButton
+              }
+            >
+              Simulation
+            </NavLink>
+
+            <NavLink
+              to="/daml"
+              className={({ isActive }) =>
+                isActive ? styles.navButtonActive : styles.navButton
+              }
+            >
+              DA/ML
+            </NavLink>
+
+            <NavLink
+              to="/reports"
+              className={({ isActive }) =>
+                isActive ? styles.navButtonActive : styles.navButton
+              }
+            >
+              Reports
+            </NavLink>
+
+            <NavLink
+              to="/about"
+              className={({ isActive }) =>
+                isActive ? styles.navButtonActive : styles.navButton
+              }
+            >
+              About
+            </NavLink>
 
           </nav>
 
         </aside>
 
         <section className={styles.pageContent}>
-          <h2 style={{ color: "white", padding: 20 }}>
-            MainLayout funcionando correctamente
-          </h2>
+          <Outlet />
         </section>
 
       </section>
