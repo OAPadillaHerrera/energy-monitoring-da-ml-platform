@@ -168,10 +168,10 @@ function App() {
 
 export default App;*/
 
-import ML from "./pages/Reports/ML/ML";
+import MainLayout from "./layouts/MainLayout/MainLayout";
 
 function App() {
-  return <ML />;
+  return <MainLayout />;
 }
 
 export default App;

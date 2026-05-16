@@ -1,0 +1,193 @@
+
+
+.container {
+  height: 100vh;
+
+  background:
+    radial-gradient(circle at top, #07152f 0%, #020617 55%, #000814 100%);
+
+  position: relative;
+  overflow: hidden;
+
+  font-family: "Courier New", Consolas, monospace;
+  color: white;
+}
+
+.container * {
+  font-family: "Courier New", Consolas, monospace;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(0, 140, 255, 0.012) 0px,
+    rgba(0, 140, 255, 0.012) 1px,
+    transparent 1px,
+    transparent 72px
+  );
+
+  opacity: 0.2;
+}
+
+.topbar {
+  position: relative;
+  z-index: 2;
+
+  height: 68px;
+  padding: 0 22px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border-bottom: 1px solid rgba(0, 194, 255, 0.08);
+}
+
+.stationBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.stationLabel {
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: rgba(125, 211, 252, 0.58);
+}
+
+.stationName {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.systemBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.systemTitle {
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: rgba(125, 211, 252, 0.68);
+}
+
+.systemStatus {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+
+  display: inline-block;
+
+  background: #00ff9d;
+
+  animation: pulseGlow 1.5s infinite ease-in-out;
+
+  box-shadow: 0 0 2px #00ff9d;
+}
+
+.statusText {
+  font-size: 14px;
+  color: rgba(125, 211, 252, 0.9);
+}
+
+@keyframes pulseGlow {
+  0% {
+    transform: scale(1);
+    opacity: 0.75;
+    box-shadow: 0 0 2px #00ff9d;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+    box-shadow: 0 0 6px #00ff9d;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0.75;
+    box-shadow: 0 0 2px #00ff9d;
+  }
+}
+
+.content {
+  display: flex;
+  height: calc(100vh - 68px);
+}
+
+.sidebar {
+  width: 220px;
+  padding: 16px;
+  border-right: 1px solid rgba(0, 194, 255, 0.08);
+}
+
+.sidebarLogo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 56px;
+}
+
+.brandContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.brandMain {
+  font-family: "Inter", sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #e7edf3;
+}
+
+.brandSub {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: #39cfff;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.navButton {
+  height: 38px;
+  padding: 0 16px;
+
+  border-radius: 6px;
+  border: 1px solid rgba(0, 194, 255, 0.12);
+
+  background: rgba(8, 28, 52, 0.85);
+
+  color: rgba(255, 255, 255, 0.75);
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.navButton:hover {
+  opacity: 0.88;
+}
+
+.pageContent {
+  flex: 1;
+  padding: 16px;
+}
