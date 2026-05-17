@@ -1,195 +1,91 @@
 
 
-import styles from "./Daml.module.css";
-import logo from "../../assets/logos/logo_ENERGON.png";
+import styles from "./DAML.module.css";
 
 function Daml() {
   return (
-    <main className={styles.container}>
-
+    <section className={styles.container}>
       <div className={styles.overlay}></div>
 
-      <header className={styles.topbar}>
+      <section className={styles.mainPanel}>
 
-        <div className={styles.stationBlock}>
-          <span className={styles.stationLabel}>
-            Station
-          </span>
+        <div className={styles.tabs}>
+          <button className={styles.tabButtonActive}>
+            Metrics
+          </button>
 
-          <h1 className={styles.stationName}>
-            Vehicular Fuel Service Station
-          </h1>
+          <button className={styles.tabButton}>
+            Anomaly Detection
+          </button>
+
+          <button className={styles.tabButton}>
+            ML
+          </button>
         </div>
 
-        <div className={styles.systemBlock}>
-          <span className={styles.systemTitle}>
-            Energy DA/ML Engine
-          </span>
+        <section className={styles.chartPanel}>
+          <div className={styles.panelHeader}>
+            Basic Metrics Visualization
+          </div>
 
-          <div className={styles.systemStatus}>
+          <div className={styles.chartPlaceholder}>
+            <div className={styles.chartGrid}></div>
 
-            <span className={styles.statusDot}></span>
-
-            <span className={styles.statusText}>
-              System Online
+            <span className={styles.placeholderText}>
+              Waiting for Basic Metrics execution...
             </span>
-
           </div>
-        </div>
+        </section>
 
-      </header>
-
-      <section className={styles.content}>
-
-        <aside className={styles.sidebar}>
-
-          <div className={styles.sidebarLogo}>
-
-            <img
-              src={logo}
-              alt="Energon"
-              className={styles.logo}
-            />
-
-            <div className={styles.brandContainer}>
-
-              <div className={styles.brandMain}>
-                ENERGON
-              </div>
-
-              <div className={styles.brandSub}>
-                ANALYTICS
-              </div>
-
-            </div>
-
+        <section className={styles.controlPanel}>
+          <div className={styles.panelHeader}>
+            Metrics Configuration
           </div>
 
-          <nav className={styles.nav}>
+          <div className={styles.controlContent}>
 
-            <button className={styles.navButton}>
-              Dashboard
-            </button>
-
-            <button className={styles.navButton}>
-              Simulation
-            </button>
-
-            <button className={styles.navButtonActive}>
-              DA/ML
-            </button>
-
-            <button className={styles.navButton}>
-              Reports
-            </button>
-
-            <button className={styles.navButton}>
-              About
-            </button>
-
-          </nav>
-
-        </aside>
-
-        <section className={styles.mainPanel}>
-
-          <div className={styles.tabs}>
-
-            <button className={styles.tabButtonActive}>
-              Metrics
-            </button>
-
-            <button className={styles.tabButton}>
-              Anomaly Detection
-            </button>
-
-            <button className={styles.tabButton}>
-              ML 
-            </button>
-
-          </div>
-
-          <section className={styles.chartPanel}>
-
-            <div className={styles.panelHeader}>
-              Basic Metrics Visualization
-            </div>
-
-            <div className={styles.chartPlaceholder}>
-
-              <div className={styles.chartGrid}></div>
-
-              <span className={styles.placeholderText}>
-                Waiting for Basic Metrics execution...
-              </span>
-
-            </div>
-
-          </section>
-
-          <section className={styles.controlPanel}>
-
-            <div className={styles.panelHeader}>
-              Metrics Configuration
-            </div>
-
-            <div className={styles.controlContent}>
-
-              <div className={styles.modeSelector}>
-
-                <button className={styles.tabButtonActive}>
-                  Basic
-                </button>
-
-                <button className={styles.tabButton}>
-                  Station
-                </button>
-
-                <button className={styles.tabButton}>
-                  System
-                </button>
-
-                <button className={styles.tabButton}>
-                  Energy
-                </button>
-
-              </div>
-
-              <div className={styles.rangeInputs}>
-
-                <div className={styles.inputGroup}>
-
-                  <input
-                    type="text"
-                    className={styles.input}
-                    placeholder="Select System"
-                  />
-
-                  <div className={styles.inputLabel}>
-                    System Name
-                  </div>
-
-                </div>
-
-              </div>
-
-              <button className={styles.runButton}>
-                Run Basic
+            <div className={styles.modeSelector}>
+              <button className={styles.tabButtonActive}>
+                Basic
               </button>
 
+              <button className={styles.tabButton}>
+                Station
+              </button>
+
+              <button className={styles.tabButton}>
+                System
+              </button>
+
+              <button className={styles.tabButton}>
+                Energy
+              </button>
             </div>
 
-          </section>
+            <div className={styles.rangeInputs}>
+              <div className={styles.inputGroup}>
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder="Select System"
+                />
 
+                <div className={styles.inputLabel}>
+                  System Name
+                </div>
+              </div>
+            </div>
+
+            <button className={styles.runButton}>
+              Run Basic
+            </button>
+
+          </div>
         </section>
 
       </section>
-
-    </main>
+    </section>
   );
 }
 
 export default Daml;
-
-
-

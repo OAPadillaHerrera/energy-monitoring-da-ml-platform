@@ -1,189 +1,102 @@
 
 
 import styles from "./Reports.module.css";
-import logo from "../../assets/logos/logo_ENERGON.png";
 
 function Reports() {
   return (
-    <main className={styles.container}>
-
+    <section className={styles.container}>
       <div className={styles.overlay}></div>
 
-      <header className={styles.topbar}>
+      <section className={styles.mainPanel}>
 
-        <div className={styles.stationBlock}>
-          <span className={styles.stationLabel}>
-            Station
-          </span>
+        <div className={styles.tabs}>
 
-          <h1 className={styles.stationName}>
-            Vehicular Fuel Service Station
-          </h1>
+          <button className={styles.tabButtonActive}>
+            Simulation
+          </button>
+
+          <button className={styles.tabButton}>
+            DA/ML
+          </button>
+
         </div>
 
-        <div className={styles.systemBlock}>
-          <span className={styles.systemTitle}>
-            Energy DA/ML Engine
-          </span>
+        <div className={styles.subTabs}>
 
-          <div className={styles.systemStatus}>
+          <button className={styles.tabButtonActive}>
+            Hourly Data
+          </button>
 
-            <span className={styles.statusDot}></span>
+          <button className={styles.tabButton}>
+            Event Records
+          </button>
 
-            <span className={styles.statusText}>
-              System Online
+          <button className={styles.tabButton}>
+            Daily Totals
+          </button>
+
+          <button className={styles.tabButton}>
+            Voltage Records
+          </button>
+
+        </div>
+
+        <section className={styles.chartPanel}>
+
+          <div className={styles.panelHeader}>
+            Hourly Energy Consumption Report
+          </div>
+
+          <div className={styles.chartPlaceholder}>
+
+            <div className={styles.chartGrid}></div>
+
+            <span className={styles.placeholderText}>
+              Waiting for report generation...
             </span>
 
           </div>
-        </div>
 
-      </header>
+        </section>
 
-      <section className={styles.content}>
+        <section className={styles.controlPanel}>
 
-        <aside className={styles.sidebar}>
+          <div className={styles.panelHeader}>
+            Report Configuration
+          </div>
 
-          <div className={styles.sidebarLogo}>
+          <div className={styles.controlContent}>
 
-            <img
-              src={logo}
-              alt="Energon"
-              className={styles.logo}
-            />
+            <div className={styles.modeSelector}>
 
-            <div className={styles.brandContainer}>
+              <button className={styles.tabButtonActive}>
+                Chart View
+              </button>
 
-              <div className={styles.brandMain}>
-                ENERGON
-              </div>
+              <button className={styles.tabButton}>
+                Table View
+              </button>
 
-              <div className={styles.brandSub}>
-                ANALYTICS
-              </div>
+            </div>
+
+            <div className={styles.modeSelector}>
+
+              <button className={styles.exportButton}>
+                Export CSV
+              </button>
+
+              <button className={styles.exportButton}>
+                Export PDF
+              </button>
 
             </div>
 
           </div>
-
-          <nav className={styles.nav}>
-
-            <button className={styles.navButton}>
-              Dashboard
-            </button>
-
-            <button className={styles.navButton}>
-              Simulation
-            </button>
-
-            <button className={styles.navButton}>
-              DA/ML
-            </button>
-
-            <button className={styles.navButtonActive}>
-              Reports
-            </button>
-
-            <button className={styles.navButton}>
-              About
-            </button>
-
-          </nav>
-
-        </aside>
-
-        <section className={styles.mainPanel}>
-
-          <div className={styles.tabs}>
-
-            <button className={styles.tabButtonActive}>
-              Simulation
-            </button>
-
-            <button className={styles.tabButton}>
-              DA/ML
-            </button>
-
-          </div>
-
-          <div className={styles.subTabs}>
-
-            <button className={styles.subTabButtonActive}>
-              Hourly Data
-            </button>
-
-            <button className={styles.subTabButton}>
-              Event Records
-            </button>
-
-            <button className={styles.subTabButton}>
-              Daily Totals
-            </button>
-
-            <button className={styles.subTabButton}>
-              Voltage Records
-            </button>
-
-          </div>
-
-          <section className={styles.chartPanel}>
-
-            <div className={styles.panelHeader}>
-              Hourly Energy Consumption Report
-            </div>
-
-            <div className={styles.chartPlaceholder}>
-
-              <div className={styles.chartGrid}></div>
-
-              <span className={styles.placeholderText}>
-                Waiting for report generation...
-              </span>
-
-            </div>
-
-          </section>
-
-          <section className={styles.controlPanel}>
-
-            <div className={styles.panelHeader}>
-              Report Configuration
-            </div>
-
-            <div className={styles.controlContent}>
-
-              <div className={styles.modeSelector}>
-
-                <button className={styles.tabButtonActive}>
-                  Chart View
-                </button>
-
-                <button className={styles.tabButton}>
-                  Table View
-                </button>
-
-              </div>
-
-              <div className={styles.modeSelector}>
-
-                <button className={styles.exportButton}>
-                  Export CSV
-                </button>
-
-                <button className={styles.exportButton}>
-                  Export PDF
-                </button>
-
-              </div>
-
-            </div>
-
-          </section>
 
         </section>
 
       </section>
-
-    </main>
+    </section>
   );
 }
 

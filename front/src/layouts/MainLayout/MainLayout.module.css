@@ -3,10 +3,15 @@
 .container {
   height: 100vh;
 
-  background:
-    radial-gradient(circle at top, #07152f 0%, #020617 55%, #000814 100%);
+  background: radial-gradient(
+    circle at top,
+    #07152f 0%,
+    #020617 55%,
+    #000814 100%
+  );
 
   position: relative;
+
   overflow: hidden;
 
   font-family: "Courier New", Consolas, monospace;
@@ -44,6 +49,8 @@
   align-items: center;
 
   border-bottom: 1px solid rgba(0, 194, 255, 0.08);
+
+  flex-shrink: 0;
 }
 
 .stationBlock {
@@ -85,12 +92,9 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  display: inline-block;
-
   background: #00ff9d;
 
   animation: pulseGlow 1.5s infinite ease-in-out;
-
   box-shadow: 0 0 2px #00ff9d;
 }
 
@@ -105,13 +109,11 @@
     opacity: 0.75;
     box-shadow: 0 0 2px #00ff9d;
   }
-
   50% {
     transform: scale(1.08);
     opacity: 1;
     box-shadow: 0 0 8px #00ff9d;
   }
-
   100% {
     transform: scale(1);
     opacity: 0.75;
@@ -121,20 +123,29 @@
 
 .content {
   display: flex;
+
   height: calc(100vh - 68px);
+
+  min-height: 0;
 }
 
 .sidebar {
   width: 220px;
-  padding: 16px;
+
+  padding: 14px;
 
   border-right: 1px solid rgba(0, 194, 255, 0.08);
+
+  flex-shrink: 0;
+
+  overflow-y: auto;
 }
 
 .sidebarLogo {
   display: flex;
   align-items: center;
   gap: 12px;
+
   margin-bottom: 20px;
 }
 
@@ -177,20 +188,21 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 6px;
+  border-radius: 8px;
+
   border: 1px solid rgba(0, 194, 255, 0.12);
 
   background: rgba(8, 28, 52, 0.85);
 
   color: rgba(255, 255, 255, 0.75);
 
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 1px;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  flex-shrink: 0;
 }
 
 .navButton:hover {
@@ -208,12 +220,81 @@
   box-shadow: 0 0 14px rgba(0, 194, 255, 0.35);
 }
 
-.navButton:visited,
-.navButtonActive:visited {
-  color: white;
-}
-
 .pageContent {
   flex: 1;
-  padding: 16px;
+
+  min-height: 0; /* 🔥 CRÍTICO */
+  overflow: hidden; /* 🔥 evita scroll raro */
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 14px;
+}
+
+@media (max-width: 1000px) {
+  .container {
+    overflow-y: auto;
+  }
+
+  .content {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 194, 255, 0.08);
+  }
+
+  .nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-height: 820px) {
+  .topbar {
+    height: 58px;
+    padding: 0 18px;
+  }
+
+  .content {
+    height: calc(100vh - 58px);
+  }
+
+  .stationName {
+    font-size: 20px;
+  }
+
+  .sidebar {
+    padding: 10px;
+  }
+
+  .sidebarLogo {
+    margin-bottom: 14px;
+  }
+
+  .logo {
+    width: 48px;
+  }
+
+  .brandMain {
+    font-size: 20px;
+  }
+
+  .nav {
+    gap: 8px;
+  }
+
+  .navButton,
+  .navButtonActive {
+    height: 34px;
+    font-size: 12px;
+  }
+
+  .pageContent {
+    padding: 8px;
+  }
 }
