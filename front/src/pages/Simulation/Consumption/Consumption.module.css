@@ -55,11 +55,11 @@
 
   flex-shrink: 0;
 
-  display: inline-flex;
+  display: inline-flex;          
   align-items: center;
   justify-content: center;
 
-  text-decoration: none;
+  text-decoration: none;        
   color: rgba(255, 255, 255, 0.75);
 
   line-height: 1;
@@ -68,8 +68,11 @@
 
 .tabButtonActive {
   border: 1px solid rgba(0, 194, 255, 0.28);
+
   background: linear-gradient(90deg, #008cff, #00c2ff);
+
   color: white;
+
   box-shadow: 0 0 14px rgba(0, 194, 255, 0.35);
 }
 
@@ -82,6 +85,7 @@
   border-radius: 14px;
 
   border: 1px solid rgba(0, 194, 255, 0.08);
+
   background: rgba(4, 16, 30, 0.76);
 
   overflow: hidden;
@@ -92,6 +96,18 @@
 
   display: flex;
   flex-direction: column;
+}
+
+.controlPanel {
+  border-radius: 14px;
+
+  border: 1px solid rgba(0, 194, 255, 0.08);
+
+  background: rgba(4, 16, 30, 0.76);
+
+  overflow: hidden;
+
+  flex-shrink: 0;
 }
 
 .panelHeader {
@@ -151,18 +167,156 @@
   color: rgba(125, 211, 252, 0.58);
 }
 
-.controlPanel {
-  border-radius: 14px;
+.controlContent {
+  padding: 16px;
 
-  border: 1px solid rgba(0, 194, 255, 0.08);
-  background: rgba(4, 16, 30, 0.76);
+  display: flex;
+  flex-direction: column;
 
-  overflow: hidden;
-
-  flex-shrink: 0;
+  gap: 16px;
 }
 
-.mainPanel {
-  min-height: 0;  
-  overflow-y: auto; 
+.modeSelector {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.rangeInputs {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.input {
+  height: 38px;
+
+  border-radius: 8px;
+
+  border: 1px solid rgba(0, 194, 255, 0.12);
+
+  background: rgba(2, 12, 24, 0.92);
+
+  color: white;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  padding: 0 12px;
+
+  text-align: center;
+
+  font-family: inherit;
+}
+
+.inputLabel {
+  width: 100%;
+
+  text-align: center;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+  color: rgba(125, 211, 252, 0.62);
+}
+
+.runButton {
+  height: 38px;
+
+  padding: 0 18px;
+
+  width: fit-content;
+
+  align-self: flex-start;
+
+  border-radius: 8px;
+
+  border: 1px solid rgba(0, 255, 157, 0.25);
+
+  background: linear-gradient(90deg, #00b894, #00ff9d);
+
+  color: #02120d;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  font-family: inherit;
+}
+
+@media (max-width: 1000px) {
+  .rangeInputs {
+    flex-direction: column;
+  }
+
+  .chartPanel {
+    min-height: 340px;
+  }
+}
+
+@media (max-height: 820px) {
+  .mainPanel {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .tabs {
+    gap: 8px;
+  }
+
+  .tabButton,
+  .tabButtonActive,
+  .runButton {
+    height: 32px;
+    padding: 0 14px;
+    font-size: 11px;
+  }
+
+  .panelHeader {
+    height: 34px;
+    font-size: 11px;
+    padding: 0 14px;
+  }
+
+  .chartPanel {
+    min-height: 190px;
+  }
+
+  .placeholderText {
+    font-size: 12px;
+  }
+
+  .controlContent {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .rangeInputs {
+    gap: 10px;
+  }
+
+  .input {
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .inputLabel {
+    font-size: 10px;
+  }
+
+  .pageTitle {
+    font-size: 20px;
+  }
 }

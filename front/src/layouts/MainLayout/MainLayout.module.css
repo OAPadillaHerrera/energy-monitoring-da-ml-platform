@@ -223,8 +223,8 @@
 .pageContent {
   flex: 1;
 
-  min-height: 0; /* 🔥 CRÍTICO */
-  overflow: hidden; /* 🔥 evita scroll raro */
+  min-height: 0; 
+  overflow: hidden; 
 
   display: flex;
   flex-direction: column;
