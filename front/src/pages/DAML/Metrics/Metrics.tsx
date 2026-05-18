@@ -1,49 +1,55 @@
 
 
-import styles from "./ML.module.css";
+import styles from "./Metrics.module.css";
 
-function ML() {
+function Metrics() {
   return (
     <section className={styles.mainPanel}>
 
       <section className={styles.chartPanel}>
-
         <div className={styles.panelHeader}>
-          Root Cause Pipeline Visualization
+          Basic Metrics Visualization
         </div>
 
         <div className={styles.chartPlaceholder}>
-
           <div className={styles.chartGrid}></div>
 
           <span className={styles.placeholderText}>
-            Waiting for ML execution...
+            Waiting for Metrics execution...
           </span>
-
         </div>
-
       </section>
 
       <section className={styles.controlPanel}>
-
         <div className={styles.panelHeader}>
-          ML Configuration
+          Metrics Configuration
         </div>
 
         <div className={styles.controlContent}>
 
           <div className={styles.modeSelector}>
 
-            <span className={styles.pipelineLabel}>
-              Root Cause Pipeline
-            </span>
+            <button className={styles.tabButtonActive}>
+              Basic
+            </button>
+
+            <button className={styles.tabButton}>
+              Station
+            </button>
+
+            <button className={styles.tabButton}>
+              System
+            </button>
+
+            <button className={styles.tabButton}>
+              Energy
+            </button>
 
           </div>
 
           <div className={styles.rangeInputs}>
 
             <div className={styles.inputGroup}>
-
               <input
                 type="text"
                 className={styles.input}
@@ -53,21 +59,19 @@ function ML() {
               <div className={styles.inputLabel}>
                 System Name
               </div>
-
             </div>
 
           </div>
 
           <button className={styles.runButton}>
-            Run Root Cause Pipeline
+            Run Basic
           </button>
 
         </div>
-
       </section>
 
     </section>
   );
 }
 
-export default ML;
+export default Metrics;

@@ -35,7 +35,8 @@
   flex-shrink: 0;
 }
 
-.tabButton {
+.tabButton,
+.tabButtonActive {
   height: 38px;
   padding: 0 16px;
 
@@ -44,40 +45,40 @@
   border: 1px solid rgba(0, 194, 255, 0.12);
   background: rgba(8, 28, 52, 0.85);
 
-  color: rgba(255, 255, 255, 0.75);
-
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 1px;
 
   cursor: pointer;
+
   font-family: inherit;
 
   flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.75);
+
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .tabButtonActive {
-  height: 38px;
-  padding: 0 16px;
-
-  border-radius: 8px;
-
   border: 1px solid rgba(0, 194, 255, 0.28);
 
   background: linear-gradient(90deg, #008cff, #00c2ff);
 
   color: white;
 
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1px;
-
   box-shadow: 0 0 14px rgba(0, 194, 255, 0.35);
+}
 
-  cursor: pointer;
-  font-family: inherit;
-
-  flex-shrink: 0;
+.tabButton:hover,
+.tabButtonActive:hover {
+  opacity: 0.9;
 }
 
 .chartPanel,
@@ -96,7 +97,7 @@
   min-height: 260px;
 
   display: flex;
-  flex-direction: column;
+  flex-direction:  column;
 }
 
 .panelHeader {
@@ -113,6 +114,7 @@
   font-weight: 700;
 
   letter-spacing: 2px;
+
   color: white;
 
   flex-shrink: 0;
@@ -120,6 +122,7 @@
 
 .chartPlaceholder {
   position: relative;
+
   flex: 1;
 
   display: flex;
@@ -179,6 +182,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+
   align-items: center;
 }
 
@@ -186,6 +190,7 @@
   height: 38px;
 
   border-radius: 8px;
+
   border: 1px solid rgba(0, 194, 255, 0.12);
 
   background: rgba(2, 12, 24, 0.92);
@@ -198,6 +203,7 @@
   padding: 0 12px;
 
   text-align: center;
+
   font-family: inherit;
 }
 
@@ -224,6 +230,7 @@
   align-self: flex-start;
 
   border-radius: 8px;
+
   border: 1px solid rgba(0, 255, 157, 0.25);
 
   background: linear-gradient(90deg, #00b894, #00ff9d);
@@ -236,6 +243,7 @@
   letter-spacing: 1px;
 
   cursor: pointer;
+
   font-family: inherit;
 }
 
@@ -264,12 +272,15 @@
   .runButton {
     height: 32px;
     padding: 0 14px;
+
     font-size: 11px;
   }
 
   .panelHeader {
     height: 34px;
+
     font-size: 11px;
+
     padding: 0 14px;
   }
 
@@ -283,6 +294,7 @@
 
   .controlContent {
     padding: 10px;
+
     gap: 10px;
   }
 
@@ -292,6 +304,7 @@
 
   .input {
     height: 32px;
+
     font-size: 12px;
   }
 
@@ -303,7 +316,6 @@
     font-size: 20px;
   }
 }
-
 
 
 

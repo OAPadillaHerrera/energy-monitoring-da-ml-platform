@@ -1,89 +1,46 @@
 
 
 import styles from "./DAML.module.css";
+import { Outlet, NavLink } from "react-router-dom";
 
 function Daml() {
   return (
-    <section className={styles.container}>
-      <div className={styles.overlay}></div>
+    <section className={styles.mainPanel}>
 
-      <section className={styles.mainPanel}>
+      <div className={styles.tabs}>
 
-        <div className={styles.tabs}>
-          <button className={styles.tabButtonActive}>
-            Metrics
-          </button>
+        <NavLink
+          to="/daml"
+          end
+          className={({ isActive }) =>
+            isActive ? styles.tabButtonActive : styles.tabButton
+          }
+        >
+          Metrics
+        </NavLink>
 
-          <button className={styles.tabButton}>
-            Anomaly Detection
-          </button>
+        <NavLink
+          to="anomaly-detection"
+          className={({ isActive }) =>
+            isActive ? styles.tabButtonActive : styles.tabButton
+          }
+        >
+          Detection
+        </NavLink>
 
-          <button className={styles.tabButton}>
-            ML
-          </button>
-        </div>
+        <NavLink
+          to="ml"
+          className={({ isActive }) =>
+            isActive ? styles.tabButtonActive : styles.tabButton
+          }
+        >
+          ML
+        </NavLink>
 
-        <section className={styles.chartPanel}>
-          <div className={styles.panelHeader}>
-            Basic Metrics Visualization
-          </div>
+      </div>
 
-          <div className={styles.chartPlaceholder}>
-            <div className={styles.chartGrid}></div>
+      <Outlet />
 
-            <span className={styles.placeholderText}>
-              Waiting for Basic Metrics execution...
-            </span>
-          </div>
-        </section>
-
-        <section className={styles.controlPanel}>
-          <div className={styles.panelHeader}>
-            Metrics Configuration
-          </div>
-
-          <div className={styles.controlContent}>
-
-            <div className={styles.modeSelector}>
-              <button className={styles.tabButtonActive}>
-                Basic
-              </button>
-
-              <button className={styles.tabButton}>
-                Station
-              </button>
-
-              <button className={styles.tabButton}>
-                System
-              </button>
-
-              <button className={styles.tabButton}>
-                Energy
-              </button>
-            </div>
-
-            <div className={styles.rangeInputs}>
-              <div className={styles.inputGroup}>
-                <input
-                  type="text"
-                  className={styles.input}
-                  placeholder="Select System"
-                />
-
-                <div className={styles.inputLabel}>
-                  System Name
-                </div>
-              </div>
-            </div>
-
-            <button className={styles.runButton}>
-              Run Basic
-            </button>
-
-          </div>
-        </section>
-
-      </section>
     </section>
   );
 }

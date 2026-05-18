@@ -8,6 +8,9 @@ import Consumption from "./pages/Simulation/Consumption/Consumption";
 import SystemEvents from "./pages/Simulation/SystemEvents/SystemEvents";
 import Voltage from "./pages/Simulation/Voltage/Voltage";
 import DAML from "./pages/DAML/DAML";
+import Metrics from "./pages/DAML/Metrics/Metrics";
+import AnomalyDetection from "./pages/DAML/AnomalyDetection/AnomalyDetection";
+import ML from "./pages/DAML/ML/ML";
 import Reports from "./pages/Reports/Reports";
 import About from "./pages/About/About";
 
@@ -25,6 +28,14 @@ function App() {
             <Route index element={<Consumption />} />
             <Route path="system-events" element={<SystemEvents />} />
             <Route path="voltage" element={<Voltage />} />
+
+          </Route>
+
+           <Route path="/DAML" element={<DAML />}>
+
+            <Route index element={<Metrics />} />
+            <Route path="anomaly-detection" element={<AnomalyDetection />} />
+            <Route path="ML" element={<ML />} />
 
           </Route>
 
