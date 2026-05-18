@@ -170,8 +170,13 @@
 
   text-decoration: none;
 
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center; 
+
+  line-height: 1; 
+
+  box-sizing: border-box;
 
   transition:
     opacity 0.2s ease,
