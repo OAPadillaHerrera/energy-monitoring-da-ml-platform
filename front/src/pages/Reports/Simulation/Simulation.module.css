@@ -2,16 +2,13 @@
 
 .mainPanel {
   height: 100%;
-
   position: relative;
 
   padding: 14px;
-
   display: flex;
   flex-direction: column;
 
   gap: 12px;
-
   min-height: 0;
 
   overflow-y: auto;
@@ -22,7 +19,6 @@
   font-weight: 800;
 
   color: #ffffff;
-
   letter-spacing: 1px;
 
   margin: 0 0 6px 0;
@@ -35,8 +31,7 @@
   flex-shrink: 0;
 }
 
-.tabButton,
-.tabButtonActive {
+.tabButton {
   height: 38px;
   padding: 0 16px;
 
@@ -45,87 +40,83 @@
   border: 1px solid rgba(0, 194, 255, 0.12);
   background: rgba(8, 28, 52, 0.85);
 
+  color: rgba(255, 255, 255, 0.75);
+
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 1px;
 
   cursor: pointer;
-
   font-family: inherit;
 
   flex-shrink: 0;
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  text-decoration: none;
-
-  color: rgba(255, 255, 255, 0.75);
-
-  line-height: 1;
-  white-space: nowrap;
-
   transition:
-    opacity 0.2s ease,
-    box-shadow 0.2s ease,
+    background 0.2s ease,
     border-color 0.2s ease,
-    background 0.2s ease;
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.tabButton:hover {
+  opacity: 0.88;
+
+  border-color: rgba(0, 194, 255, 0.28);
+
+  background: rgba(10, 34, 62, 0.92);
 }
 
 .tabButtonActive {
+  height: 38px;
+  padding: 0 16px;
+
+  border-radius: 8px;
+
   border: 1px solid rgba(0, 194, 255, 0.28);
 
   background: linear-gradient(90deg, #008cff, #00c2ff);
 
   color: white;
 
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+
   box-shadow: 0 0 14px rgba(0, 194, 255, 0.35);
-}
 
-.tabButton:hover {
-  opacity: 0.88;
+  cursor: pointer;
+  font-family: inherit;
 
-  border-color: rgba(0, 194, 255, 0.35);
+  flex-shrink: 0;
 
-  background: rgba(10, 34, 64, 0.95);
+  transition:
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .tabButtonActive:hover {
   opacity: 0.92;
 
   box-shadow: 0 0 18px rgba(0, 194, 255, 0.45);
-
-  border-color: rgba(0, 194, 255, 0.4);
 }
 
-.chartPanel {
-  border-radius: 14px;
-
-  border: 1px solid rgba(0, 194, 255, 0.08);
-
-  background: rgba(4, 16, 30, 0.76);
-
-  overflow: hidden;
-
-  flex-shrink: 0;
-
-  min-height: 260px;
-
-  display: flex;
-  flex-direction: column;
-}
-
+.chartPanel,
 .controlPanel {
   border-radius: 14px;
 
   border: 1px solid rgba(0, 194, 255, 0.08);
-
   background: rgba(4, 16, 30, 0.76);
 
   overflow: hidden;
 
   flex-shrink: 0;
+}
+
+.chartPanel {
+  min-height: 260px;
+
+  display: flex;
+  flex-direction: column;
 }
 
 .panelHeader {
@@ -142,7 +133,6 @@
   font-weight: 700;
 
   letter-spacing: 2px;
-
   color: white;
 
   flex-shrink: 0;
@@ -150,7 +140,6 @@
 
 .chartPlaceholder {
   position: relative;
-
   flex: 1;
 
   display: flex;
@@ -217,7 +206,6 @@
   height: 38px;
 
   border-radius: 8px;
-
   border: 1px solid rgba(0, 194, 255, 0.12);
 
   background: rgba(2, 12, 24, 0.92);
@@ -230,13 +218,23 @@
   padding: 0 12px;
 
   text-align: center;
-
   font-family: inherit;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+
+  border-color: rgba(0, 194, 255, 0.35);
+
+  box-shadow: 0 0 12px rgba(0, 194, 255, 0.2);
 }
 
 .inputLabel {
   width: 100%;
-
   text-align: center;
 
   font-size: 12px;
@@ -251,13 +249,11 @@
   height: 38px;
 
   padding: 0 18px;
-
   width: fit-content;
 
   align-self: flex-start;
 
   border-radius: 8px;
-
   border: 1px solid rgba(0, 255, 157, 0.25);
 
   background: linear-gradient(90deg, #00b894, #00ff9d);
@@ -270,7 +266,6 @@
   letter-spacing: 1px;
 
   cursor: pointer;
-
   font-family: inherit;
 
   transition:
@@ -281,6 +276,41 @@
 
 .runButton:hover {
   opacity: 0.9;
+
+  border-color: rgba(0, 255, 157, 0.4);
+
+  box-shadow: 0 0 18px rgba(0, 255, 157, 0.35);
+}
+
+.exportButton {
+  height: 38px;
+  padding: 0 18px;
+
+  border-radius: 8px;
+
+  border: 1px solid rgba(0, 255, 157, 0.25);
+
+  background: linear-gradient(90deg, #00b894, #00ff9d);
+
+  color: #02120d;
+
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+  font-family: inherit;
+
+  flex-shrink: 0;
+
+  transition:
+    opacity 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.exportButton:hover {
+  opacity: 0.88;
 
   box-shadow: 0 0 18px rgba(0, 255, 157, 0.35);
 
@@ -309,7 +339,8 @@
 
   .tabButton,
   .tabButtonActive,
-  .runButton {
+  .runButton,
+  .exportButton {
     height: 32px;
     padding: 0 14px;
     font-size: 11px;

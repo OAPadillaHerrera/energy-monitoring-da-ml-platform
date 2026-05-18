@@ -1,182 +1,83 @@
 
 
 import styles from "./DAML.module.css";
-import logo from "../../../assets/logos/logo_ENERGON.png";
 
-function Reports() {
+function DAML() {
   return (
-    <main className={styles.container}>
+    <section className={styles.mainPanel}>
 
-      <div className={styles.overlay}></div>
+      <div className={styles.subTabs}>
 
-      <header className={styles.topbar}>
+        <button className={styles.subTabButtonActive}>
+          Metrics
+        </button>
 
-        <div className={styles.stationBlock}>
-          <span className={styles.stationLabel}>
-            Station
-          </span>
+        <button className={styles.subTabButton}>
+          Anomaly 
+        </button>
 
-          <h1 className={styles.stationName}>
-            Vehicular Fuel Service Station
-          </h1>
+        <button className={styles.subTabButton}>
+          ML
+        </button>
+
+      </div>
+
+      <section className={styles.chartPanel}>
+
+        <div className={styles.panelHeader}>
+          Metrics Report
         </div>
 
-        <div className={styles.systemBlock}>
-          <span className={styles.systemTitle}>
-            Energy DA/ML Engine
+        <div className={styles.chartPlaceholder}>
+
+          <div className={styles.chartGrid}></div>
+
+          <span className={styles.placeholderText}>
+            Waiting for Report generation...
           </span>
 
-          <div className={styles.systemStatus}>
-            <span className={styles.statusDot}></span>
-
-            <span className={styles.statusText}>
-              System Online
-            </span>
-          </div>
         </div>
-
-      </header>
-
-      <section className={styles.content}>
-
-        <aside className={styles.sidebar}>
-
-          <div className={styles.sidebarLogo}>
-
-            <img
-              src={logo}
-              alt="Energon"
-              className={styles.logo}
-            />
-
-            <div className={styles.brandContainer}>
-              <div className={styles.brandMain}>
-                ENERGON
-              </div>
-
-              <div className={styles.brandSub}>
-                ANALYTICS
-              </div>
-            </div>
-
-          </div>
-
-          <nav className={styles.nav}>
-
-            <button className={styles.navButton}>
-              Dashboard
-            </button>
-
-            <button className={styles.navButton}>
-              Simulation
-            </button>
-
-            <button className={styles.navButton}>
-              DA/ML
-            </button>
-
-            <button className={styles.navButtonActive}>
-              Reports
-            </button>
-
-            <button className={styles.navButton}>
-              About
-            </button>
-
-          </nav>
-
-        </aside>
-
-        <section className={styles.mainPanel}>
-
-          <div className={styles.tabs}>
-
-            <button className={styles.tabButton}>
-              Simulation
-            </button>
-
-            <button className={styles.tabButtonActive}>
-              DA/ML
-            </button>
-
-          </div>
-
-          <div className={styles.subTabs}>
-
-            <button className={styles.subTabButtonActive}>
-              Metrics
-            </button>
-
-            <button className={styles.subTabButton}>
-              Anomaly Detection
-            </button>
-
-            <button className={styles.subTabButton}>
-              ML
-            </button>
-
-          </div>
-
-          <section className={styles.chartPanel}>
-
-            <div className={styles.panelHeader}>
-              Metrics Report
-            </div>
-
-            <div className={styles.chartPlaceholder}>
-
-              <div className={styles.chartGrid}></div>
-
-              <span className={styles.placeholderText}>
-                Waiting for Report generation...
-              </span>
-
-            </div>
-
-          </section>
-
-          <section className={styles.controlPanel}>
-
-            <div className={styles.panelHeader}>
-              Report Configuration
-            </div>
-
-            <div className={styles.controlContent}>
-
-              <div className={styles.modeSelector}>
-
-                <button className={styles.tabButtonActive}>
-                  Chart View
-                </button>
-
-                <button className={styles.tabButton}>
-                  Table View
-                </button>
-
-              </div>
-
-              <div className={styles.modeSelector}>
-
-                <button className={styles.exportButton}>
-                  Export CSV
-                </button>
-
-                <button className={styles.exportButton}>
-                  Export PDF
-                </button>
-
-              </div>
-
-            </div>
-
-          </section>
-
-        </section>
 
       </section>
 
-    </main>
+      <section className={styles.controlPanel}>
+
+        <div className={styles.panelHeader}>
+          Report Configuration
+        </div>
+
+        <div className={styles.controlContent}>
+
+          <div className={styles.modeSelector}>
+
+            <button className={styles.tabButtonActive}>
+              Chart View
+            </button>
+
+            <button className={styles.tabButton}>
+              Table View
+            </button>
+
+          </div>
+
+          <div className={styles.modeSelector}>
+
+            <button className={styles.exportButton}>
+              Export CSV
+            </button>
+
+            <button className={styles.exportButton}>
+              Export PDF
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </section>
   );
 }
 
-export default Reports;
+export default DAML;

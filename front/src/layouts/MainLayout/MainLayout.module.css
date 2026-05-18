@@ -3,15 +3,10 @@
 .container {
   height: 100vh;
 
-  background: radial-gradient(
-    circle at top,
-    #07152f 0%,
-    #020617 55%,
-    #000814 100%
-  );
+  background:
+    radial-gradient(circle at top, #07152f 0%, #020617 55%, #000814 100%);
 
   position: relative;
-
   overflow: hidden;
 
   font-family: "Courier New", Consolas, monospace;
@@ -20,21 +15,6 @@
 
 .container * {
   font-family: "Courier New", Consolas, monospace;
-}
-
-.overlay {
-  position: absolute;
-  inset: 0;
-
-  background: repeating-linear-gradient(
-    90deg,
-    rgba(0, 140, 255, 0.012) 0px,
-    rgba(0, 140, 255, 0.012) 1px,
-    transparent 1px,
-    transparent 72px
-  );
-
-  opacity: 0.2;
 }
 
 .topbar {
@@ -49,8 +29,6 @@
   align-items: center;
 
   border-bottom: 1px solid rgba(0, 194, 255, 0.08);
-
-  flex-shrink: 0;
 }
 
 .stationBlock {
@@ -61,11 +39,13 @@
 .stationLabel {
   font-size: 13px;
   letter-spacing: 3px;
+
   color: rgba(125, 211, 252, 0.58);
 }
 
 .stationName {
   margin: 0;
+
   font-size: 24px;
   font-weight: bold;
 }
@@ -79,6 +59,7 @@
 .systemTitle {
   font-size: 13px;
   letter-spacing: 2px;
+
   color: rgba(125, 211, 252, 0.68);
 }
 
@@ -91,54 +72,32 @@
 .statusDot {
   width: 8px;
   height: 8px;
+
   border-radius: 50%;
+
   background: #00ff9d;
 
-  animation: pulseGlow 1.5s infinite ease-in-out;
-  box-shadow: 0 0 2px #00ff9d;
+  box-shadow: 0 0 8px #00ff9d;
 }
 
 .statusText {
   font-size: 14px;
-  color: rgba(125, 211, 252, 0.9);
-}
 
-@keyframes pulseGlow {
-  0% {
-    transform: scale(1);
-    opacity: 0.75;
-    box-shadow: 0 0 2px #00ff9d;
-  }
-  50% {
-    transform: scale(1.08);
-    opacity: 1;
-    box-shadow: 0 0 8px #00ff9d;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0.75;
-    box-shadow: 0 0 2px #00ff9d;
-  }
+  color: rgba(125, 211, 252, 0.9);
 }
 
 .content {
   display: flex;
 
   height: calc(100vh - 68px);
-
-  min-height: 0;
 }
 
 .sidebar {
   width: 220px;
 
-  padding: 14px;
+  padding: 16px;
 
   border-right: 1px solid rgba(0, 194, 255, 0.08);
-
-  flex-shrink: 0;
-
-  overflow-y: auto;
 }
 
 .sidebarLogo {
@@ -156,19 +115,35 @@
 .brandContainer {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .brandMain {
   font-family: "Inter", sans-serif;
+
   font-size: 24px;
   font-weight: 800;
+
+  letter-spacing: 1px;
+
   color: #e7edf3;
+
+  line-height: 1;
 }
 
 .brandSub {
+  margin-top: 4px;
+
+  font-family: "Inter", sans-serif;
+
   font-size: 11px;
+  font-weight: 400;
+
   letter-spacing: 4px;
+
   color: #39cfff;
+
+  line-height: 1;
 }
 
 .nav {
@@ -179,14 +154,8 @@
 
 .navButton,
 .navButtonActive {
-  all: unset;
-
   height: 38px;
   padding: 0 16px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
   border-radius: 8px;
 
@@ -200,101 +169,53 @@
   font-weight: 700;
   letter-spacing: 1px;
 
-  cursor: pointer;
+  text-decoration: none;
 
-  flex-shrink: 0;
-}
+  display: inline-flex;
+  align-items: center;
 
-.navButton:hover {
-  opacity: 0.88;
-  border-color: rgba(0, 194, 255, 0.25);
+  transition:
+    opacity 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
 .navButtonActive {
   border: 1px solid rgba(0, 194, 255, 0.28);
 
-  background: linear-gradient(90deg, #008cff, #00c2ff);
+  background: linear-gradient(
+    90deg,
+    #008cff,
+    #00c2ff
+  );
 
   color: white;
 
   box-shadow: 0 0 14px rgba(0, 194, 255, 0.35);
 }
 
+.navButton:hover {
+  opacity: 0.88;
+
+  border-color: rgba(0, 194, 255, 0.35);
+
+  background: rgba(10, 34, 64, 0.95);
+}
+
+.navButtonActive:hover {
+  opacity: 0.92;
+
+  box-shadow: 0 0 18px rgba(0, 194, 255, 0.45);
+
+  border-color: rgba(0, 194, 255, 0.4);
+}
+
 .pageContent {
   flex: 1;
 
-  min-height: 0; 
-  overflow: hidden; 
+  min-width: 0;
+  min-height: 0;
 
-  display: flex;
-  flex-direction: column;
-
-  padding: 14px;
-}
-
-@media (max-width: 1000px) {
-  .container {
-    overflow-y: auto;
-  }
-
-  .content {
-    flex-direction: column;
-    height: auto;
-  }
-
-  .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid rgba(0, 194, 255, 0.08);
-  }
-
-  .nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-}
-
-@media (max-height: 820px) {
-  .topbar {
-    height: 58px;
-    padding: 0 18px;
-  }
-
-  .content {
-    height: calc(100vh - 58px);
-  }
-
-  .stationName {
-    font-size: 20px;
-  }
-
-  .sidebar {
-    padding: 10px;
-  }
-
-  .sidebarLogo {
-    margin-bottom: 14px;
-  }
-
-  .logo {
-    width: 48px;
-  }
-
-  .brandMain {
-    font-size: 20px;
-  }
-
-  .nav {
-    gap: 8px;
-  }
-
-  .navButton,
-  .navButtonActive {
-    height: 34px;
-    font-size: 12px;
-  }
-
-  .pageContent {
-    padding: 8px;
-  }
+  overflow: hidden;
 }

@@ -2,13 +2,16 @@
 
 .mainPanel {
   height: 100%;
+
   position: relative;
 
   padding: 14px;
+
   display: flex;
   flex-direction: column;
 
   gap: 12px;
+
   min-height: 0;
 
   overflow-y: auto;
@@ -19,6 +22,7 @@
   font-weight: 800;
 
   color: #ffffff;
+
   letter-spacing: 1px;
 
   margin: 0 0 6px 0;
@@ -27,247 +31,61 @@
 .tabs {
   display: flex;
   gap: 16px;
+
   flex-wrap: wrap;
+
   flex-shrink: 0;
 }
 
-.tabButton {
+.tabButton,
+.tabButtonActive {
   height: 38px;
+
   padding: 0 16px;
 
   border-radius: 8px;
 
   border: 1px solid rgba(0, 194, 255, 0.12);
-  background: rgba(8, 28, 52, 0.85);
 
-  color: rgba(255, 255, 255, 0.75);
+  background: rgba(8, 28, 52, 0.85);
 
   font-size: 13px;
   font-weight: 700;
+
   letter-spacing: 1px;
 
   cursor: pointer;
+
   font-family: inherit;
 
   flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  text-decoration: none;
+
+  color: rgba(255, 255, 255, 0.75);
+
+  line-height: 1;
+
+  white-space: nowrap;
 }
 
 .tabButtonActive {
-  height: 38px;
-  padding: 0 16px;
-
-  border-radius: 8px;
-
   border: 1px solid rgba(0, 194, 255, 0.28);
 
   background: linear-gradient(90deg, #008cff, #00c2ff);
 
   color: white;
 
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1px;
-
   box-shadow: 0 0 14px rgba(0, 194, 255, 0.35);
-
-  cursor: pointer;
-  font-family: inherit;
-
-  flex-shrink: 0;
 }
 
-.chartPanel,
-.controlPanel {
-  border-radius: 14px;
-
-  border: 1px solid rgba(0, 194, 255, 0.08);
-  background: rgba(4, 16, 30, 0.76);
-
-  overflow: hidden;
-
-  flex-shrink: 0;
-}
-
-.chartPanel {
-  min-height: 260px;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.panelHeader {
-  height: 42px;
-
-  padding: 0 16px;
-
-  display: flex;
-  align-items: center;
-
-  border-bottom: 1px solid rgba(0, 194, 255, 0.08);
-
-  font-size: 13px;
-  font-weight: 700;
-
-  letter-spacing: 2px;
-  color: white;
-
-  flex-shrink: 0;
-}
-
-.chartPlaceholder {
-  position: relative;
-  flex: 1;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  overflow: hidden;
-}
-
-.chartGrid {
-  position: absolute;
-  inset: 0;
-
-  background:
-    linear-gradient(rgba(0, 194, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 194, 255, 0.04) 1px, transparent 1px);
-
-  background-size: 48px 48px;
-}
-
-.placeholderText {
-  position: relative;
-  z-index: 2;
-
-  font-size: 15px;
-  font-weight: 700;
-
-  letter-spacing: 2px;
-
-  text-align: center;
-
-  color: rgba(125, 211, 252, 0.58);
-}
-
-.controlContent {
-  padding: 16px;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 16px;
-}
-
-.modeSelector {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.rangeInputs {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.inputGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: center;
-}
-
-.input {
-  height: 38px;
-
-  border-radius: 8px;
-  border: 1px solid rgba(0, 194, 255, 0.12);
-
-  background: rgba(2, 12, 24, 0.92);
-
-  color: white;
-
-  font-size: 14px;
-  font-weight: 700;
-
-  padding: 0 12px;
-
-  text-align: center;
-  font-family: inherit;
-}
-
-.inputLabel {
-  width: 100%;
-  text-align: center;
-
-  font-size: 12px;
-  font-weight: 700;
-
-  letter-spacing: 1px;
-
-  color: rgba(125, 211, 252, 0.62);
-}
-
-.runButton {
-  height: 38px;
-
-  padding: 0 18px;
-  width: fit-content;
-
-  align-self: flex-start;
-
-  border-radius: 8px;
-  border: 1px solid rgba(0, 255, 157, 0.25);
-
-  background: linear-gradient(90deg, #00b894, #00ff9d);
-
-  color: #02120d;
-
-  font-size: 13px;
-  font-weight: 700;
-
-  letter-spacing: 1px;
-
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.exportButton {
-  height: 38px;
-  padding: 0 18px;
-
-  border-radius: 8px;
-
-  border: 1px solid rgba(0, 255, 157, 0.25);
-
-  background: linear-gradient(90deg, #00b894, #00ff9d);
-
-  color: #02120d;
-
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1px;
-
-  cursor: pointer;
-  font-family: inherit;
-
-  flex-shrink: 0;
-}
-
-.exportButton:hover {
-  border-color: rgba(0, 194, 255, 0.35);
-  background: rgba(8, 28, 52, 0.85);
-}
-
-@media (max-width: 1000px) {
-  .rangeInputs {
-    flex-direction: column;
-  }
-
-  .chartPanel {
-    min-height: 340px;
-  }
+.tabButton:hover,
+.tabButtonActive:hover {
+  opacity: 0.9;
 }
 
 @media (max-height: 820px) {
@@ -281,48 +99,15 @@
   }
 
   .tabButton,
-  .tabButtonActive,
-  .runButton,
-  .exportButton {
+  .tabButtonActive {
     height: 32px;
+
     padding: 0 14px;
+
     font-size: 11px;
-  }
-
-  .panelHeader {
-    height: 34px;
-    font-size: 11px;
-    padding: 0 14px;
-  }
-
-  .chartPanel {
-    min-height: 190px;
-  }
-
-  .placeholderText {
-    font-size: 12px;
-  }
-
-  .controlContent {
-    padding: 10px;
-    gap: 10px;
-  }
-
-  .rangeInputs {
-    gap: 10px;
-  }
-
-  .input {
-    height: 32px;
-    font-size: 12px;
-  }
-
-  .inputLabel {
-    font-size: 10px;
   }
 
   .pageTitle {
     font-size: 20px;
   }
 }
-
