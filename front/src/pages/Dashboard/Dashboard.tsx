@@ -8,9 +8,7 @@ function Dashboard() {
 
       <div className={styles.overlay}></div>
 
-      <section className={styles.pageHeader}>
-
-      </section>
+      <section className={styles.pageHeader}></section>
 
       <section className={styles.mainPanel}>
 
