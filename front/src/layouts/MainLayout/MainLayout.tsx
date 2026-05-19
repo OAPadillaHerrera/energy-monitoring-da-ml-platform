@@ -2,7 +2,34 @@
 
 import styles from "./MainLayout.module.css";
 import logo from "../../assets/logos/logo_ENERGON.png";
-import { NavLink, Outlet } from "react-router-dom";
+
+import {
+  NavLink,
+  Outlet
+} from "react-router-dom";
+
+const navItems = [
+  {
+    to: "/",
+    label: "Dashboard"
+  },
+  {
+    to: "/simulation",
+    label: "Simulation"
+  },
+  {
+    to: "/daml",
+    label: "DA/ML"
+  },
+  {
+    to: "/reports",
+    label: "Reports"
+  },
+  {
+    to: "/about",
+    label: "About"
+  }
+];
 
 function MainLayout() {
   return (
@@ -11,23 +38,31 @@ function MainLayout() {
       <header className={styles.topbar}>
 
         <div className={styles.stationBlock}>
-          <span className={styles.stationLabel}>Station</span>
+
+          <span className={styles.stationLabel}>
+            Station
+          </span>
 
           <h1 className={styles.stationName}>
             Vehicular Fuel Service Station
           </h1>
+
         </div>
 
         <div className={styles.systemBlock}>
+
           <span className={styles.systemTitle}>
             Energy DA/ML Engine
           </span>
 
           <div className={styles.systemStatus}>
+
             <span className={styles.statusDot}></span>
+
             <span className={styles.statusText}>
               System Online
             </span>
+
           </div>
 
         </div>
@@ -47,59 +82,36 @@ function MainLayout() {
             />
 
             <div className={styles.brandContainer}>
-              <div className={styles.brandMain}>ENERGON</div>
-              <div className={styles.brandSub}>ANALYTICS</div>
+
+              <div className={styles.brandMain}>
+                ENERGON
+              </div>
+
+              <div className={styles.brandSub}>
+                ANALYTICS
+              </div>
+
             </div>
 
           </div>
 
           <nav className={styles.nav}>
 
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                isActive ? styles.navButtonActive : styles.navButton
-              }
-          
-            >
-              Dashboard
-            </NavLink>
+            {navItems.map((item) => (
 
-            <NavLink
-              to="/simulation"
-              className={({ isActive }) =>
-                isActive ? styles.navButtonActive : styles.navButton
-              }
-            >
-              Simulation
-            </NavLink>
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  isActive
+                    ? styles.navButtonActive
+                    : styles.navButton
+                }
+              >
+                {item.label}
+              </NavLink>
 
-            <NavLink
-              to="/daml"
-              className={({ isActive }) =>
-                isActive ? styles.navButtonActive : styles.navButton
-              }
-            >
-              DA/ML
-            </NavLink>
-
-            <NavLink
-              to="/reports"
-              className={({ isActive }) =>
-                isActive ? styles.navButtonActive : styles.navButton
-              }
-            >
-              Reports
-            </NavLink>
-
-            <NavLink
-              to="/about"
-              className={({ isActive }) =>
-                isActive ? styles.navButtonActive : styles.navButton
-              }
-            >
-              About
-            </NavLink>
+            ))}
 
           </nav>
 
