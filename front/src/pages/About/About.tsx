@@ -1,42 +1,44 @@
 
 
 import styles from "./About.module.css";
+import tabStyles from "../../components/shared/styles/tabStyles.module.css";
+import panelStyles from "../../components/shared/styles/panelStyles.module.css";
 
 function About() {
   return (
     <section className={styles.mainPanel}>
 
-      <div className={styles.tabs}>
+      <nav className={tabStyles.tabs}>
 
-        <button className={styles.tabButtonActive}>
+        <button className={tabStyles.tabButtonActive}>
           Platform Overview
         </button>
 
-        <button className={styles.tabButton}>
+        <button className={tabStyles.tabButton}>
           Architecture
         </button>
 
-        <button className={styles.tabButton}>
+        <button className={tabStyles.tabButton}>
           Technologies
         </button>
 
-        <button className={styles.tabButton}>
+        <button className={tabStyles.tabButton}>
           Academic Context
         </button>
 
-      </div>
+      </nav>
 
-      <section className={styles.chartPanel}>
+      <section className={panelStyles.chartPanel}>
 
-        <div className={styles.panelHeader}>
+        <div className={panelStyles.panelHeader}>
           About Energon Analytics
         </div>
 
-        <div className={styles.chartPlaceholder}>
+        <div className={panelStyles.chartPlaceholder}>
 
-          <div className={styles.chartGrid}></div>
+          <div className={panelStyles.chartGrid}></div>
 
-          <span className={styles.placeholderText}>
+          <span className={panelStyles.placeholderText}>
             About content under construction...
           </span>
 

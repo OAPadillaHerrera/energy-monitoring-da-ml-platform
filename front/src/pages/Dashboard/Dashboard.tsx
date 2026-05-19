@@ -1,60 +1,65 @@
 
 
 import styles from "./Dashboard.module.css";
+import panelStyles from "../../components/shared/styles/panelStyles.module.css";
 
 function Dashboard() {
   return (
-    <section className={styles.container}>
+    <section className={styles.mainPanel}>
 
-      <div className={styles.overlay}></div>
+      <section className={panelStyles.chartPanel}>
 
-      <section className={styles.pageHeader}></section>
+        <div className={panelStyles.panelHeader}>
+          Total Station Energy Consumption
+        </div>
 
-      <section className={styles.mainPanel}>
+        <div className={panelStyles.chartPlaceholder}>
 
-        <section className={styles.chartPanel}>
+          <div className={panelStyles.chartGrid}></div>
 
-          <div className={styles.panelHeader}>
-            Total Station Energy Consumption
-          </div>
-
-          <div className={styles.chartPlaceholder}>
-
-            <div className={styles.chartGrid}></div>
-
-            <span className={styles.placeholderText}>
-              Waiting for simulation data...
-            </span>
-
-          </div>
-
-        </section>
-
-        <div className={styles.kpiRow}>
-
-          <div className={styles.kpiCard}>
-            <span className={styles.kpiLabel}>Total Consumption</span>
-            <h2 className={styles.kpiValue}>--</h2>
-          </div>
-
-          <div className={styles.kpiCard}>
-            <span className={styles.kpiLabel}>Peak Demand</span>
-            <h2 className={styles.kpiValue}>--</h2>
-          </div>
-
-          <div className={styles.kpiCard}>
-            <span className={styles.kpiLabel}>Active Systems</span>
-            <h2 className={styles.kpiValue}>--</h2>
-          </div>
-
-          <div className={styles.kpiCard}>
-            <span className={styles.kpiLabel}>Alert Status</span>
-            <h2 className={styles.kpiValue}>--</h2>
-          </div>
+          <span className={panelStyles.placeholderText}>
+            Waiting for simulation data...
+          </span>
 
         </div>
 
       </section>
+
+      <div className={styles.kpiRow}>
+
+        <div className={styles.kpiCard}>
+          <span className={styles.kpiLabel}>
+            Total Consumption
+          </span>
+
+          <h2 className={styles.kpiValue}>--</h2>
+        </div>
+
+        <div className={styles.kpiCard}>
+          <span className={styles.kpiLabel}>
+            Peak Demand
+          </span>
+
+          <h2 className={styles.kpiValue}>--</h2>
+        </div>
+
+        <div className={styles.kpiCard}>
+          <span className={styles.kpiLabel}>
+            Active Systems
+          </span>
+
+          <h2 className={styles.kpiValue}>--</h2>
+        </div>
+
+        <div className={styles.kpiCard}>
+          <span className={styles.kpiLabel}>
+            Alert Status
+          </span>
+
+          <h2 className={styles.kpiValue}>--</h2>
+        </div>
+
+      </div>
 
     </section>
   );

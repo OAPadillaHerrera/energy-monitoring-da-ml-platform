@@ -17,97 +17,9 @@
   overflow-y: auto;
 }
 
-.pageTitle {
-  font-size: 24px;
-  font-weight: 800;
-
-  color: #ffffff;
-
-  letter-spacing: 1px;
-
-  margin: 0 0 6px 0;
-}
-
-.tabs {
-  display: flex;
-  gap: 16px;
-
-  flex-wrap: wrap;
-
-  flex-shrink: 0;
-}
-
-.tabButton,
-.tabButtonActive {
-  height: 38px;
-
-  padding: 0 16px;
-
-  border-radius: 8px;
-
-  border: 1px solid rgba(0, 194, 255, 0.12);
-
-  background: rgba(8, 28, 52, 0.85);
-
-  font-size: 13px;
-  font-weight: 700;
-
-  letter-spacing: 1px;
-
-  cursor: pointer;
-
-  font-family: inherit;
-
-  flex-shrink: 0;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  text-decoration: none;
-
-  color: rgba(255, 255, 255, 0.75);
-
-  line-height: 1;
-
-  white-space: nowrap;
-}
-
-.tabButtonActive {
-  border: 1px solid rgba(0, 194, 255, 0.28);
-
-  background: linear-gradient(90deg, #008cff, #00c2ff);
-
-  color: white;
-
-  box-shadow: 0 0 14px rgba(0, 194, 255, 0.35);
-}
-
-.tabButton:hover,
-.tabButtonActive:hover {
-  opacity: 0.9;
-}
-
 @media (max-height: 820px) {
   .mainPanel {
     padding: 10px;
     gap: 10px;
-  }
-
-  .tabs {
-    gap: 8px;
-  }
-
-  .tabButton,
-  .tabButtonActive {
-    height: 32px;
-
-    padding: 0 14px;
-
-    font-size: 11px;
-  }
-
-  .pageTitle {
-    font-size: 20px;
   }
 }

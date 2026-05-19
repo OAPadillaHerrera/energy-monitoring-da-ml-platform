@@ -1,19 +1,22 @@
 
 
 import styles from "./Reports.module.css";
+import tabStyles from "../../components/shared/styles/tabStyles.module.css";
 import { Outlet, NavLink } from "react-router-dom";
 
 function Reports() {
   return (
     <section className={styles.mainPanel}>
 
-      <div className={styles.tabs}>
+      <nav className={tabStyles.tabs}>
 
         <NavLink
           to="/reports"
           end
           className={({ isActive }) =>
-            isActive ? styles.tabButtonActive : styles.tabButton
+            isActive
+              ? tabStyles.tabButtonActive
+              : tabStyles.tabButton
           }
         >
           Simulation
@@ -22,13 +25,15 @@ function Reports() {
         <NavLink
           to="daml"
           className={({ isActive }) =>
-            isActive ? styles.tabButtonActive : styles.tabButton
+            isActive
+              ? tabStyles.tabButtonActive
+              : tabStyles.tabButton
           }
         >
           DA/ML
         </NavLink>
 
-      </div>
+      </nav>
 
       <Outlet />
 

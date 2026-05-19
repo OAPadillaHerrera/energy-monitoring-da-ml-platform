@@ -1,19 +1,22 @@
 
 
 import styles from "./Simulation.module.css";
+import tabStyles from "../../components/shared/styles/tabStyles.module.css";
 import { Outlet, NavLink } from "react-router-dom";
 
 function Simulation() {
   return (
     <section className={styles.mainPanel}>
 
-      <div className={styles.tabs}>
+      <nav className={tabStyles.tabs}>
 
         <NavLink
           to="/simulation"
           end
           className={({ isActive }) =>
-            isActive ? styles.tabButtonActive : styles.tabButton
+            isActive
+              ? tabStyles.tabButtonActive
+              : tabStyles.tabButton
           }
         >
           Consumption
@@ -22,7 +25,9 @@ function Simulation() {
         <NavLink
           to="system-events"
           className={({ isActive }) =>
-            isActive ? styles.tabButtonActive : styles.tabButton
+            isActive
+              ? tabStyles.tabButtonActive
+              : tabStyles.tabButton
           }
         >
           System Events
@@ -31,13 +36,15 @@ function Simulation() {
         <NavLink
           to="voltage"
           className={({ isActive }) =>
-            isActive ? styles.tabButtonActive : styles.tabButton
+            isActive
+              ? tabStyles.tabButtonActive
+              : tabStyles.tabButton
           }
         >
           Voltage
         </NavLink>
 
-      </div>
+      </nav>
 
       <Outlet />
 

@@ -2,99 +2,60 @@
 
 .mainPanel {
   height: 100%;
+
   padding: 14px;
+
   display: flex;
   flex-direction: column;
+
   gap: 12px;
+
   min-height: 0;
+
   overflow: hidden;
-}
-
-.chartPanel {
-  flex: 1;
-  min-height: 260px;
-  border-radius: 14px;
-  border: 1px solid rgba(0, 194, 255, 0.08);
-  background: rgba(4, 16, 30, 0.76);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.panelHeader {
-  height: 42px;
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid rgba(0, 194, 255, 0.08);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: white;
-  flex-shrink: 0;
-}
-
-.chartPlaceholder {
-  position: relative;
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
-.chartGrid {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-      rgba(0, 194, 255, 0.04) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(0, 194, 255, 0.04) 1px,
-      transparent 1px
-    );
-  background-size: 48px 48px;
-}
-
-.placeholderText {
-  position: relative;
-  z-index: 2;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-align: center;
-  color: rgba(125, 211, 252, 0.58);
 }
 
 .kpiRow {
   display: grid;
+
   grid-template-columns: repeat(4, 1fr);
+
   gap: 12px;
+
   margin-top: 14px;
+
   flex-shrink: 0;
 }
 
 .kpiCard {
   height: 82px;
+
   border-radius: 12px;
+
   border: 1px solid rgba(0, 194, 255, 0.08);
+
   background: rgba(4, 16, 30, 0.76);
+
   padding: 12px 14px;
 }
 
 .kpiLabel {
   font-size: 11px;
+
   font-weight: 700;
+
   letter-spacing: 2px;
+
   color: white;
 }
 
 .kpiValue {
   margin: 12px 0 0 0;
+
   font-size: 28px;
+
   font-weight: 700;
+
   color: rgba(255, 255, 255, 0.95);
 }
 
@@ -109,10 +70,6 @@
     overflow: visible;
   }
 
-  .chartPanel {
-    min-height: 380px;
-  }
-
   .kpiRow {
     grid-template-columns: 1fr;
   }
@@ -121,29 +78,19 @@
 @media (max-height: 820px) {
   .mainPanel {
     padding: 10px;
+
     gap: 10px;
-  }
-
-  .chartPanel {
-    min-height: 220px;
-  }
-
-  .panelHeader {
-    height: 38px;
-    font-size: 12px;
-  }
-
-  .placeholderText {
-    font-size: 13px;
   }
 
   .kpiRow {
     gap: 8px;
+
     margin-top: 10px;
   }
 
   .kpiCard {
     height: 70px;
+
     padding: 10px 12px;
   }
 

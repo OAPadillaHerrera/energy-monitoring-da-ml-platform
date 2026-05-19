@@ -1,0 +1,114 @@
+
+
+.mainPanel {
+  height: 100%;
+  padding: 14px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+
+  min-height: 0;
+}
+
+.chartPanel {
+  flex: 1;
+  min-height: 260px;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(0, 194, 255, 0.08);
+  background: rgba(4, 16, 30, 0.76);
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.panelHeader {
+  height: 42px;
+
+  padding: 0 16px;
+
+  display: flex;
+  align-items: center;
+
+  border-bottom: 1px solid rgba(0, 194, 255, 0.08);
+
+  font-size: 13px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  color: white;
+
+  flex-shrink: 0;
+}
+
+.chartPlaceholder {
+  position: relative;
+
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  overflow: hidden;
+}
+
+.chartGrid {
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(rgba(0, 194, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 194, 255, 0.04) 1px, transparent 1px);
+
+  background-size: 48px 48px;
+}
+
+.placeholderText {
+  position: relative;
+  z-index: 2;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  text-align: center;
+
+  color: rgba(125, 211, 252, 0.58);
+}
+
+@media (max-width: 1000px) {
+  .chartPanel {
+    min-height: 340px;
+  }
+}
+
+@media (max-height: 820px) {
+  .mainPanel {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .panelHeader {
+    height: 34px;
+
+    font-size: 11px;
+
+    padding: 0 14px;
+  }
+
+  .chartPanel {
+    min-height: 190px;
+  }
+
+  .placeholderText {
+    font-size: 12px;
+  }
+}

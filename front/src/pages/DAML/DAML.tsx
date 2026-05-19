@@ -1,19 +1,22 @@
 
 
 import styles from "./DAML.module.css";
+import tabStyles from "../../components/shared/styles/tabStyles.module.css";
 import { Outlet, NavLink } from "react-router-dom";
 
 function Daml() {
   return (
     <section className={styles.mainPanel}>
 
-      <div className={styles.tabs}>
+      <nav className={tabStyles.tabs}>
 
         <NavLink
           to="/daml"
           end
           className={({ isActive }) =>
-            isActive ? styles.tabButtonActive : styles.tabButton
+            isActive
+              ? tabStyles.tabButtonActive
+              : tabStyles.tabButton
           }
         >
           Metrics
@@ -22,7 +25,9 @@ function Daml() {
         <NavLink
           to="anomaly-detection"
           className={({ isActive }) =>
-            isActive ? styles.tabButtonActive : styles.tabButton
+            isActive
+              ? tabStyles.tabButtonActive
+              : tabStyles.tabButton
           }
         >
           Detection
@@ -31,13 +36,15 @@ function Daml() {
         <NavLink
           to="ml"
           className={({ isActive }) =>
-            isActive ? styles.tabButtonActive : styles.tabButton
+            isActive
+              ? tabStyles.tabButtonActive
+              : tabStyles.tabButton
           }
         >
           ML
         </NavLink>
 
-      </div>
+      </nav>
 
       <Outlet />
 

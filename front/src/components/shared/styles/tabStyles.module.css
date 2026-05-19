@@ -1,0 +1,91 @@
+
+
+.tabs {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.tabButton,
+.tabButtonActive {
+  height: 38px;
+  padding: 0 16px;
+
+  border-radius: 8px;
+
+  border: 1px solid rgba(0, 194, 255, 0.12);
+  background: rgba(8, 28, 52, 0.85);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  text-decoration: none;
+
+  color: rgba(255, 255, 255, 0.75);
+
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+
+  line-height: 1;
+  white-space: nowrap;
+
+  font-family: inherit;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.tabButton:hover {
+  opacity: 0.88;
+
+  border-color: rgba(0, 194, 255, 0.35);
+
+  background: rgba(10, 34, 64, 0.95);
+}
+
+.tabButtonActive {
+  border: 1px solid rgba(0, 194, 255, 0.28);
+
+  background: linear-gradient(
+    90deg,
+    #008cff,
+    #00c2ff
+  );
+
+  color: white;
+
+  box-shadow: 0 0 14px rgba(0, 194, 255, 0.35);
+}
+
+.tabButtonActive:hover {
+  opacity: 0.92;
+
+  border-color: rgba(0, 194, 255, 0.4);
+
+  box-shadow: 0 0 18px rgba(0, 194, 255, 0.45);
+}
+
+@media (max-height: 820px) {
+  .tabs {
+    gap: 8px;
+  }
+
+  .tabButton,
+  .tabButtonActive {
+    height: 32px;
+
+    padding: 0 14px;
+
+    font-size: 11px;
+  }
+}
