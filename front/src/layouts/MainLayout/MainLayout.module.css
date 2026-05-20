@@ -292,3 +292,92 @@
 
   overflow: hidden;
 }
+
+@media (max-width: 1100px) {
+
+  .sidebar {
+    flex: 0 0 190px;
+
+    padding: 12px;
+  }
+
+  .stationName {
+    font-size: 20px;
+  }
+
+  .brandMain {
+    font-size: 20px;
+  }
+
+  .navButton,
+  .navButtonActive {
+    height: 34px;
+
+    font-size: 12px;
+  }
+}
+
+@media (max-height: 820px) {
+
+  .topbar {
+    height: 56px;
+
+    padding: 0 16px;
+  }
+
+  .content {
+    height: calc(100vh - 56px);
+  }
+
+  .stationLabel,
+  .systemTitle {
+    font-size: 11px;
+  }
+
+  .stationName {
+    font-size: 18px;
+  }
+
+  .statusText {
+    font-size: 12px;
+  }
+
+  .sidebar {
+    flex: 0 0 190px;
+
+    padding: 12px;
+  }
+
+  .sidebarLogo {
+    gap: 10px;
+
+    margin-bottom: 16px;
+  }
+
+  .logo {
+    width: 46px;
+  }
+
+  .brandMain {
+    font-size: 20px;
+  }
+
+  .brandSub {
+    font-size: 10px;
+
+    letter-spacing: 3px;
+  }
+
+  .nav {
+    gap: 8px;
+  }
+
+  .navButton,
+  .navButtonActive {
+    height: 32px;
+
+    font-size: 11px;
+
+    padding: 0 12px;
+  }
+}
