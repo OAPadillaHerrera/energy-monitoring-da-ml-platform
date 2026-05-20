@@ -1,9 +1,39 @@
 
 
+import { type ChangeEvent, useState } from "react";
 import styles from "./ML.module.css";
 
 function ML() {
+
+  const [systemName, setSystemName] = useState("");
+
+  const [executionMessage, setExecutionMessage] = useState("");
+
+  const handleRunPipeline = (): void => {
+
+    if (!systemName.trim()) {
+
+      setExecutionMessage(
+        "Please provide a valid system name."
+      );
+
+      return;
+    }
+
+    setExecutionMessage(
+      `Root Cause Pipeline executed for ${systemName}.`
+    );
+  };
+
+  const handleSystemChange = (
+    event: ChangeEvent<HTMLInputElement>
+  ): void => {
+
+    setSystemName(event.target.value);
+  };
+
   return (
+
     <section className={styles.mainPanel}>
 
       <section className={styles.chartPanel}>
@@ -46,8 +76,14 @@ function ML() {
 
               <input
                 type="text"
+
                 className={styles.input}
+
                 placeholder="Select System"
+
+                value={systemName}
+
+                onChange={handleSystemChange}
               />
 
               <div className={styles.inputLabel}>
@@ -58,9 +94,31 @@ function ML() {
 
           </div>
 
-          <button className={styles.runButton}>
+          <button
+            className={styles.runButton}
+
+            onClick={handleRunPipeline}
+          >
             Run Root Cause Pipeline
           </button>
+
+          {
+            executionMessage && (
+
+              <div className={styles.executionInfo}>
+
+                <span>
+                  ML execution status:
+                </span>
+
+                <strong>
+                  {executionMessage}
+                </strong>
+
+              </div>
+
+            )
+          }
 
         </div>
 

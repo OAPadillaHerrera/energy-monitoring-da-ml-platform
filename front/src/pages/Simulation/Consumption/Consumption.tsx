@@ -1,6 +1,6 @@
 
 
-import { useState } from "react";
+import { type ChangeEvent, useState } from "react";
 import styles from "./Consumption.module.css";
 
 function Consumption() {
@@ -13,7 +13,7 @@ function Consumption() {
 
   const [endDate, setEndDate] = useState("");
 
-  const handleRunSimulation = () => {
+  const handleRunSimulation = (): void => {
 
     if (mode === "daily") {
 
@@ -32,7 +32,10 @@ function Consumption() {
 
     if (mode === "range") {
 
-      if (!startDate || !endDate) {
+      if (!startDate.trim() || !endDate.trim()) {
+
+        setExecutedDate("");
+
         return;
       }
 
@@ -40,6 +43,20 @@ function Consumption() {
         `${startDate} → ${endDate}`
       );
     }
+  };
+
+  const handleStartDateChange = (
+    event: ChangeEvent<HTMLInputElement>
+  ): void => {
+
+    setStartDate(event.target.value);
+  };
+
+  const handleEndDateChange = (
+    event: ChangeEvent<HTMLInputElement>
+  ): void => {
+
+    setEndDate(event.target.value);
   };
 
   return (
@@ -120,15 +137,15 @@ function Consumption() {
                 <div className={styles.inputGroup}>
 
                   <input
+                    type="text"
+
                     className={styles.input}
 
                     placeholder="yyyy/mm/dd"
 
                     value={startDate}
 
-                    onChange={(event) =>
-                      setStartDate(event.target.value)
-                    }
+                    onChange={handleStartDateChange}
                   />
 
                   <div className={styles.inputLabel}>
@@ -140,15 +157,15 @@ function Consumption() {
                 <div className={styles.inputGroup}>
 
                   <input
+                    type="text"
+
                     className={styles.input}
 
                     placeholder="yyyy/mm/dd"
 
                     value={endDate}
 
-                    onChange={(event) =>
-                      setEndDate(event.target.value)
-                    }
+                    onChange={handleEndDateChange}
                   />
 
                   <div className={styles.inputLabel}>

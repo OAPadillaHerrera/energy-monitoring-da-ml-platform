@@ -1,15 +1,79 @@
 
 
+import { type ChangeEvent, useState } from "react";
 import styles from "./AnomalyDetection.module.css";
 
 function AnomalyDetection() {
+
+  const [mode, setMode] = useState("zscore");
+
+  const [systemName, setSystemName] = useState("");
+
+  const [executionMessage, setExecutionMessage] = useState("");
+
+  const handleRunDetection = (): void => {
+
+    if (!systemName.trim()) {
+
+      setExecutionMessage(
+        "Please provide a valid system name."
+      );
+
+      return;
+    }
+
+    if (mode === "zscore") {
+
+      setExecutionMessage(
+        `Z-Score Analysis executed for ${systemName}.`
+      );
+    }
+
+    if (mode === "detection") {
+
+      setExecutionMessage(
+        `Detection Analysis executed for ${systemName}.`
+      );
+    }
+
+    if (mode === "classification") {
+
+      setExecutionMessage(
+        `Classification Analysis executed for ${systemName}.`
+      );
+    }
+  };
+
+  const handleSystemChange = (
+    event: ChangeEvent<HTMLInputElement>
+  ): void => {
+
+    setSystemName(event.target.value);
+  };
+
   return (
+
     <section className={styles.mainPanel}>
 
       <section className={styles.chartPanel}>
 
         <div className={styles.panelHeader}>
-          Z-Score Visualization
+
+          {
+            mode === "zscore" &&
+            "Z-Score Visualization"
+          }
+
+          {
+            mode === "detection" &&
+            "Detection Visualization"
+          }
+
+          {
+            mode === "classification" &&
+            "Classification Visualization"
+          }
+
         </div>
 
         <div className={styles.chartPlaceholder}>
@@ -34,15 +98,39 @@ function AnomalyDetection() {
 
           <div className={styles.modeSelector}>
 
-            <button className={styles.tabButtonActive}>
+            <button
+              className={
+                mode === "zscore"
+                  ? styles.tabButtonActive
+                  : styles.tabButton
+              }
+
+              onClick={() => setMode("zscore")}
+            >
               Z-Score
             </button>
 
-            <button className={styles.tabButton}>
+            <button
+              className={
+                mode === "detection"
+                  ? styles.tabButtonActive
+                  : styles.tabButton
+              }
+
+              onClick={() => setMode("detection")}
+            >
               Detection
             </button>
 
-            <button className={styles.tabButton}>
+            <button
+              className={
+                mode === "classification"
+                  ? styles.tabButtonActive
+                  : styles.tabButton
+              }
+
+              onClick={() => setMode("classification")}
+            >
               Classification
             </button>
 
@@ -54,8 +142,14 @@ function AnomalyDetection() {
 
               <input
                 type="text"
+
                 className={styles.input}
+
                 placeholder="Select System"
+
+                value={systemName}
+
+                onChange={handleSystemChange}
               />
 
               <div className={styles.inputLabel}>
@@ -66,9 +160,35 @@ function AnomalyDetection() {
 
           </div>
 
-          <button className={styles.runButton}>
-            Run Z-Score
+          <button
+            className={styles.runButton}
+
+            onClick={handleRunDetection}
+          >
+            Run {
+              mode === "zscore"
+                ? "Z-Score"
+                : mode.charAt(0).toUpperCase() + mode.slice(1)
+            }
           </button>
+
+          {
+            executionMessage && (
+
+              <div className={styles.executionInfo}>
+
+                <span>
+                  Detection execution status:
+                </span>
+
+                <strong>
+                  {executionMessage}
+                </strong>
+
+              </div>
+
+            )
+          }
 
         </div>
 
