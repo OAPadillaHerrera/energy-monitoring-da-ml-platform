@@ -1,26 +1,71 @@
 
 
+import { useState } from "react";
 import styles from "./Consumption.module.css";
 
 function Consumption() {
+
+  const [mode, setMode] = useState("daily");
+
+  const [executedDate, setExecutedDate] = useState("");
+
+  const [startDate, setStartDate] = useState("");
+
+  const [endDate, setEndDate] = useState("");
+
+  const handleRunSimulation = () => {
+
+    if (mode === "daily") {
+
+      const today = new Date();
+
+      const formattedDate =
+        today
+          .toISOString()
+          .split("T")[0]
+          .replace(/-/g, "/");
+
+      setExecutedDate(formattedDate);
+
+      return;
+    }
+
+    if (mode === "range") {
+
+      if (!startDate || !endDate) {
+        return;
+      }
+
+      setExecutedDate(
+        `${startDate} → ${endDate}`
+      );
+    }
+  };
+
   return (
+
     <section className={styles.mainPanel}>
 
       <section className={styles.chartPanel}>
+
         <div className={styles.panelHeader}>
           Total Station Energy Consumption
         </div>
 
         <div className={styles.chartPlaceholder}>
+
           <div className={styles.chartGrid}></div>
 
           <span className={styles.placeholderText}>
             Waiting for Simulation execution...
           </span>
+
         </div>
+
       </section>
 
       <section className={styles.controlPanel}>
+
         <div className={styles.panelHeader}>
           Simulation Configuration
         </div>
@@ -28,32 +73,123 @@ function Consumption() {
         <div className={styles.controlContent}>
 
           <div className={styles.modeSelector}>
-            <button className={styles.tabButtonActive}>
+
+            <button
+
+              className={
+                mode === "daily"
+                  ? styles.tabButtonActive
+                  : styles.tabButton
+              }
+
+              onClick={() => {
+
+                setMode("daily");
+
+                setExecutedDate("");
+              }}
+            >
               Daily Simulation
             </button>
 
-            <button className={styles.tabButton}>
+            <button
+
+              className={
+                mode === "range"
+                  ? styles.tabButtonActive
+                  : styles.tabButton
+              }
+
+              onClick={() => {
+
+                setMode("range");
+
+                setExecutedDate("");
+              }}
+            >
               Range Simulation
             </button>
+
           </div>
 
-          <div className={styles.rangeInputs}>
-            <div className={styles.inputGroup}>
-              <input className={styles.input} placeholder="yyyy/mm/dd" />
-              <div className={styles.inputLabel}>Start Date</div>
-            </div>
+          {
+            mode === "range" && (
 
-            <div className={styles.inputGroup}>
-              <input className={styles.input} placeholder="yyyy/mm/dd" />
-              <div className={styles.inputLabel}>End Date</div>
-            </div>
-          </div>
+              <div className={styles.rangeInputs}>
 
-          <button className={styles.runButton}>
+                <div className={styles.inputGroup}>
+
+                  <input
+                    className={styles.input}
+
+                    placeholder="yyyy/mm/dd"
+
+                    value={startDate}
+
+                    onChange={(event) =>
+                      setStartDate(event.target.value)
+                    }
+                  />
+
+                  <div className={styles.inputLabel}>
+                    Start Date
+                  </div>
+
+                </div>
+
+                <div className={styles.inputGroup}>
+
+                  <input
+                    className={styles.input}
+
+                    placeholder="yyyy/mm/dd"
+
+                    value={endDate}
+
+                    onChange={(event) =>
+                      setEndDate(event.target.value)
+                    }
+                  />
+
+                  <div className={styles.inputLabel}>
+                    End Date
+                  </div>
+
+                </div>
+
+              </div>
+
+            )
+          }
+
+          <button
+            className={styles.runButton}
+
+            onClick={handleRunSimulation}
+          >
             Run Simulation
           </button>
 
+          {
+            executedDate && (
+
+              <div className={styles.executionInfo}>
+
+                <span>
+                  Simulation executed for:
+                </span>
+
+                <strong>
+                  {executedDate}
+                </strong>
+
+              </div>
+
+            )
+          }
+
         </div>
+
       </section>
 
     </section>
@@ -61,3 +197,10 @@ function Consumption() {
 }
 
 export default Consumption;
+
+
+
+
+
+
+
