@@ -30,7 +30,7 @@ function Daml() {
               : tabStyles.tabButton
           }
         >
-          Detection
+          Anomaly
         </NavLink>
 
         <NavLink

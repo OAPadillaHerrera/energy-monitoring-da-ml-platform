@@ -16,14 +16,14 @@ function Metrics() {
     if (mode === "basic") {
 
       setExecutionMessage(
-        "Basic metrics executed successfully."
+        "Basic Metrics executed successfully."
       );
     }
 
     if (mode === "station") {
 
       setExecutionMessage(
-        "Station metrics executed successfully."
+        "Station Metrics executed successfully."
       );
     }
 
@@ -39,14 +39,14 @@ function Metrics() {
       }
 
       setExecutionMessage(
-        `System metrics executed for ${systemName}.`
+        `System Metrics executed for ${systemName}.`
       );
     }
 
     if (mode === "energy") {
 
       setExecutionMessage(
-        "Energy metrics executed successfully."
+        "Energy Metrics executed successfully."
       );
     }
   };
