@@ -1,21 +1,22 @@
 
 
 import styles from "./SystemEvents.module.css";
+import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 
 function SystemEvents() {
   return (
     <section className={styles.mainPanel}>
 
-      <section className={styles.chartPanel}>
+      <section className={panelStyles.chartPanel}>
 
-        <div className={styles.panelHeader}>
+        <div className={panelStyles.panelHeader}>
           System Event Records
         </div>
 
-        <div className={styles.chartPlaceholder}>
-          <div className={styles.chartGrid}></div>
+        <div className={panelStyles.chartPlaceholder}>
+          <div className={panelStyles.chartGrid}></div>
 
-          <span className={styles.placeholderText}>
+          <span className={panelStyles.placeholderText}>
             Waiting for Simulation execution...
           </span>
         </div>
