@@ -2,6 +2,9 @@
 
 import { type ChangeEvent, useState } from "react";
 import styles from "./Consumption.module.css";
+import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
+import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
+import controlStyles from "../../../components/shared/styles/controlStyles.module.css";
 
 function Consumption() {
 
@@ -63,17 +66,17 @@ function Consumption() {
 
     <section className={styles.mainPanel}>
 
-      <section className={styles.chartPanel}>
+      <section className={panelStyles.chartPanel}>
 
-        <div className={styles.panelHeader}>
+        <div className={panelStyles.panelHeader}>
           Total Station Energy Consumption
         </div>
 
-        <div className={styles.chartPlaceholder}>
+        <div className={panelStyles.chartPlaceholder}>
 
-          <div className={styles.chartGrid}></div>
+          <div className={panelStyles.chartGrid}></div>
 
-          <span className={styles.placeholderText}>
+          <span className={panelStyles.placeholderText}>
             Waiting for Simulation execution...
           </span>
 
@@ -81,22 +84,21 @@ function Consumption() {
 
       </section>
 
-      <section className={styles.controlPanel}>
+      <section className={panelStyles.controlPanel}>
 
-        <div className={styles.panelHeader}>
+        <div className={panelStyles.panelHeader}>
           Simulation Configuration
         </div>
 
-        <div className={styles.controlContent}>
+        <div className={controlStyles.controlContent}>
 
-          <div className={styles.modeSelector}>
+          <div className={controlStyles.modeSelector}>
 
             <button
-
               className={
                 mode === "daily"
-                  ? styles.tabButtonActive
-                  : styles.tabButton
+                  ? tabStyles.tabButtonActive
+                  : tabStyles.tabButton
               }
 
               onClick={() => {
@@ -110,11 +112,10 @@ function Consumption() {
             </button>
 
             <button
-
               className={
                 mode === "range"
-                  ? styles.tabButtonActive
-                  : styles.tabButton
+                  ? tabStyles.tabButtonActive
+                  : tabStyles.tabButton
               }
 
               onClick={() => {
@@ -132,14 +133,14 @@ function Consumption() {
           {
             mode === "range" && (
 
-              <div className={styles.rangeInputs}>
+              <div className={controlStyles.rangeInputs}>
 
-                <div className={styles.inputGroup}>
+                <div className={controlStyles.inputGroup}>
 
                   <input
                     type="text"
 
-                    className={styles.input}
+                    className={controlStyles.input}
 
                     placeholder="yyyy/mm/dd"
 
@@ -148,18 +149,18 @@ function Consumption() {
                     onChange={handleStartDateChange}
                   />
 
-                  <div className={styles.inputLabel}>
+                  <div className={controlStyles.inputLabel}>
                     Start Date
                   </div>
 
                 </div>
 
-                <div className={styles.inputGroup}>
+                <div className={controlStyles.inputGroup}>
 
                   <input
                     type="text"
 
-                    className={styles.input}
+                    className={controlStyles.input}
 
                     placeholder="yyyy/mm/dd"
 
@@ -168,7 +169,7 @@ function Consumption() {
                     onChange={handleEndDateChange}
                   />
 
-                  <div className={styles.inputLabel}>
+                  <div className={controlStyles.inputLabel}>
                     End Date
                   </div>
 
@@ -180,7 +181,7 @@ function Consumption() {
           }
 
           <button
-            className={styles.runButton}
+            className={controlStyles.runButton}
 
             onClick={handleRunSimulation}
           >
@@ -190,7 +191,7 @@ function Consumption() {
           {
             executedDate && (
 
-              <div className={styles.executionInfo}>
+              <div className={controlStyles.executionInfo}>
 
                 <span>
                   Simulation executed for:

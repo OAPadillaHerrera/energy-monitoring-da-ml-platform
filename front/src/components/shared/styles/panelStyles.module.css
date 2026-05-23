@@ -2,231 +2,107 @@
 
 .chartPanel,
 .controlPanel {
-  border-radius: 14px;
+border-radius: 14px;
 
-  border: 1px solid rgba(0, 194, 255, 0.08);
+border: 1px solid rgba(0, 194, 255, 0.08);
 
-  background: rgba(4, 16, 30, 0.76);
+background: rgba(4, 16, 30, 0.76);
 
-  overflow: hidden;
+overflow: hidden;
 }
 
 .chartPanel {
-  display: flex;
-  flex-direction: column;
+display: flex;
+flex-direction: column;
 
-  min-height: 260px;
+min-height: 260px;
 }
 
 .panelHeader {
-  height: 42px;
+height: 42px;
 
-  padding: 0 16px;
+padding: 0 16px;
 
-  display: flex;
-  align-items: center;
+display: flex;
+align-items: center;
 
-  border-bottom: 1px solid rgba(0, 194, 255, 0.08);
+border-bottom: 1px solid rgba(0, 194, 255, 0.08);
 
-  flex-shrink: 0;
+flex-shrink: 0;
 
-  color: white;
+color: white;
 
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 2px;
+font-size: 13px;
+font-weight: 700;
+letter-spacing: 2px;
 }
 
 .chartPlaceholder {
-  position: relative;
+position: relative;
 
-  flex: 1;
+flex: 1;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+display: flex;
+justify-content: center;
+align-items: center;
 
-  overflow: hidden;
+overflow: hidden;
 }
 
 .chartGrid {
-  position: absolute;
+position: absolute;
 
-  inset: 0;
+inset: 0;
 
-  background:
-    linear-gradient(
-      rgba(0, 194, 255, 0.04) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(0, 194, 255, 0.04) 1px,
-      transparent 1px
-    );
+background:
+linear-gradient(
+rgba(0, 194, 255, 0.04) 1px,
+transparent 1px
+),
+linear-gradient(
+90deg,
+rgba(0, 194, 255, 0.04) 1px,
+transparent 1px
+);
 
-  background-size: 48px 48px;
+background-size: 48px 48px;
 }
 
 .placeholderText {
-  position: relative;
+position: relative;
 
-  z-index: 2;
+z-index: 2;
 
-  text-align: center;
+text-align: center;
 
-  color: rgba(125, 211, 252, 0.58);
+color: rgba(125, 211, 252, 0.58);
 
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
-.controlContent {
-  padding: 16px;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 16px;
-}
-
-.modeSelector {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.rangeInputs {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.inputGroup {
-  display: flex;
-  flex-direction: column;
-
-  gap: 6px;
-
-  align-items: center;
-}
-
-.input {
-  height: 38px;
-
-  padding: 0 12px;
-
-  border-radius: 8px;
-
-  border: 1px solid rgba(0, 194, 255, 0.12);
-
-  background: rgba(2, 12, 24, 0.92);
-
-  color: white;
-
-  text-align: center;
-
-  font-size: 14px;
-  font-weight: 700;
-
-  font-family: inherit;
-}
-
-.inputLabel {
-  width: 100%;
-
-  text-align: center;
-
-  color: rgba(125, 211, 252, 0.62);
-
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.runButton {
-  height: 38px;
-
-  padding: 0 18px;
-
-  width: fit-content;
-
-  align-self: flex-start;
-
-  border-radius: 8px;
-
-  border: 1px solid rgba(0, 255, 157, 0.25);
-
-  background: linear-gradient(
-    90deg,
-    #00b894,
-    #00ff9d
-  );
-
-  color: #02120d;
-
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1px;
-
-  font-family: inherit;
-
-  cursor: pointer;
+font-size: 15px;
+font-weight: 700;
+letter-spacing: 2px;
 }
 
 @media (max-width: 1000px) {
-  .rangeInputs {
-    flex-direction: column;
-  }
-
-  .chartPanel {
-    min-height: 340px;
-  }
+.chartPanel {
+min-height: 340px;
+}
 }
 
 @media (max-height: 820px) {
-  .panelHeader {
-    height: 34px;
+.panelHeader {
+height: 34px;
 
-    padding: 0 14px;
+padding: 0 14px;
 
-    font-size: 11px;
-  }
+font-size: 11px;
 
-  .chartPanel {
-    min-height: 190px;
-  }
+}
 
-  .placeholderText {
-    font-size: 12px;
-  }
+.chartPanel {
+min-height: 190px;
+}
 
-  .controlContent {
-    padding: 10px;
-
-    gap: 10px;
-  }
-
-  .rangeInputs {
-    gap: 10px;
-  }
-
-  .input {
-    height: 32px;
-
-    font-size: 12px;
-  }
-
-  .inputLabel {
-    font-size: 10px;
-  }
-
-  .runButton {
-    height: 32px;
-
-    padding: 0 14px;
-
-    font-size: 11px;
-  }
+.placeholderText {
+font-size: 12px;
+}
 }
