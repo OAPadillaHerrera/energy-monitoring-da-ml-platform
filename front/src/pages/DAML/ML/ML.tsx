@@ -2,21 +2,19 @@
 
 import { type ChangeEvent, useState } from "react";
 import styles from "./ML.module.css";
+import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
+import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
+import controlStyles from "../../../components/shared/styles/controlStyles.module.css";
 
 function ML() {
 
   const [systemName, setSystemName] = useState("");
-
   const [executionMessage, setExecutionMessage] = useState("");
 
   const handleRunPipeline = (): void => {
 
     if (!systemName.trim()) {
-
-      setExecutionMessage(
-        "Please provide a valid system name."
-      );
-
+      setExecutionMessage("Please provide a valid system name.");
       return;
     }
 
@@ -25,10 +23,7 @@ function ML() {
     );
   };
 
-  const handleSystemChange = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-
+  const handleSystemChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSystemName(event.target.value);
   };
 
@@ -36,91 +31,69 @@ function ML() {
 
     <section className={styles.mainPanel}>
 
-      <section className={styles.chartPanel}>
+      <section className={panelStyles.chartPanel}>
 
-        <div className={styles.panelHeader}>
+        <div className={panelStyles.panelHeader}>
           Root Cause Pipeline Visualization
         </div>
 
-        <div className={styles.chartPlaceholder}>
+        <div className={panelStyles.chartPlaceholder}>
+          <div className={panelStyles.chartGrid}></div>
 
-          <div className={styles.chartGrid}></div>
-
-          <span className={styles.placeholderText}>
+          <span className={panelStyles.placeholderText}>
             Waiting for ML execution...
           </span>
-
         </div>
 
       </section>
 
-      <section className={styles.controlPanel}>
+      <section className={controlStyles.controlContent}>
 
-        <div className={styles.panelHeader}>
+        <div className={panelStyles.panelHeader}>
           ML Configuration
         </div>
 
-        <div className={styles.controlContent}>
+        <div className={tabStyles.tabs}>
 
-          <div className={styles.modeSelector}>
+          <span className={styles.pipelineLabel}>
+            Root Cause Pipeline
+          </span>
 
-            <span className={styles.pipelineLabel}>
-              Root Cause Pipeline
-            </span>
+        </div>
 
-          </div>
+        <div className={controlStyles.rangeInputs}>
 
-          <div className={styles.rangeInputs}>
+          <div className={controlStyles.inputGroup}>
 
-            <div className={styles.inputGroup}>
+            <input
+              type="text"
+              className={controlStyles.input}
+              placeholder="Select System"
+              value={systemName}
+              onChange={handleSystemChange}
+            />
 
-              <input
-                type="text"
-
-                className={styles.input}
-
-                placeholder="Select System"
-
-                value={systemName}
-
-                onChange={handleSystemChange}
-              />
-
-              <div className={styles.inputLabel}>
-                System Name
-              </div>
-
+            <div className={controlStyles.inputLabel}>
+              System Name
             </div>
 
           </div>
 
-          <button
-            className={styles.runButton}
-
-            onClick={handleRunPipeline}
-          >
-            Run Root Cause Pipeline
-          </button>
-
-          {
-            executionMessage && (
-
-              <div className={styles.executionInfo}>
-
-                <span>
-                  ML execution status:
-                </span>
-
-                <strong>
-                  {executionMessage}
-                </strong>
-
-              </div>
-
-            )
-          }
-
         </div>
+
+        <button
+          className={controlStyles.runButton}
+          onClick={handleRunPipeline}
+        >
+          Run Root Cause Pipeline
+        </button>
+
+        {executionMessage && (
+          <div className={controlStyles.executionInfo}>
+            <span>ML execution status:</span>
+            <strong>{executionMessage}</strong>
+          </div>
+        )}
 
       </section>
 

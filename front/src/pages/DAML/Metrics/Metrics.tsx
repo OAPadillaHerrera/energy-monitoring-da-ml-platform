@@ -2,121 +2,83 @@
 
 import { type ChangeEvent, useState } from "react";
 import styles from "./Metrics.module.css";
+import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
+import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
+import controlStyles from "../../../components/shared/styles/controlStyles.module.css";
 
 function Metrics() {
 
   const [mode, setMode] = useState("basic");
-
   const [systemName, setSystemName] = useState("");
-
   const [executionMessage, setExecutionMessage] = useState("");
 
   const handleRunMetrics = (): void => {
 
     if (mode === "basic") {
-
-      setExecutionMessage(
-        "Basic Metrics executed successfully."
-      );
+      setExecutionMessage("Basic Metrics executed successfully.");
     }
 
     if (mode === "station") {
-
-      setExecutionMessage(
-        "Station Metrics executed successfully."
-      );
+      setExecutionMessage("Station Metrics executed successfully.");
     }
 
     if (mode === "system") {
 
       if (!systemName.trim()) {
-
-        setExecutionMessage(
-          "Please provide a valid system name."
-        );
-
+        setExecutionMessage("Please provide a valid system name.");
         return;
       }
 
-      setExecutionMessage(
-        `System Metrics executed for ${systemName}.`
-      );
+      setExecutionMessage(`System Metrics executed for ${systemName}.`);
     }
 
     if (mode === "energy") {
-
-      setExecutionMessage(
-        "Energy Metrics executed successfully."
-      );
+      setExecutionMessage("Energy Metrics executed successfully.");
     }
   };
 
-  const handleSystemChange = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-
+  const handleSystemChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSystemName(event.target.value);
   };
 
   return (
-
     <section className={styles.mainPanel}>
 
-      <section className={styles.chartPanel}>
+      <section className={panelStyles.chartPanel}>
 
-        <div className={styles.panelHeader}>
-
-          {
-            mode === "basic" &&
-            "Basic Metrics Visualization"
-          }
-
-          {
-            mode === "station" &&
-            "Station Metrics Visualization"
-          }
-
-          {
-            mode === "system" &&
-            "System Metrics Visualization"
-          }
-
-          {
-            mode === "energy" &&
-            "Energy Metrics Visualization"
-          }
-
+        <div className={panelStyles.panelHeader}>
+          {mode === "basic" && "Basic Metrics Visualization"}
+          {mode === "station" && "Station Metrics Visualization"}
+          {mode === "system" && "System Metrics Visualization"}
+          {mode === "energy" && "Energy Metrics Visualization"}
         </div>
 
-        <div className={styles.chartPlaceholder}>
+        <div className={panelStyles.chartPlaceholder}>
+          <div className={panelStyles.chartGrid}></div>
 
-          <div className={styles.chartGrid}></div>
-
-          <span className={styles.placeholderText}>
+          <span className={panelStyles.placeholderText}>
             Waiting for Metrics execution...
           </span>
-
         </div>
 
       </section>
 
-      <section className={styles.controlPanel}>
+      <section className={panelStyles.controlPanel}>
 
-        <div className={styles.panelHeader}>
+        <div className={panelStyles.panelHeader}>
           Metrics Configuration
         </div>
 
-        <div className={styles.controlContent}>
+        <div className={controlStyles.controlContent}>
 
-          <div className={styles.modeSelector}>
+          <div className={tabStyles.tabs}>
 
             <button
               className={
                 mode === "basic"
-                  ? styles.tabButtonActive
-                  : styles.tabButton
+                  ? tabStyles.tabButtonActive
+                  : tabStyles.tabButton
               }
-
               onClick={() => setMode("basic")}
             >
               Basic
@@ -125,10 +87,9 @@ function Metrics() {
             <button
               className={
                 mode === "station"
-                  ? styles.tabButtonActive
-                  : styles.tabButton
+                  ? tabStyles.tabButtonActive
+                  : tabStyles.tabButton
               }
-
               onClick={() => setMode("station")}
             >
               Station
@@ -137,10 +98,9 @@ function Metrics() {
             <button
               className={
                 mode === "system"
-                  ? styles.tabButtonActive
-                  : styles.tabButton
+                  ? tabStyles.tabButtonActive
+                  : tabStyles.tabButton
               }
-
               onClick={() => setMode("system")}
             >
               System
@@ -149,10 +109,9 @@ function Metrics() {
             <button
               className={
                 mode === "energy"
-                  ? styles.tabButtonActive
-                  : styles.tabButton
+                  ? tabStyles.tabButtonActive
+                  : tabStyles.tabButton
               }
-
               onClick={() => setMode("energy")}
             >
               Energy
@@ -160,61 +119,41 @@ function Metrics() {
 
           </div>
 
-          {
-            mode === "system" && (
+          {mode === "system" && (
+            <div className={controlStyles.rangeInputs}>
 
-              <div className={styles.rangeInputs}>
+              <div className={controlStyles.inputGroup}>
 
-                <div className={styles.inputGroup}>
+                <input
+                  type="text"
+                  className={controlStyles.input}
+                  placeholder="Select System"
+                  value={systemName}
+                  onChange={handleSystemChange}
+                />
 
-                  <input
-                    type="text"
-
-                    className={styles.input}
-
-                    placeholder="Select System"
-
-                    value={systemName}
-
-                    onChange={handleSystemChange}
-                  />
-
-                  <div className={styles.inputLabel}>
-                    System Name
-                  </div>
-
+                <div className={controlStyles.inputLabel}>
+                  System Name
                 </div>
 
               </div>
 
-            )
-          }
+            </div>
+          )}
 
           <button
-            className={styles.runButton}
-
+            className={controlStyles.runButton}
             onClick={handleRunMetrics}
           >
             Run {mode.charAt(0).toUpperCase() + mode.slice(1)}
           </button>
 
-          {
-            executionMessage && (
-
-              <div className={styles.executionInfo}>
-
-                <span>
-                  Metrics execution status:
-                </span>
-
-                <strong>
-                  {executionMessage}
-                </strong>
-
-              </div>
-
-            )
-          }
+          {executionMessage && (
+            <div className={controlStyles.executionInfo}>
+              <span>Metrics execution status:</span>
+              <strong>{executionMessage}</strong>
+            </div>
+          )}
 
         </div>
 

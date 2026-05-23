@@ -2,109 +2,77 @@
 
 import { type ChangeEvent, useState } from "react";
 import styles from "./AnomalyDetection.module.css";
+import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
+import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
+import controlStyles from "../../../components/shared/styles/controlStyles.module.css";
 
 function AnomalyDetection() {
 
   const [mode, setMode] = useState("zscore");
-
   const [systemName, setSystemName] = useState("");
-
   const [executionMessage, setExecutionMessage] = useState("");
 
   const handleRunDetection = (): void => {
 
     if (!systemName.trim()) {
-
-      setExecutionMessage(
-        "Please provide a valid system name."
-      );
-
+      setExecutionMessage("Please provide a valid system name.");
       return;
     }
 
     if (mode === "zscore") {
-
-      setExecutionMessage(
-        `Z-Score Analysis executed for ${systemName}.`
-      );
+      setExecutionMessage(`Z-Score Analysis executed for ${systemName}.`);
     }
 
     if (mode === "detection") {
-
-      setExecutionMessage(
-        `Detection Analysis executed for ${systemName}.`
-      );
+      setExecutionMessage(`Detection Analysis executed for ${systemName}.`);
     }
 
     if (mode === "classification") {
-
-      setExecutionMessage(
-        `Classification Analysis executed for ${systemName}.`
-      );
+      setExecutionMessage(`Classification Analysis executed for ${systemName}.`);
     }
   };
 
-  const handleSystemChange = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-
+  const handleSystemChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSystemName(event.target.value);
   };
 
   return (
-
     <section className={styles.mainPanel}>
 
-      <section className={styles.chartPanel}>
+      <section className={panelStyles.chartPanel}>
 
-        <div className={styles.panelHeader}>
-
-          {
-            mode === "zscore" &&
-            "Z-Score Visualization"
-          }
-
-          {
-            mode === "detection" &&
-            "Detection Visualization"
-          }
-
-          {
-            mode === "classification" &&
-            "Classification Visualization"
-          }
-
+        <div className={panelStyles.panelHeader}>
+          {mode === "zscore" && "Z-Score Analysis Visualization"}
+          {mode === "detection" && "Detection Analysis Visualization"}
+          {mode === "classification" && "Classification Analysis Visualization"}
         </div>
 
-        <div className={styles.chartPlaceholder}>
+        <div className={panelStyles.chartPlaceholder}>
+          <div className={panelStyles.chartGrid}></div>
 
-          <div className={styles.chartGrid}></div>
-
-          <span className={styles.placeholderText}>
-            Waiting for Detection execution...
+          <span className={panelStyles.placeholderText}>
+            Waiting for Anomaly execution...
           </span>
-
         </div>
 
       </section>
 
-      <section className={styles.controlPanel}>
+      <section className={panelStyles.controlPanel}>
 
-        <div className={styles.panelHeader}>
-          Detection Configuration
+        <div className={panelStyles.panelHeader}>
+          Anomaly Configuration
         </div>
 
-        <div className={styles.controlContent}>
+        <div className={controlStyles.controlContent}>
 
-          <div className={styles.modeSelector}>
+          <div className={tabStyles.tabs}>
 
             <button
               className={
                 mode === "zscore"
-                  ? styles.tabButtonActive
-                  : styles.tabButton
+                  ? tabStyles.tabButtonActive
+                  : tabStyles.tabButton
               }
-
               onClick={() => setMode("zscore")}
             >
               Z-Score
@@ -113,10 +81,9 @@ function AnomalyDetection() {
             <button
               className={
                 mode === "detection"
-                  ? styles.tabButtonActive
-                  : styles.tabButton
+                  ? tabStyles.tabButtonActive
+                  : tabStyles.tabButton
               }
-
               onClick={() => setMode("detection")}
             >
               Detection
@@ -125,10 +92,9 @@ function AnomalyDetection() {
             <button
               className={
                 mode === "classification"
-                  ? styles.tabButtonActive
-                  : styles.tabButton
+                  ? tabStyles.tabButtonActive
+                  : tabStyles.tabButton
               }
-
               onClick={() => setMode("classification")}
             >
               Classification
@@ -136,23 +102,19 @@ function AnomalyDetection() {
 
           </div>
 
-          <div className={styles.rangeInputs}>
+          <div className={controlStyles.rangeInputs}>
 
-            <div className={styles.inputGroup}>
+            <div className={controlStyles.inputGroup}>
 
               <input
                 type="text"
-
-                className={styles.input}
-
+                className={controlStyles.input}
                 placeholder="Select System"
-
                 value={systemName}
-
                 onChange={handleSystemChange}
               />
 
-              <div className={styles.inputLabel}>
+              <div className={controlStyles.inputLabel}>
                 System Name
               </div>
 
@@ -161,8 +123,7 @@ function AnomalyDetection() {
           </div>
 
           <button
-            className={styles.runButton}
-
+            className={controlStyles.runButton}
             onClick={handleRunDetection}
           >
             Run {
@@ -172,23 +133,12 @@ function AnomalyDetection() {
             }
           </button>
 
-          {
-            executionMessage && (
-
-              <div className={styles.executionInfo}>
-
-                <span>
-                  Detection execution status:
-                </span>
-
-                <strong>
-                  {executionMessage}
-                </strong>
-
-              </div>
-
-            )
-          }
+          {executionMessage && (
+            <div className={controlStyles.executionInfo}>
+              <span>Detection execution status:</span>
+              <strong>{executionMessage}</strong>
+            </div>
+          )}
 
         </div>
 
