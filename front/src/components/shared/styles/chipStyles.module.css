@@ -1,6 +1,6 @@
 
 
-.pipelineLabel {
+.chipPrimary {
   height: 38px;
 
   padding: 0 16px;
@@ -22,12 +22,13 @@
   align-items: center;
   justify-content: center;
 
+  width: fit-content;
+
   box-shadow: 0 0 14px rgba(0, 194, 255, 0.35);
 }
 
 @media (max-height: 820px) {
-
-  .pipelineLabel {
+  .chipPrimary {
     height: 32px;
 
     padding: 0 14px;
