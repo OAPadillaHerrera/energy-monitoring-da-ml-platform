@@ -17,25 +17,9 @@
   overflow-y: auto;
 }
 
-.pageTitle {
-  margin: 0 0 6px 0;
-
-  color: #ffffff;
-
-  font-size: 24px;
-  font-weight: 800;
-
-  letter-spacing: 1px;
-}
-
 @media (max-height: 820px) {
   .mainPanel {
     padding: 10px;
-
     gap: 10px;
-  }
-
-  .pageTitle {
-    font-size: 20px;
   }
 }

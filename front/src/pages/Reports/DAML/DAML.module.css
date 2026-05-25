@@ -2,21 +2,19 @@
 
 .mainPanel {
   height: 100%;
+
   position: relative;
 
   padding: 14px;
+
   display: flex;
   flex-direction: column;
+
   gap: 12px;
 
   min-height: 0;
-  overflow-y: auto;
-}
 
-.subTabs {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
+  overflow-y: auto;
 }
 
 .pipelineLabel {
@@ -47,14 +45,18 @@
 }
 
 @media (max-height: 820px) {
+
   .mainPanel {
     padding: 10px;
+
     gap: 10px;
   }
 
   .pipelineLabel {
     height: 32px;
+
     padding: 0 14px;
+
     font-size: 11px;
   }
 }

@@ -9,12 +9,17 @@ import controlStyles from "../../../components/shared/styles/controlStyles.modul
 function ML() {
 
   const [systemName, setSystemName] = useState("");
+
   const [executionMessage, setExecutionMessage] = useState("");
 
   const handleRunPipeline = (): void => {
 
     if (!systemName.trim()) {
-      setExecutionMessage("Please provide a valid system name.");
+
+      setExecutionMessage(
+        "Please provide a valid system name."
+      );
+
       return;
     }
 
@@ -23,7 +28,10 @@ function ML() {
     );
   };
 
-  const handleSystemChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleSystemChange = (
+    event: ChangeEvent<HTMLInputElement>
+  ): void => {
+
     setSystemName(event.target.value);
   };
 
@@ -38,66 +46,82 @@ function ML() {
         </div>
 
         <div className={panelStyles.chartPlaceholder}>
+
           <div className={panelStyles.chartGrid}></div>
 
           <span className={panelStyles.placeholderText}>
             Waiting for ML execution...
           </span>
+
         </div>
 
       </section>
 
-      <section className={controlStyles.controlContent}>
+      <section className={panelStyles.controlPanel}>
 
         <div className={panelStyles.panelHeader}>
           ML Configuration
         </div>
 
-        <div className={tabStyles.tabs}>
+        <div className={controlStyles.controlContent}>
 
-          <span className={styles.pipelineLabel}>
-            Root Cause Pipeline
-          </span>
+          <div className={tabStyles.tabs}>
 
-        </div>
+            <span className={styles.pipelineLabel}>
+              Root Cause Pipeline
+            </span>
 
-        <div className={controlStyles.rangeInputs}>
+          </div>
 
-          <div className={controlStyles.inputGroup}>
+          <div className={controlStyles.rangeInputs}>
 
-            <input
-              type="text"
-              className={controlStyles.input}
-              placeholder="Select System"
-              value={systemName}
-              onChange={handleSystemChange}
-            />
+            <div className={controlStyles.inputGroup}>
 
-            <div className={controlStyles.inputLabel}>
-              System Name
+              <input
+                type="text"
+                className={controlStyles.input}
+                placeholder="Select System"
+                value={systemName}
+                onChange={handleSystemChange}
+              />
+
+              <div className={controlStyles.inputLabel}>
+                System Name
+              </div>
+
             </div>
 
           </div>
 
+          <button
+            className={controlStyles.runButton}
+            onClick={handleRunPipeline}
+          >
+            Run Root Cause Pipeline
+          </button>
+
+          {executionMessage && (
+
+            <div className={controlStyles.executionInfo}>
+
+              <span>
+                ML execution status:
+              </span>
+
+              <strong>
+                {executionMessage}
+              </strong>
+
+            </div>
+
+          )}
+
         </div>
-
-        <button
-          className={controlStyles.runButton}
-          onClick={handleRunPipeline}
-        >
-          Run Root Cause Pipeline
-        </button>
-
-        {executionMessage && (
-          <div className={controlStyles.executionInfo}>
-            <span>ML execution status:</span>
-            <strong>{executionMessage}</strong>
-          </div>
-        )}
 
       </section>
 
     </section>
+
   );
 }
 

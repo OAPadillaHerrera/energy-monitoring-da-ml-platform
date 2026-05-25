@@ -17,3 +17,9 @@
   overflow-y: auto;
 }
 
+@media (max-height: 820px) {
+  .mainPanel {
+    padding: 10px;
+    gap: 10px;
+  }
+}
