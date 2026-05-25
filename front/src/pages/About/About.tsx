@@ -1,12 +1,12 @@
 
 
-import styles from "./About.module.css";
+import layoutStyles from "../../components/shared/styles/layoutStyles.module.css";
 import tabStyles from "../../components/shared/styles/tabStyles.module.css";
 import panelStyles from "../../components/shared/styles/panelStyles.module.css";
 
 function About() {
   return (
-    <section className={styles.mainPanel}>
+    <section className={layoutStyles.mainPanel}>
 
       <nav className={tabStyles.tabs}>
 

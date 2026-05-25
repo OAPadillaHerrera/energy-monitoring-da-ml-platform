@@ -1,11 +1,12 @@
 
 
 import styles from "./Dashboard.module.css";
+import layoutStyles from "../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../components/shared/styles/panelStyles.module.css";
 
 function Dashboard() {
   return (
-    <section className={styles.mainPanel}>
+    <section className={layoutStyles.mainPanel}>
 
       <section className={panelStyles.chartPanel}>
 

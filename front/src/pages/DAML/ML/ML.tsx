@@ -1,6 +1,7 @@
 
 
 import { type ChangeEvent, useState } from "react";
+import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
 import styles from "./ML.module.css";
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
@@ -37,7 +38,7 @@ function ML() {
 
   return (
 
-    <section className={styles.mainPanel}>
+    <section className={layoutStyles.mainPanel}>
 
       <section className={panelStyles.chartPanel}>
 
@@ -79,9 +80,13 @@ function ML() {
 
               <input
                 type="text"
+
                 className={controlStyles.input}
+
                 placeholder="Select System"
+
                 value={systemName}
+
                 onChange={handleSystemChange}
               />
 
@@ -95,26 +100,29 @@ function ML() {
 
           <button
             className={controlStyles.runButton}
+
             onClick={handleRunPipeline}
           >
             Run Root Cause Pipeline
           </button>
 
-          {executionMessage && (
+          {
+            executionMessage && (
 
-            <div className={controlStyles.executionInfo}>
+              <div className={controlStyles.executionInfo}>
 
-              <span>
-                ML execution status:
-              </span>
+                <span>
+                  ML execution status:
+                </span>
 
-              <strong>
-                {executionMessage}
-              </strong>
+                <strong>
+                  {executionMessage}
+                </strong>
 
-            </div>
+              </div>
 
-          )}
+            )
+          }
 
         </div>
 

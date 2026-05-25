@@ -1,7 +1,7 @@
 
 
 import { type ChangeEvent, useState } from "react";
-import styles from "./AnomalyDetection.module.css";
+import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
 import controlStyles from "../../../components/shared/styles/controlStyles.module.css";
@@ -9,50 +9,76 @@ import controlStyles from "../../../components/shared/styles/controlStyles.modul
 function AnomalyDetection() {
 
   const [mode, setMode] = useState("zscore");
+
   const [systemName, setSystemName] = useState("");
+
   const [executionMessage, setExecutionMessage] = useState("");
 
   const handleRunDetection = (): void => {
 
     if (!systemName.trim()) {
+
       setExecutionMessage("Please provide a valid system name.");
+
       return;
     }
 
     if (mode === "zscore") {
-      setExecutionMessage(`Z-Score Analysis executed for ${systemName}.`);
+
+      setExecutionMessage(
+        `Z-Score Analysis executed for ${systemName}.`
+      );
     }
 
     if (mode === "detection") {
-      setExecutionMessage(`Detection Analysis executed for ${systemName}.`);
+
+      setExecutionMessage(
+        `Detection Analysis executed for ${systemName}.`
+      );
     }
 
     if (mode === "classification") {
-      setExecutionMessage(`Classification Analysis executed for ${systemName}.`);
+
+      setExecutionMessage(
+        `Classification Analysis executed for ${systemName}.`
+      );
     }
   };
 
-  const handleSystemChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleSystemChange = (
+    event: ChangeEvent<HTMLInputElement>
+  ): void => {
+
     setSystemName(event.target.value);
   };
 
   return (
-    <section className={styles.mainPanel}>
+
+    <section className={layoutStyles.mainPanel}>
 
       <section className={panelStyles.chartPanel}>
 
         <div className={panelStyles.panelHeader}>
-          {mode === "zscore" && "Z-Score Analysis Visualization"}
-          {mode === "detection" && "Detection Analysis Visualization"}
-          {mode === "classification" && "Classification Analysis Visualization"}
+
+          {mode === "zscore" &&
+            "Z-Score Analysis Visualization"}
+
+          {mode === "detection" &&
+            "Detection Analysis Visualization"}
+
+          {mode === "classification" &&
+            "Classification Analysis Visualization"}
+
         </div>
 
         <div className={panelStyles.chartPlaceholder}>
+
           <div className={panelStyles.chartGrid}></div>
 
           <span className={panelStyles.placeholderText}>
             Waiting for Anomaly execution...
           </span>
+
         </div>
 
       </section>
@@ -73,6 +99,7 @@ function AnomalyDetection() {
                   ? tabStyles.tabButtonActive
                   : tabStyles.tabButton
               }
+
               onClick={() => setMode("zscore")}
             >
               Z-Score
@@ -84,6 +111,7 @@ function AnomalyDetection() {
                   ? tabStyles.tabButtonActive
                   : tabStyles.tabButton
               }
+
               onClick={() => setMode("detection")}
             >
               Detection
@@ -95,6 +123,7 @@ function AnomalyDetection() {
                   ? tabStyles.tabButtonActive
                   : tabStyles.tabButton
               }
+
               onClick={() => setMode("classification")}
             >
               Classification
@@ -108,9 +137,13 @@ function AnomalyDetection() {
 
               <input
                 type="text"
+
                 className={controlStyles.input}
+
                 placeholder="Select System"
+
                 value={systemName}
+
                 onChange={handleSystemChange}
               />
 
@@ -124,6 +157,7 @@ function AnomalyDetection() {
 
           <button
             className={controlStyles.runButton}
+
             onClick={handleRunDetection}
           >
             Run {
@@ -133,12 +167,23 @@ function AnomalyDetection() {
             }
           </button>
 
-          {executionMessage && (
-            <div className={controlStyles.executionInfo}>
-              <span>Detection execution status:</span>
-              <strong>{executionMessage}</strong>
-            </div>
-          )}
+          {
+            executionMessage && (
+
+              <div className={controlStyles.executionInfo}>
+
+                <span>
+                  Detection execution status:
+                </span>
+
+                <strong>
+                  {executionMessage}
+                </strong>
+
+              </div>
+
+            )
+          }
 
         </div>
 

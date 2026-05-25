@@ -1,12 +1,12 @@
 
 
-import styles from "./Simulation.module.css";
+import layoutStyles from "../../components/shared/styles/layoutStyles.module.css";
 import tabStyles from "../../components/shared/styles/tabStyles.module.css";
 import { Outlet, NavLink } from "react-router-dom";
 
 function Simulation() {
   return (
-    <section className={styles.mainPanel}>
+    <section className={layoutStyles.mainPanel}>
 
       <nav className={tabStyles.tabs}>
 

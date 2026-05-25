@@ -1,11 +1,11 @@
 
 
-import styles from "./Voltage.module.css";
+import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 
 function Voltage() {
   return (
-    <section className={styles.mainPanel}>
+    <section className={layoutStyles.mainPanel}>
 
       <section className={panelStyles.chartPanel}>
 

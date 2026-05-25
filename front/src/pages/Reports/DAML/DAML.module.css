@@ -1,22 +1,5 @@
 
 
-.mainPanel {
-  height: 100%;
-
-  position: relative;
-
-  padding: 14px;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 12px;
-
-  min-height: 0;
-
-  overflow-y: auto;
-}
-
 .pipelineLabel {
   height: 38px;
 
@@ -45,12 +28,6 @@
 }
 
 @media (max-height: 820px) {
-
-  .mainPanel {
-    padding: 10px;
-
-    gap: 10px;
-  }
 
   .pipelineLabel {
     height: 32px;

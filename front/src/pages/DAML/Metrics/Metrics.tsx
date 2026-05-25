@@ -1,7 +1,7 @@
 
 
 import { type ChangeEvent, useState } from "react";
-import styles from "./Metrics.module.css";
+import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
 import controlStyles from "../../../components/shared/styles/controlStyles.module.css";
@@ -42,7 +42,7 @@ function Metrics() {
   };
 
   return (
-    <section className={styles.mainPanel}>
+    <section className={layoutStyles.mainPanel}>
 
       <section className={panelStyles.chartPanel}>
 
