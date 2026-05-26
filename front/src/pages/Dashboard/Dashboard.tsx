@@ -4,47 +4,71 @@ import { useEffect, useState } from "react";
 import styles from "./Dashboard.module.css";
 import layoutStyles from "../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../components/shared/styles/panelStyles.module.css";
-import ConsumptionChart from "../../components/charts/ConsumptionChart";
+import ConsumptionChart from "../../components/charts/SystemConsumptionChart";
 import api from "../../services/api";
+
+type DashboardSummary = {
+
+  total_consumption: number;
+
+  average_consumption: number;
+
+  peak_demand: number;
+
+  load_factor: number;
+
+  consumption_by_system: Record<string, number>;
+};
 
 function Dashboard() {
 
-  const [data, setData] = useState<Record<string, number> | null>(null);
+  const [summary, setSummary] =
+    useState<DashboardSummary | null>(null);
 
   const [loading, setLoading] = useState(true);
 
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] =
+    useState<string | null>(null);
 
   useEffect(() => {
 
     api
-      .get("/metrics/basic")
+      .get("/dashboard/summary")
 
       .then((response) => {
 
-        console.log("API RESPONSE:", response.data);
+        console.log(
+          "DASHBOARD RESPONSE:",
+          response.data
+        );
 
-        const hourly = response.data?.consumption_by_hour;
+        const dashboardData = response.data;
 
-        if (!hourly || Object.keys(hourly).length === 0) {
+        if (
+          !dashboardData?.consumption_by_system ||
+          Object.keys(
+            dashboardData.consumption_by_system
+          ).length === 0
+        ) {
 
           throw new Error(
-            "consumption_by_hour is empty or missing"
+            "consumption_by_system is empty or missing"
           );
         }
 
-        setData(hourly);
+        setSummary(dashboardData);
       })
 
       .catch((error) => {
 
         console.error(
-          "Error loading metrics:",
+          "Error loading dashboard summary:",
           error
         );
 
         setError(
-          error.message || "Failed to load metrics"
+          error.message ||
+          "Failed to load dashboard summary"
         );
       })
 
@@ -62,7 +86,7 @@ function Dashboard() {
       <section className={panelStyles.chartPanel}>
 
         <div className={panelStyles.panelHeader}>
-          Total Station Energy Consumption
+          Energy Consumption by System
         </div>
 
         <div className={panelStyles.chartPlaceholder}>
@@ -73,7 +97,7 @@ function Dashboard() {
             loading && (
 
               <span className={panelStyles.placeholderText}>
-                Loading consumption data...
+                Loading dashboard data...
               </span>
 
             )
@@ -92,10 +116,16 @@ function Dashboard() {
           {
             !loading &&
             !error &&
-            data &&
-            Object.keys(data).length > 0 && (
+            summary &&
+            Object.keys(
+              summary.consumption_by_system
+            ).length > 0 && (
 
-              <ConsumptionChart data={data} />
+              <ConsumptionChart
+                data={
+                  summary.consumption_by_system
+                }
+              />
 
             )
           }
@@ -113,7 +143,31 @@ function Dashboard() {
           </span>
 
           <h2 className={styles.kpiValue}>
-            --
+
+            {
+              summary
+                ? `${summary.total_consumption.toFixed(2)} kWh`
+                : "--"
+            }
+
+          </h2>
+
+        </div>
+
+        <div className={styles.kpiCard}>
+
+          <span className={styles.kpiLabel}>
+            Average Consumption
+          </span>
+
+          <h2 className={styles.kpiValue}>
+
+            {
+              summary
+                ? `${summary.average_consumption.toFixed(2)} kWh`
+                : "--"
+            }
+
           </h2>
 
         </div>
@@ -125,7 +179,13 @@ function Dashboard() {
           </span>
 
           <h2 className={styles.kpiValue}>
-            --
+
+            {
+              summary
+                ? `${summary.peak_demand.toFixed(2)} kWh`
+                : "--"
+            }
+
           </h2>
 
         </div>
@@ -133,23 +193,17 @@ function Dashboard() {
         <div className={styles.kpiCard}>
 
           <span className={styles.kpiLabel}>
-            Active Systems
+            Load Factor
           </span>
 
           <h2 className={styles.kpiValue}>
-            --
-          </h2>
 
-        </div>
+            {
+              summary
+                ? summary.load_factor.toFixed(2)
+                : "--"
+            }
 
-        <div className={styles.kpiCard}>
-
-          <span className={styles.kpiLabel}>
-            Alert Status
-          </span>
-
-          <h2 className={styles.kpiValue}>
-            --
           </h2>
 
         </div>
