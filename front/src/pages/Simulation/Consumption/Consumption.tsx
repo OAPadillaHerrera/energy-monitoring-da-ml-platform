@@ -1,52 +1,148 @@
 
 
-import { type ChangeEvent, useState } from "react";
+import {
+  type ChangeEvent,
+  useState
+} from "react";
+
 import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
 import controlStyles from "../../../components/shared/styles/controlStyles.module.css";
+import SimulationConsumptionChart from "../../../components/charts/SimulationConsumptionChart";
+import api from "../../../services/api";
+
+type SimulationMode =
+  | "daily"
+  | "range";
+
+type SimulationInfo = {
+
+  status: string;
+
+  simulation_date?: string;
+
+  daily_records_inserted?: number;
+
+  hourly_records_inserted?: number;
+
+  hours_generated?: number;
+};
 
 function Consumption() {
 
-  const [mode, setMode] = useState("daily");
+  const [mode, setMode] =
+    useState<SimulationMode>("daily");
 
-  const [executedDate, setExecutedDate] = useState("");
+  const [chartData, setChartData] =
+    useState<Record<string, number> | null>(
+      null
+    );
 
-  const [startDate, setStartDate] = useState("");
+  const [simulationInfo, setSimulationInfo] =
+    useState<SimulationInfo | null>(null);
 
-  const [endDate, setEndDate] = useState("");
+  const [loading, setLoading] =
+    useState(false);
 
-  const handleRunSimulation = (): void => {
+  const [error, setError] =
+    useState<string | null>(null);
 
-    if (mode === "daily") {
+  const [startDate, setStartDate] =
+    useState("");
 
-      const today = new Date();
+  const [endDate, setEndDate] =
+    useState("");
 
-      const formattedDate =
-        today
-          .toISOString()
-          .split("T")[0]
-          .replace(/-/g, "/");
+  const handleRunSimulation =
+    async (): Promise<void> => {
 
-      setExecutedDate(formattedDate);
+      try {
 
-      return;
-    }
+        setLoading(true);
 
-    if (mode === "range") {
+        setError(null);
 
-      if (!startDate.trim() || !endDate.trim()) {
+        setChartData(null);
 
-        setExecutedDate("");
+        if (mode === "daily") {
 
-        return;
+          const simulationResponse =
+            await api.post(
+              "/simulation/daily"
+            );
+
+          setSimulationInfo(
+            simulationResponse.data
+          );
+
+          const metricsResponse =
+            await api.get(
+              "/metrics/station/hourly"
+            );
+
+          setChartData(
+            metricsResponse.data
+              .energy_by_hour
+          );
+        }
+
+        if (mode === "range") {
+
+          if (
+            !startDate.trim() ||
+            !endDate.trim()
+          ) {
+
+            setError(
+              "Start date and end date are required."
+            );
+
+            return;
+          }
+
+          const simulationResponse =
+            await api.post(
+              "/simulation/range",
+              {
+                start_date: startDate,
+                end_date: endDate
+              }
+            );
+
+          setSimulationInfo(
+            simulationResponse.data
+          );
+
+          const metricsResponse =
+            await api.get(
+              "/metrics/station/daily"
+            );
+
+          setChartData(
+            metricsResponse.data
+              .daily_energy
+          );
+        }
+
+      } catch (error: any) {
+
+        console.error(
+          "Simulation execution failed:",
+          error
+        );
+
+        setError(
+          error?.response?.data?.message ||
+          error.message ||
+          "Simulation execution failed."
+        );
+
+      } finally {
+
+        setLoading(false);
       }
-
-      setExecutedDate(
-        `${startDate} → ${endDate}`
-      );
-    }
-  };
+    };
 
   const handleStartDateChange = (
     event: ChangeEvent<HTMLInputElement>
@@ -69,16 +165,63 @@ function Consumption() {
       <section className={panelStyles.chartPanel}>
 
         <div className={panelStyles.panelHeader}>
-          Total Station Energy Consumption
+
+          {
+            mode === "daily"
+              ? "Hourly Station Consumption"
+              : "Daily Station Consumption"
+          }
+
         </div>
 
         <div className={panelStyles.chartPlaceholder}>
 
           <div className={panelStyles.chartGrid}></div>
 
-          <span className={panelStyles.placeholderText}>
-            Waiting for Simulation execution...
-          </span>
+          {
+            loading && (
+
+              <span className={panelStyles.placeholderText}>
+                Running simulation...
+              </span>
+
+            )
+          }
+
+          {
+            error && (
+
+              <span className={panelStyles.placeholderText}>
+                Error: {error}
+              </span>
+
+            )
+          }
+
+          {
+            !loading &&
+            !error &&
+            !chartData && (
+
+              <span className={panelStyles.placeholderText}>
+                Waiting for Simulation execution...
+              </span>
+
+            )
+          }
+
+          {
+            !loading &&
+            !error &&
+            chartData && (
+
+              <SimulationConsumptionChart
+                data={chartData}
+                mode={mode}
+              />
+
+            )
+          }
 
         </div>
 
@@ -105,7 +248,11 @@ function Consumption() {
 
                 setMode("daily");
 
-                setExecutedDate("");
+                setChartData(null);
+
+                setSimulationInfo(null);
+
+                setError(null);
               }}
             >
               Daily Simulation
@@ -122,7 +269,11 @@ function Consumption() {
 
                 setMode("range");
 
-                setExecutedDate("");
+                setChartData(null);
+
+                setSimulationInfo(null);
+
+                setError(null);
               }}
             >
               Range Simulation
@@ -138,15 +289,15 @@ function Consumption() {
                 <div className={controlStyles.inputGroup}>
 
                   <input
-                    type="text"
+                    type="date"
 
                     className={controlStyles.input}
 
-                    placeholder="yyyy/mm/dd"
-
                     value={startDate}
 
-                    onChange={handleStartDateChange}
+                    onChange={
+                      handleStartDateChange
+                    }
                   />
 
                   <div className={controlStyles.inputLabel}>
@@ -158,15 +309,15 @@ function Consumption() {
                 <div className={controlStyles.inputGroup}>
 
                   <input
-                    type="text"
+                    type="date"
 
                     className={controlStyles.input}
 
-                    placeholder="yyyy/mm/dd"
-
                     value={endDate}
 
-                    onChange={handleEndDateChange}
+                    onChange={
+                      handleEndDateChange
+                    }
                   />
 
                   <div className={controlStyles.inputLabel}>
@@ -189,17 +340,41 @@ function Consumption() {
           </button>
 
           {
-            executedDate && (
+            simulationInfo && (
 
               <div className={controlStyles.executionInfo}>
 
                 <span>
-                  Simulation executed for:
+                  Simulation executed successfully
                 </span>
 
-                <strong>
-                  {executedDate}
-                </strong>
+                {
+                  simulationInfo.simulation_date && (
+
+                    <strong>
+                      Date:
+                      {" "}
+                      {
+                        simulationInfo.simulation_date
+                      }
+                    </strong>
+
+                  )
+                }
+
+                {
+                  simulationInfo.hourly_records_inserted && (
+
+                    <strong>
+                      Hourly records:
+                      {" "}
+                      {
+                        simulationInfo.hourly_records_inserted
+                      }
+                    </strong>
+
+                  )
+                }
 
               </div>
 
@@ -215,7 +390,6 @@ function Consumption() {
 }
 
 export default Consumption;
-
 
 
 
