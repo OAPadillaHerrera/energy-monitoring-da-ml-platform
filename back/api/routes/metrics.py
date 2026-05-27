@@ -6,7 +6,9 @@ from analytics.metrics.service import (
     get_basic_metrics,
     get_station_metrics,
     get_system_metrics,
-    get_energy_metrics
+    get_energy_metrics,
+    get_station_hourly_metrics,
+    get_station_daily_metrics
 )
 
 metrics_bp = Blueprint("metrics", __name__)
@@ -32,3 +34,11 @@ def get_system():
 @metrics_bp.route("/energy", methods=["GET"])
 def get_energy():
     return jsonify(get_energy_metrics()), 200
+
+@metrics_bp.route("/station/hourly", methods=["GET"])
+def get_station_hourly():
+    return jsonify(get_station_hourly_metrics()), 200
+
+@metrics_bp.route("/station/daily", methods=["GET"])
+def get_station_daily():
+    return jsonify(get_station_daily_metrics()), 200

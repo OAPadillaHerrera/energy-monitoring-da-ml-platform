@@ -89,6 +89,27 @@ def get_station_metrics():
         "daily_energy": _serialize_series(daily_energy(df)),
     }
 
+
+def get_station_hourly_metrics():
+
+    df = _get_clean_dataset()
+
+    return {
+        "energy_by_hour": _serialize_series(
+            energy_by_hour(df)
+        )
+    }
+
+def get_station_daily_metrics():
+
+    df = _get_clean_dataset()
+
+    return {
+        "daily_energy": _serialize_series(
+            daily_energy(df)
+        )
+    }
+
 def get_system_metrics(system_name: str):
     df = _get_clean_dataset()
 
