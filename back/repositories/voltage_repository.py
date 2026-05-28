@@ -25,6 +25,16 @@ INSERT INTO hourly_voltage_profile (
 VALUES (%s, %s, %s, %s)
 """
 
+SQL_GET_ALL_VOLTAGE_RECORDS = """
+SELECT
+    timestamp,
+    voltage_120v,
+    voltage_240v,
+    quality_flag
+FROM hourly_voltage_profile
+ORDER BY timestamp ASC;
+"""
+
 def insert_hourly_voltage_bulk(
     records: List[Tuple[datetime.datetime, float, float, str]]
 ) -> None:
@@ -55,6 +65,44 @@ def insert_hourly_voltage_bulk(
 
         raise RepositoryError(
             "Failed to insert hourly voltage records."
+        ) from exc
+
+    finally:
+
+        if cursor:
+            cursor.close()
+
+        if connection:
+            connection.close()
+
+def get_all_voltage_records() -> List[
+    Tuple[datetime.datetime, float, float, str]
+]:
+
+    connection = None
+    cursor = None
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            SQL_GET_ALL_VOLTAGE_RECORDS
+        )
+
+        result = cursor.fetchall()
+
+        return result if result else []
+
+    except Exception as exc:
+
+        logger.error(
+            "Failed retrieving voltage records.",
+            exc_info=exc,
+        )
+
+        raise RepositoryError(
+            "Failed to fetch voltage records."
         ) from exc
 
     finally:

@@ -13,10 +13,11 @@ import datetime
 import logging
 from flask import Blueprint, jsonify, request
 
-from application.simulation_application import (
+from application.simulation_application import (   
     run_daily_simulation,
     run_range_simulation,
-    get_system_events
+    get_system_events,
+    get_voltage_records
 )
 
 from core.exceptions import SimulationError
@@ -79,5 +80,14 @@ def system_events():
     logger.info("System events endpoint called.")
 
     result = get_system_events()
+
+    return jsonify(result), 200
+
+@simulation_bp.route("/voltage", methods=["GET"])
+def voltage_records():
+
+    logger.info("Voltage endpoint called.")
+
+    result = get_voltage_records()
 
     return jsonify(result), 200

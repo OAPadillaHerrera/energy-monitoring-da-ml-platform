@@ -24,7 +24,10 @@ from repositories.consumption_repository import (
     get_latest_consumption_date
 )
 
-from repositories.voltage_repository import insert_hourly_voltage_bulk
+from repositories.voltage_repository import (
+    insert_hourly_voltage_bulk,
+    get_all_voltage_records
+)
 
 from repositories.system_events_repository import (
     insert_system_events,
@@ -38,12 +41,12 @@ from core.exceptions import SimulationError
 
 logger = logging.getLogger(__name__)
 
-def _create_simulation_context() -> Tuple[VoltageProfile, MonthlyZeroConsumptionEvent]:
 
+def _create_simulation_context() -> Tuple[VoltageProfile, MonthlyZeroConsumptionEvent]:
     return VoltageProfile(), MonthlyZeroConsumptionEvent()
 
-def _get_next_simulation_date() -> datetime.date:
 
+def _get_next_simulation_date() -> datetime.date:
     today = datetime.date.today()
     latest_date = get_latest_consumption_date()
 
@@ -52,6 +55,7 @@ def _get_next_simulation_date() -> datetime.date:
         if latest_date
         else today
     )
+
 
 def _build_hourly_records(
     daily_data: List[Tuple[str, float, datetime.datetime]],
@@ -78,6 +82,7 @@ def _build_hourly_records(
         )
 
     return hourly_records
+
 
 def run_daily_simulation() -> Dict[str, object]:
 
@@ -130,6 +135,7 @@ def run_daily_simulation() -> Dict[str, object]:
         )
 
         raise
+
 
 def run_range_simulation(
     start_date: datetime.date,
@@ -235,6 +241,7 @@ def run_range_simulation(
 
         raise
 
+
 def get_system_events():
 
     events = get_all_system_events()
@@ -246,4 +253,19 @@ def get_system_events():
             "event_type": record[2]
         }
         for record in events
+    ]
+
+
+def get_voltage_records():
+
+    records = get_all_voltage_records()
+
+    return [
+        {
+            "timestamp": record[0].isoformat(),
+            "voltage_120v": record[1],
+            "voltage_240v": record[2],
+            "quality_flag": record[3]
+        }
+        for record in records
     ]
