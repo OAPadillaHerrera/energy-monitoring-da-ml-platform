@@ -15,7 +15,8 @@ from flask import Blueprint, jsonify, request
 
 from application.simulation_application import (
     run_daily_simulation,
-    run_range_simulation
+    run_range_simulation,
+    get_system_events
 )
 
 from core.exceptions import SimulationError
@@ -69,5 +70,14 @@ def range_simulation():
         ) from exc
 
     result = run_range_simulation(start_date, end_date)
+
+    return jsonify(result), 200
+
+@simulation_bp.route("/system-events", methods=["GET"])
+def system_events():
+
+    logger.info("System events endpoint called.")
+
+    result = get_system_events()
 
     return jsonify(result), 200

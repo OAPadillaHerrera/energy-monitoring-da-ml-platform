@@ -4,7 +4,8 @@
 Simulation Application Layer
 
 This module orchestrates daily and range energy simulations.
-It coordinates domain services, repositories, and data persistence.
+It coordinates domain services, repositories,
+and simulation data retrieval operations.
 """
 
 import datetime
@@ -24,7 +25,12 @@ from repositories.consumption_repository import (
 )
 
 from repositories.voltage_repository import insert_hourly_voltage_bulk
-from repositories.system_events_repository import insert_system_events
+
+from repositories.system_events_repository import (
+    insert_system_events,
+    get_all_system_events
+)
+
 from services.daily_consumption_service import build_daily_consumption_records
 from electrical.voltage_profile import VoltageProfile
 from electrical.zero_consumption_events import MonthlyZeroConsumptionEvent
@@ -228,3 +234,16 @@ def run_range_simulation(
         )
 
         raise
+
+def get_system_events():
+
+    events = get_all_system_events()
+
+    return [
+        {
+            "timestamp": record[0].isoformat(),
+            "system_id": record[1],
+            "event_type": record[2]
+        }
+        for record in events
+    ]

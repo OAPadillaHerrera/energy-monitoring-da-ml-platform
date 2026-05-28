@@ -37,6 +37,12 @@ WHERE event_type = %s
 LIMIT 1;
 """
 
+SQL_GET_ALL_SYSTEM_EVENTS = """
+SELECT timestamp, system_id, event_type
+FROM system_events
+ORDER BY timestamp ASC;
+"""
+
 def insert_system_events(
     records: List[Tuple[datetime.datetime, int, str]]
 ) -> None:
@@ -152,3 +158,36 @@ def exists_system_event_in_month(
         if connection:
             connection.close()
 
+def get_all_system_events() -> List[Tuple[datetime.datetime, int, str]]:
+
+    connection = None
+    cursor = None
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(SQL_GET_ALL_SYSTEM_EVENTS)
+
+        result = cursor.fetchall()
+
+        return result if result else []
+
+    except Exception as exc:
+
+        logger.error(
+            "Failed retrieving system events.",
+            exc_info=exc,
+        )
+
+        raise RepositoryError(
+            "Failed to fetch system events."
+        ) from exc
+
+    finally:
+
+        if cursor:
+            cursor.close()
+
+        if connection:
+            connection.close()
