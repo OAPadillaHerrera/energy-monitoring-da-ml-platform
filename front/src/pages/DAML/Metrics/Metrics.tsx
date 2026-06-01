@@ -14,6 +14,7 @@ import dashboardStyles from "../../Dashboard/Dashboard.module.css";
 import api from "../../../services/api";
 import BasicMetricsTable from "../../../components/tables/BasicMetricsTable";
 import StationEnergyByHourChart from "../../../components/charts/StationEnergyByHourChart";
+import SystemEnergyByHourChart from "../../../components/charts/SystemEnergyByHourChart";
 
 type BasicMetricsData = {
   total_consumption: number;
@@ -32,6 +33,16 @@ type StationMetricsData = {
   daily_energy: Record<string, number>;
 };
 
+type SystemMetricsData = {
+  total_energy: number;
+  average_consumption: number;
+  peak_consumption: number;
+  min_consumption: number;
+  std_consumption: number;
+  avg_daily_energy: number;
+  avg_hourly_profile: Record<string, number>;
+};
+
 function Metrics() {
 
   const [mode, setMode] = useState("basic");
@@ -44,47 +55,50 @@ function Metrics() {
   const [stationMetrics, setStationMetrics] =
     useState<StationMetricsData | null>(null);
 
+  const [systemMetrics, setSystemMetrics] =
+    useState<SystemMetricsData | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
 
-    const fetchMetrics = async (): Promise<void> => {
+  const fetchMetrics = async (): Promise<void> => {
 
-      try {
-        setLoading(true);
-        setError(null);
+    try {
+      setLoading(true);
+      setError(null);
 
-        if (mode === "basic") {
-          const response = await api.get("/metrics/basic");
-          setBasicMetrics(response.data);
-        }
+      if (mode === "basic") {
+        const response = await api.get("/metrics/basic");
+        setBasicMetrics(response.data);
+      }
 
-        if (mode === "station") {
-          const response = await api.get("/metrics/station");
-          setStationMetrics(response.data);
-        }
-
-      } catch (error: any) {
-
-        console.error("Failed loading metrics:", error);
-
-        setError(
-          error?.response?.data?.message ||
-          error.message ||
-          "Failed loading metrics."
+      if (mode === "station") {
+        const response = await api.get("/metrics/station");
+        setStationMetrics(response.data);
+      }
+      
+      if (mode === "system" && systemName.trim()) {
+        const response = await api.get(
+          `/metrics/system?name=${systemName}`
         );
 
-      } finally {
-        setLoading(false);
-      }
-    };
+        setSystemMetrics(response.data);
+      }      
 
-    void fetchMetrics();
+    } catch (error: any) {
+      
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  }, [mode]);
+  void fetchMetrics();
 
-  const handleRunMetrics = (): void => {
+}, [mode, systemName]);
+
+  const handleRunMetrics = async (): Promise<void> => {
 
     if (mode === "basic") {
       setExecutionMessage("Basic Metrics executed successfully.");
@@ -94,14 +108,12 @@ function Metrics() {
       setExecutionMessage("Station Metrics executed successfully.");
     }
 
-    if (mode === "system") {
+    if (mode === "system" && systemName.trim()) {
+      const response = await api.get(
+        `/metrics/system?name=${systemName}`
+      );
 
-      if (!systemName.trim()) {
-        setExecutionMessage("Please provide a valid system name.");
-        return;
-      }
-
-      setExecutionMessage(`System Metrics executed for ${systemName}.`);
+      setSystemMetrics(response.data);
     }
 
     if (mode === "energy") {
@@ -180,7 +192,7 @@ function Metrics() {
               <div style={{ height: "260px", width: "100%" }}>
                 <StationEnergyByHourChart data={stationMetrics.energy_by_hour} />
               </div>
-el 
+
               <div className={dashboardStyles.kpiRow}>
 
                 <div className={dashboardStyles.kpiCard}>
@@ -234,6 +246,88 @@ el
             </div>
           )}
 
+          {!loading && !error && mode === "system" && systemMetrics && (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "18px"
+              }}
+            >
+
+              <div style={{ height: "260px", width: "100%" }}>
+                <SystemEnergyByHourChart
+                  data={systemMetrics.avg_hourly_profile}
+                />
+              </div>
+
+              <div className={dashboardStyles.kpiRow}>
+
+                <div className={dashboardStyles.kpiCard}>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Total Energy
+                  </span>
+                  <h2 className={dashboardStyles.kpiValue}>
+                    {systemMetrics.total_energy.toFixed(2)} kWh
+                  </h2>
+                </div>
+
+                <div className={dashboardStyles.kpiCard}>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Avg Load
+                  </span>
+                  <h2 className={dashboardStyles.kpiValue}>
+                    {systemMetrics.average_consumption.toFixed(2)} kWh
+                  </h2>
+                </div>
+
+                <div className={dashboardStyles.kpiCard}>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Peak Demand
+                  </span>
+                  <h2 className={dashboardStyles.kpiValue}>
+                    {systemMetrics.peak_consumption.toFixed(2)} kWh
+                  </h2>
+                </div>
+
+              </div>
+
+              <div className={dashboardStyles.kpiRow}>
+
+                <div className={dashboardStyles.kpiCard}>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Min Consumption
+                  </span>
+                  <h2 className={dashboardStyles.kpiValue}>
+                    {systemMetrics.min_consumption.toFixed(2)} kWh
+                  </h2>
+                </div>
+
+                <div className={dashboardStyles.kpiCard}>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Std Consumption
+                  </span>
+                  <h2 className={dashboardStyles.kpiValue}>
+                    {systemMetrics.std_consumption.toFixed(2)}
+                  </h2>
+                </div>
+
+                <div className={dashboardStyles.kpiCard}>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Avg Daily Energy
+                  </span>
+                  <h2 className={dashboardStyles.kpiValue}>
+                    {systemMetrics.avg_daily_energy.toFixed(2)} kWh
+                  </h2>
+                </div>
+
+              </div>
+
+            </div>
+          )}
+         
+   
         </div>
 
       </section>
