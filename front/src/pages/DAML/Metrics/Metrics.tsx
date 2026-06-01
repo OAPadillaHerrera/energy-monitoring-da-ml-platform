@@ -15,6 +15,8 @@ import api from "../../../services/api";
 import BasicMetricsTable from "../../../components/tables/BasicMetricsTable";
 import StationEnergyByHourChart from "../../../components/charts/StationEnergyByHourChart";
 import SystemEnergyByHourChart from "../../../components/charts/SystemEnergyByHourChart";
+import EnergySystemRankingPieChart from "../../../components/charts/EnergySystemRanlkingPieChart";
+import EnergyLoadFactorTable from "../../../components/tables/EnergyLoadFactorTable";
 
 type BasicMetricsData = {
   total_consumption: number;
@@ -43,6 +45,12 @@ type SystemMetricsData = {
   avg_hourly_profile: Record<string, number>;
 };
 
+type EnergyMetricsData = {
+  load_factor: number;
+  load_factor_by_system: Record<string, number>;
+  system_ranking: Record<string, number>;
+};
+
 function Metrics() {
 
   const [mode, setMode] = useState("basic");
@@ -57,6 +65,9 @@ function Metrics() {
 
   const [systemMetrics, setSystemMetrics] =
     useState<SystemMetricsData | null>(null);
+
+  const [energyMetrics, setEnergyMetrics] =
+  useState<EnergyMetricsData | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -80,12 +91,14 @@ function Metrics() {
       }
       
       if (mode === "system" && systemName.trim()) {
-        const response = await api.get(
-          `/metrics/system?name=${systemName}`
-        );
-
+        const response = await api.get(`/metrics/system?name=${systemName}`);
         setSystemMetrics(response.data);
       }      
+
+      if (mode === "energy") {
+        const response = await api.get("/metrics/energy");
+        setEnergyMetrics(response.data);
+      }
 
     } catch (error: any) {
       
@@ -109,11 +122,7 @@ function Metrics() {
     }
 
     if (mode === "system" && systemName.trim()) {
-      const response = await api.get(
-        `/metrics/system?name=${systemName}`
-      );
-
-      setSystemMetrics(response.data);
+       setExecutionMessage("System Metrics executed successfully.");
     }
 
     if (mode === "energy") {
@@ -293,42 +302,48 @@ function Metrics() {
 
               </div>
 
+              </div>
+            )}
+
+          {!loading && !error && mode === "energy" && energyMetrics && (
+  
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "18px"
+              }}
+            >
+
+              <div style={{ height: "320px", width: "100%" }}>
+                <EnergySystemRankingPieChart
+                  data={energyMetrics.system_ranking}
+                />
+              </div>
+
               <div className={dashboardStyles.kpiRow}>
 
                 <div className={dashboardStyles.kpiCard}>
                   <span className={dashboardStyles.kpiLabel}>
-                    Min Consumption
+                    Load Factor
                   </span>
-                  <h2 className={dashboardStyles.kpiValue}>
-                    {systemMetrics.min_consumption.toFixed(2)} kWh
-                  </h2>
-                </div>
 
-                <div className={dashboardStyles.kpiCard}>
-                  <span className={dashboardStyles.kpiLabel}>
-                    Std Consumption
-                  </span>
                   <h2 className={dashboardStyles.kpiValue}>
-                    {systemMetrics.std_consumption.toFixed(2)}
-                  </h2>
-                </div>
-
-                <div className={dashboardStyles.kpiCard}>
-                  <span className={dashboardStyles.kpiLabel}>
-                    Avg Daily Energy
-                  </span>
-                  <h2 className={dashboardStyles.kpiValue}>
-                    {systemMetrics.avg_daily_energy.toFixed(2)} kWh
+                    {(energyMetrics.load_factor * 100).toFixed(1)}%
                   </h2>
                 </div>
 
               </div>
 
+              <EnergyLoadFactorTable 
+                data={energyMetrics.load_factor_by_system} 
+                />
+
             </div>
           )}
-         
-   
-        </div>
+
+          </div>
 
       </section>
 
