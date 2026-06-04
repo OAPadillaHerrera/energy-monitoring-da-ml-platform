@@ -10,14 +10,25 @@ import layoutStyles from "../../../components/shared/styles/layoutStyles.module.
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
 import controlStyles from "../../../components/shared/styles/controlStyles.module.css";
-
 import api from "../../../services/api";
 import ZScoreChart from "../../../components/charts/ZScoreChart";
+import DetectionChart from "../../../components/charts/DetectionChart";
 
 type ZScoreData = {
   system?: string;
   z_score_consumption: Record<string, number>;
   z_score_by_system: Record<string, number>;
+};
+
+type DetectionData = {
+  system?: string;
+
+  all_systems_detection: Record<
+    string,
+    Record<string, number>
+  >;
+
+  by_system: Record<string, number>;
 };
 
 function AnomalyDetection() {
@@ -31,6 +42,9 @@ function AnomalyDetection() {
   const [zscoreData, setZscoreData] =
     useState<ZScoreData | null>(null);
 
+  const [detectionData, setDetectionData] =
+  useState<DetectionData | null>(null);
+
   const [loading, setLoading] = useState(false);
 
   const [error, setError] =
@@ -40,37 +54,40 @@ function AnomalyDetection() {
 
   const timeoutId = setTimeout(() => {
 
-    const fetchZScore = async (): Promise<void> => {
-
-      if (mode !== "zscore") {
-        return;
-      }
+    const fetchAnomaly = async (): Promise<void> => {
 
       try {
 
         setLoading(true);
         setError(null);
 
-        const endpoint = systemName.trim()
-          ? `/anomaly/zscore?name=${encodeURIComponent(systemName)}`
-          : "/anomaly/zscore";
+        if (mode === "zscore") {
 
-        const response = await api.get(endpoint);
+          const endpoint = systemName.trim()
+            ? `/anomaly/zscore?name=${encodeURIComponent(systemName)}`
+            : "/anomaly/zscore";
 
-        console.log(response.data);
+          const response = await api.get(endpoint);
 
-        setZscoreData(response.data);
+          setZscoreData(response.data);
+        }
+
+        if (mode === "detection") {
+
+          const endpoint = systemName.trim()
+            ? `/anomaly/detection?name=${encodeURIComponent(systemName)}`
+            : "/anomaly/detection";
+
+          const response = await api.get(endpoint);
+
+          setDetectionData(response.data);
+        }
 
       } catch (err) {
 
-  console.error(err);
+        console.error(err);
 
-  setZscoreData(null);
-
-  setError(
-    "System not found."
-  );
-
+        setError("System not found.");
 
       } finally {
 
@@ -78,7 +95,7 @@ function AnomalyDetection() {
       }
     };
 
-    void fetchZScore();
+    void fetchAnomaly();
 
   }, 700);
 
@@ -89,9 +106,8 @@ function AnomalyDetection() {
   const handleRunDetection = (): void => {
 
     if (mode === "zscore") {
-
+      
       setExecutionMessage(
-
         systemName.trim()
 
           ? `Z-Score Analysis executed for ${systemName}.`
@@ -103,7 +119,11 @@ function AnomalyDetection() {
     if (mode === "detection") {
 
       setExecutionMessage(
-        "Detection Analysis executed."
+        systemName.trim()
+
+          ? `Detection Analysis executed for ${systemName}.`
+
+          : "Detection Analysis executed for station consumption."
       );
     }
 
@@ -122,13 +142,21 @@ function AnomalyDetection() {
     setSystemName(event.target.value);
   };
 
-  const chartData = zscoreData
+  const zscoreChartData = zscoreData
   ? (
       zscoreData.system
         ? zscoreData.z_score_by_system
         : zscoreData.z_score_consumption
     )
   : null;
+
+  const detectionChartData = detectionData
+    ? (
+        detectionData.system
+          ? detectionData.by_system
+          : detectionData.all_systems_detection
+      )
+    : null;
 
   return (
 
@@ -157,8 +185,6 @@ function AnomalyDetection() {
           }}
         >
 
-          <div className={panelStyles.chartGrid}></div>
-
           {loading && (
 
             <span className={panelStyles.placeholderText}>
@@ -178,7 +204,7 @@ function AnomalyDetection() {
           {!loading &&
             !error &&
             mode === "zscore" &&
-            chartData && (
+            zscoreChartData && (
 
             <div
               style={{
@@ -188,7 +214,7 @@ function AnomalyDetection() {
             >
 
               <ZScoreChart
-                data={chartData}
+                data={zscoreChartData}
               />
 
             </div>
@@ -197,7 +223,27 @@ function AnomalyDetection() {
 
           {!loading &&
             !error &&
-            mode !== "zscore" && (
+            mode === "detection" &&
+            detectionChartData && (
+
+            <div
+              style={{
+                width: "100%",
+                height: "320px"
+              }}
+            >
+
+              <DetectionChart
+                data={detectionChartData}
+              />
+
+            </div>
+
+          )}
+
+          {!loading &&
+            !error &&
+            mode === "classification" && (
 
             <span className={panelStyles.placeholderText}>
               Waiting for Anomaly execution...
@@ -323,3 +369,6 @@ function AnomalyDetection() {
 }
 
 export default AnomalyDetection;
+
+
+
