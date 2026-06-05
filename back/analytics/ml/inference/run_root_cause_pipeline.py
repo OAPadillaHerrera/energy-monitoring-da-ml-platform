@@ -48,12 +48,15 @@ def run_root_cause_pipeline(model_path: str, df: pd.DataFrame):
     ]
 
     results = format_prediction_output(
-        y_pred,
-        probabilities_list,
-        risk_levels,
-        actions,
-        alerts_list
+    y_pred,
+    probabilities_list,
+    risk_levels,
+    actions,
+    alerts_list
     )
+
+    results["timestamp"] = df["timestamp"].values
+    results["system_name"] = df["system_name"].values
 
     return results
 

@@ -130,11 +130,24 @@ def anomaly_classification(
     threshold: float = ANOMALY_Z_THRESHOLD
 ) -> pd.DataFrame:
 
-    results = classify_anomalies_with_context_all_systems(dataset, threshold)
+    results = classify_anomalies_with_context_all_systems(
+        dataset,
+        threshold
+    )
 
     if not results:
         return pd.DataFrame()
 
-    df = pd.concat(results.values())
+    frames = []
+
+    for system, df_sys in results.items():
+
+        df_copy = df_sys.copy()
+
+        df_copy["system_name"] = system
+
+        frames.append(df_copy)
+
+    df = pd.concat(frames)
 
     return df
