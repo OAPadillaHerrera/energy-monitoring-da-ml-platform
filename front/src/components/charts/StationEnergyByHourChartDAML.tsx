@@ -8,8 +8,7 @@ import {
   LineElement,
   Tooltip,
   Legend,
-  Filler,
-  type ChartOptions
+  Filler
 } from "chart.js";
 
 import { Line } from "react-chartjs-2";
@@ -28,13 +27,27 @@ type Props = {
   data: Record<string, number>;
 };
 
-export default function SystemEnergyByHourChart({
+function groupByHour(data: Record<string, number>) {
+  const hours = Array(24).fill(0);
+  const counts = Array(24).fill(0);
+
+  Object.entries(data).forEach(([timestamp, value]) => {
+    const hour = new Date(timestamp).getHours();
+
+    hours[hour] += Number(value);
+    counts[hour] += 1;
+  });
+
+  return hours.map((sum, i) =>
+    counts[i] ? sum / counts[i] : 0
+  );
+}
+
+export default function StationEnergyByHourChart({
   data
 }: Props) {
-  const hourly = Array.from(
-    { length: 24 },
-    (_, hour) => Number(data[String(hour)] ?? 0)
-  );
+
+  const hourly = groupByHour(data);
 
   const labels = Array.from(
     { length: 24 },
@@ -42,52 +55,74 @@ export default function SystemEnergyByHourChart({
   );
 
   const chartData = {
+
     labels,
+
     datasets: [
       {
         label: "Avg Energy by Hour of Day (kWh)",
+
         data: hourly,
+
         borderColor: "#00c2ff",
+
         backgroundColor: "rgba(0, 194, 255, 0.18)",
+
         borderWidth: 2,
+
         tension: 0.35,
+
         fill: true,
-        pointStyle: "rect" as const,
+
+        pointStyle: "rect",
+
         pointRadius: 5,
+
         pointHoverRadius: 6,
+
         pointBackgroundColor: "#00c2ff",
+
         pointBorderWidth: 0
       }
     ]
   };
 
-  const options: ChartOptions<"line"> = {
+  const options = {
+
     responsive: true,
+
     maintainAspectRatio: false,
 
     interaction: {
-      mode: "index",
+      mode: "index" as const,
       intersect: false
     },
 
     plugins: {
+
       legend: {
         display: true
       },
 
       tooltip: {
+
         enabled: true,
+
         displayColors: false,
 
         callbacks: {
-          label: (context) =>
-            `${Number(context.parsed.y).toFixed(2)} kWh`
+
+          label: (context: any) => {
+            return `${context.parsed.y.toFixed(2)} kWh`;
+          }
         }
       }
     },
 
     scales: {
+
       x: {
+
         ticks: {
           maxRotation: 0,
           autoSkip: true,
@@ -100,14 +135,11 @@ export default function SystemEnergyByHourChart({
       },
 
       y: {
+
         beginAtZero: true,
 
         grid: {
           color: "rgba(255,255,255,0.05)"
-        },
-
-        ticks: {
-          callback: (value) => `${value} kWh`
         }
       }
     }
@@ -121,10 +153,7 @@ export default function SystemEnergyByHourChart({
         position: "relative"
       }}
     >
-      <Line
-        data={chartData}
-        options={options}
-      />
+      <Line data={chartData} options={options} />
     </div>
   );
 }
