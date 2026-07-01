@@ -19,6 +19,13 @@ import ReportDailyTable from "../../../components/tables/ReportDailyTable";
 import ReportVoltageChart from "../../../components/charts/ReportVoltageChart";
 import ReportVoltageTable from "../../../components/tables/ReportVoltageTable";
 
+import { 
+  exportDailyCSV, 
+  exportEventCSV, 
+  exportHourlyCSV, 
+  exportVoltageCSV 
+} from "../../../services/reports/simulationExportCSV";
+
 type SystemEventRecord = {
   timestamp: string;
   system_id: string;
@@ -255,10 +262,77 @@ function Simulation() {
   const handleExportCSV =
     (): void => {
 
+      if (
+        mode === "hourly" &&
+        hourlyData
+      ) {
+
+        exportHourlyCSV(
+          hourlyData
+        );
+
+        setExecutionMessage(
+          "Hourly Data CSV exported successfully."
+        );
+
+        return;
+      }
+
+      if (
+        mode === "events" &&
+        eventData.length > 0
+      ) {
+
+        exportEventCSV(
+          eventData
+        );
+
+        setExecutionMessage(
+
+          "Event Records CSV exported successfully."
+
+        );
+
+        return;
+      }
+
+      if (
+        mode === "daily" &&
+        dailyData
+      ) {
+
+        exportDailyCSV(
+          dailyData
+        );
+
+        setExecutionMessage(
+          "Daily Totals CSV exported successfully."
+        );
+
+        return;
+      }
+
+      if (
+        mode === "voltage" &&
+        voltageData 
+      ) {
+
+        exportVoltageCSV(
+          voltageData
+        );
+
+        setExecutionMessage(
+          "Voltage Records CSV exported successfully."
+        );
+
+        return;
+      }
+
       setExecutionMessage(
-        "CSV report exported successfully."
-      );
-    };
+
+        "CSV export not implemented for this report yet."
+      )
+    }
 
   const handleExportPDF =
     (): void => {
