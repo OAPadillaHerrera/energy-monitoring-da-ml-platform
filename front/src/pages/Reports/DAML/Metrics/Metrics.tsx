@@ -14,6 +14,7 @@ import SystemEnergyByHourChart from "../../../../components/charts/SystemEnergyB
 import SystemEnergyByHourTable from "../../../../components/tables/SystemEnergyByHourTableDAML";
 import EnergySystemRankingChartDAML from "../../../../components/charts/EnergySystemRanlkingPieChartDAML";
 import EnergyLoadFactorTableDAML from "../../../../components/tables/EnergyLoadFactorTableDAML";
+import { exportBasicMetricsCSV, exportEnergyMetricsCSV, exportStationMetricsCSV, exportSystemMetricsCSV } from "../../../../services/reports/damlExportCSV";
 
 type BasicMetricsData = Record<string, number>;
 
@@ -27,6 +28,12 @@ function Metrics() {
   const [executionMessage, setExecutionMessage] = useState("");
 
   const [data, setData] = useState<BasicMetricsData | null>(null);
+
+  const [basicReport, setBasicReport] = useState<any>(null);
+
+  const [stationReport, setStationReport] = useState<any>(null);
+
+  const [systemReport, setSystemReport] = useState<any>(null);
 
   const [energyData, setEnergyData] = useState<any>(null);
 
@@ -51,7 +58,10 @@ function Metrics() {
         let response;
 
         if (mode === "basic") {
+
           response = await api.get("/metrics/basic");
+
+          setBasicReport(response.data);
 
           setData(
             response.data?.consumption_by_system ?? {}
@@ -59,7 +69,12 @@ function Metrics() {
         }
 
         if (mode === "station") {
-          response = await api.get("/metrics/station/hourly");
+
+          response = await api.get("/metrics/station");
+
+          setStationReport(
+            response.data
+          );
 
           setData(
             response.data?.energy_by_hour ?? {}
@@ -74,13 +89,20 @@ function Metrics() {
             `/metrics/system?name=${systemName}`
           );
 
+          setSystemReport(
+            response.data
+          );
+
           setData(
             response.data?.avg_hourly_profile ?? {}
-          );
+          )
         }
 
         if (mode === "energy") {
-          response = await api.get("/metrics/energy");
+
+          response = await api.get(
+            "/metrics/energy"
+          );
 
           setEnergyData(response.data);
         }
@@ -111,7 +133,7 @@ function Metrics() {
       return;
     }
 
-    const target = systemName.trim();
+  const target = systemName.trim();
 
     if (mode === "basic") {
       return setExecutionMessage(
@@ -139,9 +161,85 @@ function Metrics() {
   };
 
   const handleExportCSV = (): void => {
+
+    if (
+      
+      mode === "basic" &&       
+      basicReport
+
+    ) {
+
+      exportBasicMetricsCSV(
+        basicReport
+      );
+
+      setExecutionMessage(
+        "Basic Metrics CSV exported successfully."
+      );
+
+      return;
+    };
+
+    if (
+      
+      mode === "station" &&       
+      stationReport
+
+    ) {
+
+      exportStationMetricsCSV(
+        stationReport
+      );
+
+      setExecutionMessage(
+        "Station Metrics CSV exported successfully."
+      );
+
+      return;
+    };
+
+    if (
+      
+      mode === "system" &&       
+      systemReport
+
+    ) {
+
+      exportSystemMetricsCSV(
+        systemReport
+      );
+
+      setExecutionMessage(
+        "System Metrics CSV exported successfully."
+      );
+
+      return;
+
+    }
+
+    if (
+      
+      mode === "energy" &&       
+      energyData
+
+    ) {
+
+      exportEnergyMetricsCSV(
+        energyData
+      );
+
+      setExecutionMessage(
+        "Energy Metrics CSV exported successfully."
+      );
+
+      return;
+
+    }
+
     setExecutionMessage(
-      "CSV report exported successfully."
+      "CSV export not implemented for this report yet."
     );
+  
   };
 
   const handleExportPDF = (): void => {
@@ -438,3 +536,4 @@ function Metrics() {
 }
 
 export default Metrics;
+
