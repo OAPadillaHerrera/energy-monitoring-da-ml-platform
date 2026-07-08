@@ -96,6 +96,29 @@ type ClassificationData = {
   context_classification: ClassificationEvent[];
 };
 
+type Alert = {
+  level: string;
+  message: string;
+};
+
+type PredictionEvent = {
+  timestamp: string;
+  system_name?: string;
+  prediction: string;
+  risk_level: string;
+  action: string;
+  alerts: Alert[];
+};
+
+type RootCauseReport = {
+  system?: string;
+  by_system: PredictionEvent[];
+  all_systems_prediction: Record<
+    string,
+    PredictionEvent[]
+  >;
+};
+
 export const exportBasicMetricsCSV = (
   report: BasicMetricsReport
 ): void => {
@@ -717,3 +740,94 @@ export const exportClassificationCSV = (
 
 };
 
+export const exportRootCauseCSV = (
+  report: RootCauseReport
+): void => {
+
+  if (!report) {
+    return;
+  }
+
+  let csv = "";
+
+  csv += "=== ROOT CAUSE ANALYSIS ===\n\n";
+
+  if (report.system) {
+
+    csv += `System,${report.system}\n\n`;
+
+    csv +=
+      "Timestamp,Prediction,Risk Level,Action,Alerts\n";
+
+    report.by_system.forEach((event) => {
+
+      const alerts = event.alerts
+        .map(
+          (alert) =>
+            `${alert.level}: ${alert.message}`
+        )
+        .join(" | ");
+
+      csv +=
+        `${event.timestamp},${event.prediction},${event.risk_level},${event.action},"${alerts}"\n`;
+
+    });
+
+  } else {
+
+    Object.entries(
+      report.all_systems_prediction
+    ).forEach(([system, events]) => {
+
+      csv += `=== ${system} ===\n\n`;
+
+      csv +=
+        "Timestamp,Prediction,Risk Level,Action,Alerts\n";
+
+      events.forEach((event) => {
+
+        const alerts = event.alerts
+          .map(
+            (alert) =>
+              `${alert.level}: ${alert.message}`
+          )
+          .join(" | ");
+
+        csv +=
+          `${event.timestamp},${event.prediction},${event.risk_level},${event.action},"${alerts}"\n`;
+
+      });
+
+      csv += "\n";
+
+    });
+
+  }
+
+  const blob = new Blob(
+    [csv],
+    {
+      type: "text/csv;charset=utf-8;"
+    }
+  );
+
+  const url =
+    window.URL.createObjectURL(blob);
+
+  const link =
+    document.createElement("a");
+
+  link.href = url;
+
+  link.download =
+    "root-cause-analysis-report.csv";
+
+  document.body.appendChild(link);
+
+  link.click();
+
+  document.body.removeChild(link);
+
+  window.URL.revokeObjectURL(url);
+
+};

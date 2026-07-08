@@ -14,6 +14,7 @@ import chipStyles from "../../../../components/shared/styles/chipStyles.module.c
 import api from "../../../../services/api";
 import RootCauseDistributionChartDAML from "../../../../components/charts/RootCauseDistributionChartDAML";
 import RootCauseEventsTableDAML from "../../../../components/tables/RootCauseEventsTableDAML";
+import { exportRootCauseCSV } from "../../../../services/reports/damlExportCSV";
 
 type Alert = {
   level: string;
@@ -48,6 +49,9 @@ function ML() {
   const [stableEvents, setStableEvents] =
     useState<PredictionEvent[]>([]);
 
+  const [rootCauseReport, setRootCauseReport] =
+  useState<RootCauseData | null>(null);
+
   const [loading, setLoading] =
     useState(false);
 
@@ -78,6 +82,8 @@ function ML() {
 
             const data: RootCauseData =
               response.data;
+
+            setRootCauseReport(data);
 
             const events: PredictionEvent[] =
 
@@ -145,8 +151,24 @@ function ML() {
 
   const handleExportCSV = (): void => {
 
+    if (
+      rootCauseReport
+    ) {
+
+      exportRootCauseCSV(
+        rootCauseReport
+      );
+
+      setExecutionMessage(
+        "Root Cause CSV exported successfully."
+      );
+
+       return;
+
+    }
+
     setExecutionMessage(
-      "CSV report exported successfully."
+      "CSV export not implemented for this report yet."
     );
 
   };
