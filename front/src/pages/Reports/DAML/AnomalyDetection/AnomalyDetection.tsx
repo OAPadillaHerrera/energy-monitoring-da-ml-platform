@@ -12,10 +12,12 @@ import ClassificationRootCauseChartDAML from "../../../../components/charts/Clas
 import ZScoreTableDAML from "../../../../components/tables/ZScoreTableDAML";
 import DetectionTableDAML from "../../../../components/tables/DetectionTableDAML";
 import ClassificationEventsTableDAML from "../../../../components/tables/ClassificationEventsTableDAML";
+import { exportClassificationCSV, exportDetectionCSV, exportZScoreCSV } from "../../../../services/reports/damlExportCSV";
 
 type Mode = "zscore" | "detection" | "classification";
 
 type ZScoreData = {
+  compute_z_score_example: Record<string, number>;
   system?: string;
   z_score_consumption: Record<string, number>;
   z_score_by_system: Record<string, number>;
@@ -36,24 +38,51 @@ type ClassificationEvent = {
 };
 
 type ClassificationData = {
-  system?: string;
-  full_pipeline: ClassificationEvent[];
-  context_classification: Record<
+  classify_anomaly_examples: Record<string, string>;
+
+  all_systems_summary: Record<
     string,
     ClassificationEvent[]
   >;
+
+  all_systems_with_context: Record<
+    string,
+    ClassificationEvent[]
+  >;
+
+  root_cause_examples: Record<string, string>;
+
+  full_pipeline: ClassificationEvent[];
+
+  system?: string;
+
+  by_system: ClassificationEvent[];
+
+  context_classification: ClassificationEvent[];
+};
+
+type DetectionReport = {
+  detect_anomalies_example: Record<string, string>;
+  all_systems_detection: Record<
+    string,
+    Record<string, number>
+  >;
+  system?: string;
+  by_system: Record<string, number>;
 };
 
 function AnomalyDetection() {
   const [mode, setMode] = useState<Mode>("zscore");
   const [viewMode, setViewMode] = useState<"chart" | "table">("chart");
-
   const [systemName, setSystemName] = useState("");
   const [executionMessage, setExecutionMessage] = useState("");
-
   const [zscoredata, setZscoreData] = useState<ZScoreData | null>(null);
+  const [zscoreReport, setZscoreReport] = useState<ZScoreData | null>(null);
   const [detectiondata, setDetectionData] = useState<DetectionData | null>(null);
+  const [detectionReport, setDetectionReport] = useState<DetectionReport | null>(null);
   const [classificationdata, setClassificationData] = useState<ClassificationData | null>(null);
+  const [classificationReport, setClassificationReport] = useState<ClassificationData | null>(null);
+
 
   const [loading, setLoading] = useState(false);
 
@@ -77,6 +106,7 @@ function AnomalyDetection() {
 
             const response = await api.get(endpoint);
             setZscoreData(response.data);
+            setZscoreReport(response.data);
           }
 
           if (mode === "detection") {
@@ -86,6 +116,8 @@ function AnomalyDetection() {
               : "/anomaly/detection";
 
             const response = await api.get(endpoint);
+
+            setDetectionReport(response.data);
             setDetectionData(response.data);
           }
 
@@ -96,6 +128,8 @@ function AnomalyDetection() {
               : "/anomaly/classification";
 
             const response = await api.get(endpoint);
+
+            setClassificationReport(response.data);
             setClassificationData(response.data);
           }
 
@@ -128,14 +162,14 @@ function AnomalyDetection() {
      setSystemName(event.target.value);
    };
  
-   const zscoreChartData =
+const zscoreChartData =
   zscoredata
     ? (
         zscoredata.system
           ? zscoredata.z_score_by_system
           : zscoredata.z_score_consumption
       )
-    : null;
+    : null; 
 
 const zscoreTableData =
   zscoreChartData;
@@ -173,18 +207,64 @@ const classificationEventsTableData =
 
 const handleExportCSV = (): void => {
 
+  if (
+    mode === "zscore" &&
+    zscoreReport
+  ) {
+
+    exportZScoreCSV(
+      zscoreReport
+    );
+
+    setExecutionMessage(
+      "Z-Score CSV exported successfully."
+    );
+
+    return;
+  }
+
+  if (
+    mode === "detection" &&
+    detectionReport
+  ) {
+
+    exportDetectionCSV(
+      detectionReport
+    );
+
+    setExecutionMessage(
+      "Detection CSV exported successfully."
+    );
+
+    return;
+  }
+
+  if (
+    mode === "classification" &&
+    classificationReport
+  ) {
+
+    exportClassificationCSV(
+      classificationReport
+    );
+
+    setExecutionMessage(
+      "Classification CSV exported successfully."
+    );
+
+    return;
+  }
+
   setExecutionMessage(
-    "CSV report exported successfully."
+    "CSV export not implemented for this report yet."
   );
 
 };
 
 const handleExportPDF = (): void => {
-
   setExecutionMessage(
-    "PDF report exported successfully."
+      "PDF report exported successfully."
   );
-
 };
 
 return (
