@@ -25,6 +25,12 @@ import {
   exportHourlyCSV, 
   exportVoltageCSV 
 } from "../../../services/reports/simulationExportCSV";
+import { 
+  exportDailyPDF, 
+  exportEventPDF, 
+  exportHourlyPDF, 
+  exportVoltagePDF
+} from "../../../services/reports/simulationExportPDF";
 
 type SystemEventRecord = {
   timestamp: string;
@@ -334,12 +340,77 @@ function Simulation() {
       )
     }
 
-  const handleExportPDF =
+  const handleExportPDF = 
     (): void => {
 
+      if (
+        mode === "hourly" &&
+        hourlyData
+      ) {
+
+        exportHourlyPDF(
+          hourlyData
+        );
+
+        setExecutionMessage(
+          "Hourly Data PDF exported successfully."
+        );
+
+        return;
+      }
+
+      if (
+        mode === "events" &&
+        eventData.length > 0
+      ) {
+
+        exportEventPDF(
+          eventData
+        );
+
+        setExecutionMessage(
+          "Event Records PDF exported successfully."
+        );
+
+        return;
+      }
+
+      if (
+        mode === "daily" &&
+        dailyData
+      ) {
+
+        exportDailyPDF(
+          dailyData
+        );
+
+        setExecutionMessage(
+          "Daily Totals PDF exported successfully."
+        );
+
+        return;
+      }
+
+      if (
+        mode === "voltage" &&
+        voltageData
+      ) {
+
+        exportVoltagePDF(
+          voltageData
+        );
+
+        setExecutionMessage(
+          "Voltage Records PDF exported successfully."
+        );
+
+        return;
+      }
+
       setExecutionMessage(
-        "PDF report exported successfully."
+        "PDF export not implemented for this report yet."
       );
+      
     };
 
   return (
