@@ -44,6 +44,19 @@ type StationMetricsReport = {
   daily_energy: Record<string, number>;
 };
 
+type SystemMetricsReport = {
+  system: string;
+  total_energy: number;
+  average_consumption: number;
+  peak_consumption: number;
+  min_consumption: number;
+  std_consumption: number;
+  avg_daily_energy: number;
+  energy_by_hour: Record<string, number>;
+  daily_energy: Record<string, number>;
+  avg_hourly_profile: Record<string, number>;
+};
+
 export const exportBasicMetricsPDF = (
   report: BasicMetricsReport
 ): void => {
@@ -983,4 +996,662 @@ export const exportStationMetricsPDF = (
   dailyChart.destroy();
 
 };
+
+export const exportSystemMetricsPDF = (
+  report: SystemMetricsReport
+): void => {
+
+  if (!report) {
+    return;
+  }
+
+  const hourlyRows =
+    Object.entries(report.energy_by_hour)
+      .map(
+        ([timestamp, value]) => ({
+          timestamp,
+          value: Number(value)
+        })
+      )
+      .sort(
+        (a, b) =>
+          new Date(a.timestamp).getTime() -
+          new Date(b.timestamp).getTime()
+      )
+      .slice(-72);
+
+  const dailyRows =
+    Object.entries(report.daily_energy)
+      .map(
+        ([date, value]) => ({
+          date,
+          value: Number(value)
+        })
+      )
+      .sort(
+        (a, b) =>
+          new Date(a.date).getTime() -
+          new Date(b.date).getTime()
+      );
+
+  const profileRows =
+    Object.entries(report.avg_hourly_profile)
+      .map(
+        ([hour, value]) => ({
+          hour,
+          value: Number(value)
+        })
+      )
+      .sort(
+        (a, b) =>
+          Number(a.hour) -
+          Number(b.hour)
+      );
+
+  const hourlyCanvas =
+    document.createElement("canvas");
+
+  hourlyCanvas.width = 1200;
+
+  hourlyCanvas.height = 500;
+
+  const hourlyContext =
+    hourlyCanvas.getContext("2d");
+
+  if (!hourlyContext) {
+    return;
+  }
+
+  hourlyContext.fillStyle =
+    "#FFFFFF";
+
+  hourlyContext.fillRect(
+    0,
+    0,
+    hourlyCanvas.width,
+    hourlyCanvas.height
+  );
+
+  const hourlyChart =
+    new Chart(hourlyContext, {
+
+      type: "line",
+
+      data: {
+
+        labels:
+          hourlyRows.map(
+            (row) =>
+              row.timestamp
+          ),
+
+        datasets: [
+
+          {
+
+            label:
+              "Hourly Energy (kWh)",
+
+            data:
+              hourlyRows.map(
+                (row) =>
+                  row.value
+              ),
+
+            borderColor:
+              "#00c2ff",
+
+            backgroundColor:
+              "rgba(0,194,255,0.18)",
+
+            borderWidth: 2,
+
+            tension: 0.35,
+
+            fill: true,
+
+            pointStyle: "rect",
+
+            pointRadius: 4,
+
+            pointHoverRadius: 6,
+
+            pointBackgroundColor:
+              "#00c2ff",
+
+            pointBorderWidth: 0
+
+          }
+
+        ]
+
+      },
+
+      options: {
+
+        responsive: false,
+
+        animation: false,
+
+        plugins: {
+
+          legend: {
+
+            display: true
+
+          }
+
+        },
+
+        scales: {
+
+          x: {
+
+            ticks: {
+
+              maxRotation: 0,
+
+              autoSkip: true,
+
+              maxTicksLimit: 12
+
+            }
+
+          },
+
+          y: {
+
+            beginAtZero: true
+
+          }
+
+        }
+
+      }
+
+    });
+
+  hourlyChart.update();
+
+  const hourlyImage =
+    hourlyCanvas.toDataURL(
+      "image/png"
+    );
+
+  const pdf =
+    new jsPDF(
+      "p",
+      "mm",
+      "a4"
+    );
+
+  pdf.setFontSize(18);
+
+  pdf.text(
+    "System Metrics Report",
+    14,
+    18
+  );
+
+  pdf.setFontSize(11);
+
+  pdf.text(
+    `System: ${report.system}`,
+    14,
+    26
+  );
+
+  pdf.setFontSize(10);
+
+  pdf.text(
+    `Generated: ${new Date().toLocaleString()}`,
+    14,
+    33
+  );
+
+  pdf.setFontSize(14);
+
+  pdf.text(
+    "KPI Summary",
+    14,
+    43
+  );
+
+  autoTable(pdf, {
+
+    startY: 48,
+
+    head: [[
+      "Metric",
+      "Value"
+    ]],
+
+    body: [
+
+      [
+        "Total Energy (kWh)",
+        report.total_energy.toFixed(2)
+      ],
+
+      [
+        "Average Consumption (kWh)",
+        report.average_consumption.toFixed(2)
+      ],
+
+      [
+        "Peak Consumption (kWh)",
+        report.peak_consumption.toFixed(2)
+      ],
+
+      [
+        "Minimum Consumption (kWh)",
+        report.min_consumption.toFixed(2)
+      ],
+
+      [
+        "Standard Deviation",
+        report.std_consumption.toFixed(2)
+      ],
+
+      [
+        "Average Daily Energy (kWh)",
+        report.avg_daily_energy.toFixed(2)
+      ]
+
+    ]
+
+  });
+
+    pdf.addImage(
+    hourlyImage,
+    "PNG",
+    14,
+    103,
+    180,
+    75
+  );
+
+  autoTable(pdf, {
+
+    startY: 186,
+
+    head: [[
+
+      "Timestamp",
+
+      "Energy (kWh)"
+
+    ]],
+
+    body:
+      hourlyRows.map(
+        (row) => [
+
+          row.timestamp,
+
+          row.value.toFixed(2)
+
+        ]
+      )
+
+  });
+
+  pdf.addPage();
+
+  const dailyCanvas =
+    document.createElement("canvas");
+
+  dailyCanvas.width = 1200;
+
+  dailyCanvas.height = 500;
+
+  const dailyContext =
+    dailyCanvas.getContext("2d");
+
+  if (!dailyContext) {
+    return;
+  }
+
+  dailyContext.fillStyle =
+    "#FFFFFF";
+
+  dailyContext.fillRect(
+    0,
+    0,
+    dailyCanvas.width,
+    dailyCanvas.height
+  );
+
+  const dailyChart =
+    new Chart(dailyContext, {
+
+      type: "line",
+
+      data: {
+
+        labels:
+          dailyRows.map(
+            (row) =>
+              row.date
+          ),
+
+        datasets: [
+
+          {
+
+            label:
+              "Daily Energy (kWh)",
+
+            data:
+              dailyRows.map(
+                (row) =>
+                  row.value
+              ),
+
+            borderColor:
+              "#00c2ff",
+
+            backgroundColor:
+              "rgba(0,194,255,0.18)",
+
+            borderWidth: 2,
+
+            tension: 0.35,
+
+            fill: true,
+
+            pointStyle: "rect",
+
+            pointRadius: 5,
+
+            pointHoverRadius: 6,
+
+            pointBackgroundColor:
+              "#00c2ff",
+
+            pointBorderWidth: 0
+
+          }
+
+        ]
+
+      },
+
+      options: {
+
+        responsive: false,
+
+        animation: false,
+
+        plugins: {
+
+          legend: {
+
+            display: true
+
+          }
+
+        },
+
+        scales: {
+
+          x: {
+
+            ticks: {
+
+              maxRotation: 0,
+
+              autoSkip: true,
+
+              maxTicksLimit: 12
+
+            }
+
+          },
+
+          y: {
+
+            beginAtZero: true
+
+          }
+
+        }
+
+      }
+
+    });
+
+  dailyChart.update();
+
+  const dailyImage =
+    dailyCanvas.toDataURL(
+      "image/png"
+    );
+
+  pdf.setFontSize(16);
+
+  pdf.text(
+    "Daily Energy",
+    14,
+    18
+  );
+
+  pdf.addImage(
+    dailyImage,
+    "PNG",
+    14,
+    25,
+    180,
+    75
+  );
+
+  autoTable(pdf, {
+
+    startY: 108,
+
+    head: [[
+
+      "Date",
+
+      "Energy (kWh)"
+
+    ]],
+
+    body:
+      dailyRows.map(
+        (row) => [
+
+          row.date,
+
+          row.value.toFixed(2)
+
+        ]
+      )
+
+  });
+
+  pdf.addPage();
+
+  const profileCanvas =
+    document.createElement("canvas");
+
+  profileCanvas.width = 1200;
+
+  profileCanvas.height = 500;
+
+  const profileContext =
+    profileCanvas.getContext("2d");
+
+  if (!profileContext) {
+    return;
+  }
+
+  profileContext.fillStyle =
+    "#FFFFFF";
+
+  profileContext.fillRect(
+    0,
+    0,
+    profileCanvas.width,
+    profileCanvas.height
+  );
+
+  const profileChart =
+    new Chart(profileContext, {
+
+      type: "line",
+
+      data: {
+
+        labels:
+          profileRows.map(
+            (row) =>
+              `${row.hour}:00`
+          ),
+
+        datasets: [
+
+          {
+
+            label:
+              "Average Hourly Profile (kWh)",
+
+            data:
+              profileRows.map(
+                (row) =>
+                  row.value
+              ),
+
+            borderColor:
+              "#00c2ff",
+
+            backgroundColor:
+              "rgba(0,194,255,0.18)",
+
+            borderWidth: 2,
+
+            tension: 0.35,
+
+            fill: true,
+
+            pointStyle: "rect",
+
+            pointRadius: 5,
+
+            pointHoverRadius: 6,
+
+            pointBackgroundColor:
+              "#00c2ff",
+
+            pointBorderWidth: 0
+
+          }
+
+        ]
+
+      },
+
+      options: {
+
+        responsive: false,
+
+        animation: false,
+
+        plugins: {
+
+          legend: {
+
+            display: true
+
+          }
+
+        },
+
+        scales: {
+
+          x: {
+
+            ticks: {
+
+              maxRotation: 0,
+
+              autoSkip: false
+
+            }
+
+          },
+
+          y: {
+
+            beginAtZero: true
+
+          }
+
+        }
+
+      }
+
+    });
+
+  profileChart.update();
+
+  const profileImage =
+    profileCanvas.toDataURL(
+      "image/png"
+    );
+
+  pdf.setFontSize(16);
+
+  pdf.text(
+    "Average Hourly Profile",
+    14,
+    18
+  );
+
+  pdf.addImage(
+    profileImage,
+    "PNG",
+    14,
+    25,
+    180,
+    75
+  );
+
+  autoTable(pdf, {
+
+    startY: 108,
+
+    head: [[
+
+      "Hour",
+
+      "Average Energy (kWh)"
+
+    ]],
+
+    body:
+      profileRows.map(
+        (row) => [
+
+          `${row.hour}:00`,
+
+          row.value.toFixed(2)
+
+        ]
+      )
+
+  });
+
+  pdf.save(
+    "system-metrics-report.pdf"
+  );
+
+  hourlyChart.destroy();
+
+  dailyChart.destroy();
+
+  profileChart.destroy();
+
+};
+
 
