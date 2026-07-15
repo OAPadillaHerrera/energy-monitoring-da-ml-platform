@@ -63,6 +63,13 @@ type EnergyMetricsReport = {
   system_ranking: Record<string, number>;
 };
 
+type ZScoreData = {
+  compute_z_score_example: Record<string, number>;
+  system?: string;
+  z_score_consumption: Record<string, number>;
+  z_score_by_system: Record<string, number>;
+};
+
 export const exportBasicMetricsPDF = (
   report: BasicMetricsReport
 ): void => {
@@ -2114,5 +2121,705 @@ export const exportEnergyMetricsPDF = (
   loadChart.destroy();
 
   rankingChart.destroy();
+
+};
+
+export const exportZScorePDF = (
+  report: ZScoreData
+): void => {
+
+  if (!report) {
+    return;
+  }
+
+  const computeRows =
+    Object.entries(report.compute_z_score_example)
+      .map(
+        ([value, score]) => ({
+          value,
+          score: Number(score)
+        })
+      );
+
+  const consumptionRows =
+    Object.entries(report.z_score_consumption)
+      .sort(
+        ([a], [b]) =>
+          new Date(a).getTime() -
+          new Date(b).getTime()
+      )
+      .slice(-72);
+
+  const systemRows =
+    Object.entries(report.z_score_by_system)
+      .sort(
+        ([a], [b]) =>
+          new Date(a).getTime() -
+          new Date(b).getTime()
+      )
+      .slice(-72);
+
+  const computeCanvas =
+    document.createElement("canvas");
+
+  computeCanvas.width = 1200;
+
+  computeCanvas.height = 500;
+
+  const computeContext =
+    computeCanvas.getContext("2d");
+
+  if (!computeContext) {
+    return;
+  }
+
+  computeContext.fillStyle =
+    "#FFFFFF";
+
+  computeContext.fillRect(
+    0,
+    0,
+    computeCanvas.width,
+    computeCanvas.height
+  );
+
+  const computeChart =
+    new Chart(computeContext, {
+
+      type: "bar",
+
+      data: {
+
+        labels:
+          computeRows.map(
+            row => row.value
+          ),
+
+        datasets: [
+
+          {
+
+            label:
+              "Compute Z-Score Example",
+
+            data:
+              computeRows.map(
+                row => row.score
+              ),
+
+            backgroundColor:
+              "#00c2ff",
+
+            borderWidth: 1
+
+          }
+
+        ]
+
+      },
+
+      options: {
+
+        responsive: false,
+
+        animation: false,
+
+        plugins: {
+
+          legend: {
+
+            display: false
+
+          },
+
+          tooltip: {
+
+            callbacks: {
+
+              label: (context: any) =>
+                Number(
+                  context.parsed.y
+                ).toFixed(2)
+
+            }
+
+          }
+
+        },
+
+        scales: {
+
+          y: {
+
+            beginAtZero: false,
+
+            title: {
+
+              display: true,
+
+              text: "Z-Score"
+
+            }
+
+          }
+
+        }
+
+      }
+
+    });
+
+  computeChart.update();
+
+  const computeImage =
+    computeCanvas.toDataURL(
+      "image/png"
+    );
+
+  const pdf =
+    new jsPDF(
+      "p",
+      "mm",
+      "a4"
+    );
+
+  pdf.setFontSize(18);
+
+  pdf.text(
+    "Z-Score Analysis Report",
+    14,
+    18
+  );
+
+  pdf.setFontSize(10);
+
+  pdf.text(
+    `Generated: ${new Date().toLocaleString()}`,
+    14,
+    26
+  );
+
+  if (report.system) {
+
+    pdf.text(
+      `System: ${report.system}`,
+      14,
+      32
+    );
+
+  }
+
+  pdf.setFontSize(14);
+
+  pdf.text(
+    "Compute Z-Score Example",
+    14,
+    report.system ? 42 : 38
+  );
+
+  pdf.addImage(
+    computeImage,
+    "PNG",
+    14,
+    report.system ? 47 : 43,
+    180,
+    70
+  );
+
+  autoTable(pdf, {
+
+    startY:
+      report.system ? 123 : 119,
+
+    head: [[
+
+      "Value",
+
+      "Z-Score"
+
+    ]],
+
+    body:
+      computeRows.map(
+        row => [
+
+          row.value,
+
+          row.score.toFixed(2)
+
+        ]
+      )
+
+  });
+
+    pdf.addPage();
+
+  const consumptionCanvas =
+    document.createElement("canvas");
+
+  consumptionCanvas.width = 1200;
+
+  consumptionCanvas.height = 500;
+
+  const consumptionContext =
+    consumptionCanvas.getContext("2d");
+
+  if (!consumptionContext) {
+    return;
+  }
+
+  consumptionContext.fillStyle =
+    "#FFFFFF";
+
+  consumptionContext.fillRect(
+    0,
+    0,
+    consumptionCanvas.width,
+    consumptionCanvas.height
+  );
+
+  const consumptionLabels =
+    consumptionRows.map(
+      ([timestamp]) =>
+        new Date(timestamp).toLocaleString(
+          "en-US",
+          {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit"
+          }
+        )
+    );
+
+  const consumptionValues =
+    consumptionRows.map(
+      ([, score]) =>
+        Number(score)
+    );
+
+  const upperThreshold =
+    consumptionValues.map(
+      () => 2
+    );
+
+  const lowerThreshold =
+    consumptionValues.map(
+      () => -2
+    );
+
+  const consumptionChart =
+    new Chart(consumptionContext, {
+
+      type: "line",
+
+      data: {
+
+        labels:
+          consumptionLabels,
+
+        datasets: [
+
+          {
+
+            label:
+              "Z-Score",
+
+            data:
+              consumptionValues,
+
+            borderColor:
+              "#00c2ff",
+
+            backgroundColor:
+              "rgba(99,102,241,0.20)",
+
+            tension: 0.3,
+
+            pointRadius: 0,
+
+            fill: false
+
+          },
+
+          {
+
+            label:
+              "Upper Threshold (+2)",
+
+            data:
+              upperThreshold,
+
+            borderColor:
+              "#ef4444",
+
+            borderDash: [8, 8],
+
+            pointRadius: 0,
+
+            fill: false
+
+          },
+
+          {
+
+            label:
+              "Lower Threshold (-2)",
+
+            data:
+              lowerThreshold,
+
+            borderColor:
+              "#10b981",
+
+            borderDash: [8, 8],
+
+            pointRadius: 0,
+
+            fill: false
+
+          }
+
+        ]
+
+      },
+
+      options: {
+
+        responsive: false,
+
+        animation: false,
+
+        plugins: {
+
+          legend: {
+
+            display: true
+
+          }
+
+        },
+
+        scales: {
+
+          y: {
+
+            title: {
+
+              display: true,
+
+              text: "Z-Score"
+
+            }
+
+          },
+
+          x: {
+
+            ticks: {
+
+              maxTicksLimit: 12
+
+            }
+
+          }
+
+        }
+
+      }
+
+    });
+
+  consumptionChart.update();
+
+  const consumptionImage =
+    consumptionCanvas.toDataURL(
+      "image/png"
+    );
+
+  pdf.setFontSize(16);
+
+  pdf.text(
+    "Z-Score Consumption",
+    14,
+    18
+  );
+
+  pdf.addImage(
+    consumptionImage,
+    "PNG",
+    14,
+    25,
+    180,
+    80
+  );
+
+  autoTable(pdf, {
+
+    startY: 113,
+
+    head: [[
+
+      "Timestamp",
+
+      "Z-Score"
+
+    ]],
+
+    body:
+      consumptionRows.map(
+        ([timestamp, score]) => [
+
+          new Date(timestamp)
+            .toLocaleString(),
+
+          Number(score)
+            .toFixed(2)
+
+        ]
+      )
+
+  });
+
+    if (systemRows.length > 0) {
+
+    pdf.addPage();
+
+    const systemCanvas =
+      document.createElement("canvas");
+
+    systemCanvas.width = 1200;
+
+    systemCanvas.height = 500;
+
+    const systemContext =
+      systemCanvas.getContext("2d");
+
+    if (!systemContext) {
+      return;
+    }
+
+    systemContext.fillStyle =
+      "#FFFFFF";
+
+    systemContext.fillRect(
+      0,
+      0,
+      systemCanvas.width,
+      systemCanvas.height
+    );
+
+    const systemLabels =
+      systemRows.map(
+        ([timestamp]) =>
+          new Date(timestamp).toLocaleString(
+            "en-US",
+            {
+              month: "short",
+              day: "numeric",
+              hour: "2-digit"
+            }
+          )
+      );
+
+    const systemValues =
+      systemRows.map(
+        ([, score]) =>
+          Number(score)
+      );
+
+    const upperThreshold =
+      systemValues.map(
+        () => 2
+      );
+
+    const lowerThreshold =
+      systemValues.map(
+        () => -2
+      );
+
+    const systemChart =
+      new Chart(systemContext, {
+
+        type: "line",
+
+        data: {
+
+          labels:
+            systemLabels,
+
+          datasets: [
+
+            {
+
+              label:
+                "Z-Score",
+
+              data:
+                systemValues,
+
+              borderColor:
+                "#00c2ff",
+
+              backgroundColor:
+                "rgba(99,102,241,0.20)",
+
+              tension: 0.3,
+
+              pointRadius: 0,
+
+              fill: false
+
+            },
+
+            {
+
+              label:
+                "Upper Threshold (+2)",
+
+              data:
+                upperThreshold,
+
+              borderColor:
+                "#ef4444",
+
+              borderDash: [8, 8],
+
+              pointRadius: 0,
+
+              fill: false
+
+            },
+
+            {
+
+              label:
+                "Lower Threshold (-2)",
+
+              data:
+                lowerThreshold,
+
+              borderColor:
+                "#10b981",
+
+              borderDash: [8, 8],
+
+              pointRadius: 0,
+
+              fill: false
+
+            }
+
+          ]
+
+        },
+
+        options: {
+
+          responsive: false,
+
+          animation: false,
+
+          plugins: {
+
+            legend: {
+
+              display: true
+
+            }
+
+          },
+
+          scales: {
+
+            y: {
+
+              title: {
+
+                display: true,
+
+                text: "Z-Score"
+
+              }
+
+            },
+
+            x: {
+
+              ticks: {
+
+                maxTicksLimit: 12
+
+              }
+
+            }
+
+          }
+
+        }
+
+      });
+
+    systemChart.update();
+
+    const systemImage =
+      systemCanvas.toDataURL(
+        "image/png"
+      );
+
+    pdf.setFontSize(16);
+
+    pdf.text(
+      "Z-Score by System",
+      14,
+      18
+    );
+
+    pdf.addImage(
+      systemImage,
+      "PNG",
+      14,
+      25,
+      180,
+      80
+    );
+
+    autoTable(pdf, {
+
+      startY: 113,
+
+      head: [[
+
+        "Timestamp",
+
+        "Z-Score"
+
+      ]],
+
+      body:
+        systemRows.map(
+          ([timestamp, score]) => [
+
+            new Date(timestamp)
+              .toLocaleString(),
+
+            Number(score)
+              .toFixed(2)
+
+          ]
+        )
+
+    });
+
+    systemChart.destroy();
+
+  }
+
+  pdf.save(
+    "zscore-analysis-report.pdf"
+  );
+
+  computeChart.destroy();
+
+  consumptionChart.destroy();
 
 };

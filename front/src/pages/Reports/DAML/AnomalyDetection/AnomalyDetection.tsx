@@ -13,6 +13,7 @@ import ZScoreTableDAML from "../../../../components/tables/ZScoreTableDAML";
 import DetectionTableDAML from "../../../../components/tables/DetectionTableDAML";
 import ClassificationEventsTableDAML from "../../../../components/tables/ClassificationEventsTableDAML";
 import { exportClassificationCSV, exportDetectionCSV, exportZScoreCSV } from "../../../../services/reports/damlExportCSV";
+import { exportZScorePDF } from "../../../../services/reports/damlExportPDF";
 
 type Mode = "zscore" | "detection" | "classification";
 
@@ -82,7 +83,6 @@ function AnomalyDetection() {
   const [detectionReport, setDetectionReport] = useState<DetectionReport | null>(null);
   const [classificationdata, setClassificationData] = useState<ClassificationData | null>(null);
   const [classificationReport, setClassificationReport] = useState<ClassificationData | null>(null);
-
 
   const [loading, setLoading] = useState(false);
 
@@ -262,9 +262,27 @@ const handleExportCSV = (): void => {
 };
 
 const handleExportPDF = (): void => {
+
+  if (
+    mode === "zscore" &&
+    zscoreReport
+  ) {
+
+    exportZScorePDF(
+      zscoreReport
+    );
+
+    setExecutionMessage(
+      "Z-Score Anomaly PDF exported successfully."
+    );
+
+    return;
+  }
+
   setExecutionMessage(
-      "PDF report exported successfully."
+      "PDF export not implemented for this report yet."
   );
+
 };
 
 return (
