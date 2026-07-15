@@ -15,7 +15,7 @@ import SystemEnergyByHourTable from "../../../../components/tables/SystemEnergyB
 import EnergySystemRankingChartDAML from "../../../../components/charts/EnergySystemRanlkingPieChartDAML";
 import EnergyLoadFactorTableDAML from "../../../../components/tables/EnergyLoadFactorTableDAML";
 import { exportBasicMetricsCSV, exportEnergyMetricsCSV, exportStationMetricsCSV, exportSystemMetricsCSV } from "../../../../services/reports/damlExportCSV";
-import { exportBasicMetricsPDF, exportStationMetricsPDF, exportSystemMetricsPDF } from "../../../../services/reports/damlExportPDF";
+import { exportBasicMetricsPDF, exportEnergyMetricsPDF, exportStationMetricsPDF, exportSystemMetricsPDF } from "../../../../services/reports/damlExportPDF";
 
 type BasicMetricsData = Record<string, number>;
 
@@ -288,6 +288,22 @@ function Metrics() {
 
       setExecutionMessage(
         "System Metrics PDF exported successfully."
+      );
+
+      return;
+    }
+
+    if (
+      mode === "energy" &&
+      energyData
+    ) {
+
+      exportEnergyMetricsPDF(
+        energyData
+      );       
+
+      setExecutionMessage(
+        "Energy Metrics PDF exported successfully."
       );
 
       return;

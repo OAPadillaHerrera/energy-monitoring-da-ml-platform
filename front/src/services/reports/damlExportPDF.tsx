@@ -57,6 +57,12 @@ type SystemMetricsReport = {
   avg_hourly_profile: Record<string, number>;
 };
 
+type EnergyMetricsReport = {
+  load_factor: number;
+  load_factor_by_system: Record<string, number>;
+  system_ranking: Record<string, number>;
+};
+
 export const exportBasicMetricsPDF = (
   report: BasicMetricsReport
 ): void => {
@@ -1654,4 +1660,459 @@ export const exportSystemMetricsPDF = (
 
 };
 
+export const exportEnergyMetricsPDF = (
+  report: EnergyMetricsReport
+): void => {
 
+  if (!report) {
+    return;
+  }
+
+  const loadFactorRows =
+    Object.entries(report.load_factor_by_system)
+      .map(
+        ([system, value]) => ({
+          system,
+          value: Number(value)
+        })
+      )
+      .sort(
+        (a, b) =>
+          b.value - a.value
+      );
+
+  const rankingRows =
+    Object.entries(report.system_ranking)
+      .map(
+        ([system, value]) => ({
+          system,
+          value: Number(value)
+        })
+      )
+      .sort(
+        (a, b) =>
+          b.value - a.value
+      );
+
+  const loadCanvas =
+    document.createElement("canvas");
+
+  loadCanvas.width = 1200;
+
+  loadCanvas.height = 500;
+
+  const loadContext =
+    loadCanvas.getContext("2d");
+
+  if (!loadContext) {
+    return;
+  }
+
+  loadContext.fillStyle =
+    "#FFFFFF";
+
+  loadContext.fillRect(
+    0,
+    0,
+    loadCanvas.width,
+    loadCanvas.height
+  );
+
+  const loadChart =
+    new Chart(loadContext, {
+
+      type: "bar",
+
+      data: {
+
+        labels:
+          loadFactorRows.map(
+            row => row.system
+          ),
+
+        datasets: [
+
+          {
+
+            label:
+              "Load Factor",
+
+            data:
+              loadFactorRows.map(
+                row =>
+                  row.value * 100
+              ),
+
+            backgroundColor: [
+              "#00c2ff",
+              "#00e396",
+              "#feb019",
+              "#ff4560",
+              "#775dd0",
+              "#3f51b5",
+              "#4caf50",
+              "#ff9800",
+              "#e91e63",
+              "#9c27b0",
+              "#546e7a"
+            ],
+
+            borderWidth: 1
+
+          }
+
+        ]
+
+      },
+
+      options: {
+
+        responsive: false,
+
+        animation: false,
+
+        indexAxis: "y",
+
+        plugins: {
+
+          legend: {
+
+            display: false
+
+          },
+
+          tooltip: {
+
+            callbacks: {
+
+              label: (context: any) =>
+                `${Number(
+                  context.parsed.x
+                ).toFixed(1)}%`
+
+            }
+
+          }
+
+        },
+
+        scales: {
+
+          x: {
+
+            beginAtZero: true,
+
+            ticks: {
+
+              callback: (value: any) =>
+                `${value}%`
+
+            }
+
+          },
+
+          y: {
+
+            grid: {
+
+              display: false
+
+            }
+
+          }
+
+        }
+
+      }
+
+    });
+
+  loadChart.update();
+
+  const loadImage =
+    loadCanvas.toDataURL(
+      "image/png"
+    );
+
+  const pdf =
+    new jsPDF(
+      "p",
+      "mm",
+      "a4"
+    );
+
+  pdf.setFontSize(18);
+
+  pdf.text(
+    "Energy Metrics Report",
+    14,
+    18
+  );
+
+  pdf.setFontSize(10);
+
+  pdf.text(
+    `Generated: ${new Date().toLocaleString()}`,
+    14,
+    26
+  );
+
+  pdf.setFontSize(14);
+
+  pdf.text(
+    "Overall Load Factor",
+    14,
+    38
+  );
+
+  autoTable(pdf, {
+
+    startY: 43,
+
+    head: [[
+      "Metric",
+      "Value"
+    ]],
+
+    body: [[
+      "Load Factor",
+      `${(report.load_factor * 100).toFixed(1)}%`
+    ]]
+
+  });
+
+  pdf.setFontSize(14);
+
+  pdf.text(
+    "Load Factor by System",
+    14,
+    68
+  );
+
+  pdf.addImage(
+    loadImage,
+    "PNG",
+    14,
+    73,
+    180,
+    80
+  );
+
+  autoTable(pdf, {
+
+    startY: 160,
+
+    head: [[
+
+      "System",
+
+      "Load Factor"
+
+    ]],
+
+    body:
+      loadFactorRows.map(
+        (row) => [
+
+          row.system,
+
+          `${(row.value * 100).toFixed(1)}%`
+
+        ]
+      )
+
+  });
+
+  pdf.addPage();
+
+  const rankingCanvas =
+    document.createElement("canvas");
+
+  rankingCanvas.width = 1200;
+
+  rankingCanvas.height = 500;
+
+  const rankingContext =
+    rankingCanvas.getContext("2d");
+
+  if (!rankingContext) {
+    return;
+  }
+
+  rankingContext.fillStyle =
+    "#FFFFFF";
+
+  rankingContext.fillRect(
+    0,
+    0,
+    rankingCanvas.width,
+    rankingCanvas.height
+  );
+
+  const rankingChart =
+    new Chart(rankingContext, {
+
+      type: "bar",
+
+      data: {
+
+        labels:
+          rankingRows.map(
+            row => row.system
+          ),
+
+        datasets: [
+
+          {
+
+            label:
+              "Energy Consumption",
+
+            data:
+              rankingRows.map(
+                row =>
+                  row.value
+              ),
+
+            backgroundColor: [
+              "#00c2ff",
+              "#00e396",
+              "#feb019",
+              "#ff4560",
+              "#775dd0",
+              "#3f51b5",
+              "#4caf50",
+              "#ff9800",
+              "#e91e63",
+              "#9c27b0",
+              "#546e7a"
+            ],
+
+            borderWidth: 1
+
+          }
+
+        ]
+
+      },
+
+      options: {
+
+        responsive: false,
+
+        animation: false,
+
+        indexAxis: "y",
+
+        plugins: {
+
+          legend: {
+
+            display: false
+
+          },
+
+          tooltip: {
+
+            callbacks: {
+
+              label: (context: any) =>
+                `${Number(
+                  context.parsed.x
+                ).toFixed(2)} kWh`
+
+            }
+
+          }
+
+        },
+
+        scales: {
+
+          x: {
+
+            beginAtZero: true,
+
+            ticks: {
+
+              callback: (value: any) =>
+                `${value} kWh`
+
+            }
+
+          },
+
+          y: {
+
+            grid: {
+
+              display: false
+
+            }
+
+          }
+
+        }
+
+      }
+
+    });
+
+  rankingChart.update();
+
+  const rankingImage =
+    rankingCanvas.toDataURL(
+      "image/png"
+    );
+
+  pdf.setFontSize(16);
+
+  pdf.text(
+    "System Ranking",
+    14,
+    18
+  );
+
+  pdf.addImage(
+    rankingImage,
+    "PNG",
+    14,
+    25,
+    180,
+    85
+  );
+
+    autoTable(pdf, {
+
+    startY: 118,
+
+    head: [[
+
+      "System",
+
+      "Energy Consumption (kWh)"
+
+    ]],
+
+    body:
+      rankingRows.map(
+        (row) => [
+
+          row.system,
+
+          row.value.toFixed(2)
+
+        ]
+      )
+
+  });
+
+  pdf.save(
+    "energy-metrics-report.pdf"
+  );
+
+  loadChart.destroy();
+
+  rankingChart.destroy();
+
+};
