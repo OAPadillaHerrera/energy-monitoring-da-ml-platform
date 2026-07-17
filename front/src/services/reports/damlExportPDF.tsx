@@ -70,6 +70,16 @@ type ZScoreData = {
   z_score_by_system: Record<string, number>;
 };
 
+type DetectionReport = {
+  detect_anomalies_example: Record<string, string>;
+  all_systems_detection: Record<
+    string,
+    Record<string, number>
+  >;
+  system?: string;
+  by_system: Record<string, number>;
+};
+
 export const exportBasicMetricsPDF = (
   report: BasicMetricsReport
 ): void => {
@@ -2823,3 +2833,652 @@ export const exportZScorePDF = (
   consumptionChart.destroy();
 
 };
+
+export const exportDetectionPDF = (
+  report: DetectionReport
+): void => {
+
+  if (!report) {
+    return;
+  }
+
+  const exampleRows =
+    Object.entries(report.detect_anomalies_example).map(
+      ([value, classification]) => ({
+        value,
+        classification
+      })
+    );
+
+  const allSystemRows =
+    Object.entries(report.all_systems_detection)
+      .flatMap(([system, values]) =>
+        Object.entries(values).map(
+          ([timestamp, score]) => ({
+            system,
+            timestamp,
+            score: Number(score)
+          })
+        )
+      )
+      .sort(
+        (a, b) =>
+          new Date(a.timestamp).getTime() -
+          new Date(b.timestamp).getTime()
+      )
+      .slice(-72);
+
+  const bySystemRows =
+    Object.entries(report.by_system)
+      .sort(
+        ([a], [b]) =>
+          new Date(a).getTime() -
+          new Date(b).getTime()
+      )
+      .slice(-72);
+
+  const pdf =
+    new jsPDF(
+      "p",
+      "mm",
+      "a4"
+    );
+
+  pdf.setFontSize(18);
+
+  pdf.text(
+    "Detection Analysis Report",
+    14,
+    18
+  );
+
+  pdf.setFontSize(10);
+
+  pdf.text(
+    `Generated: ${new Date().toLocaleString()}`,
+    14,
+    26
+  );
+
+  if (report.system) {
+
+    pdf.text(
+      `System: ${report.system}`,
+      14,
+      32
+    );
+
+  }
+
+  pdf.setFontSize(14);
+
+  pdf.text(
+    "Detect Anomalies Example",
+    14,
+    report.system ? 42 : 38
+  );
+
+  autoTable(pdf, {
+
+    startY:
+      report.system ? 48 : 44,
+
+    head: [[
+      "Value",
+      "Classification"
+    ]],
+
+    body:
+      exampleRows.map(
+        row => [
+          row.value,
+          row.classification
+        ]
+      )
+
+  });
+
+  pdf.addPage();
+
+  const allSystemsCanvas =
+    document.createElement("canvas");
+
+  allSystemsCanvas.width = 1200;
+
+  allSystemsCanvas.height = 500;
+
+  const allSystemsContext =
+    allSystemsCanvas.getContext("2d");
+
+  if (!allSystemsContext) {
+    return;
+  }
+
+  allSystemsContext.fillStyle =
+    "#FFFFFF";
+
+  allSystemsContext.fillRect(
+    0,
+    0,
+    allSystemsCanvas.width,
+    allSystemsCanvas.height
+  );
+
+  const groupedSystems: Record<
+    string,
+    {
+      timestamp: string;
+      score: number;
+    }[]
+  > = {};
+
+  allSystemRows.forEach(row => {
+
+    if (!groupedSystems[row.system]) {
+
+      groupedSystems[row.system] = [];
+
+    }
+
+    groupedSystems[row.system].push({
+      timestamp: row.timestamp,
+      score: row.score
+    });
+
+  });
+
+  const timestamps =
+    Array.from(
+      new Set(
+        allSystemRows.map(
+          row => row.timestamp
+        )
+      )
+    ).sort();
+
+  const labels =
+    timestamps.map(
+      timestamp =>
+        new Date(timestamp).toLocaleString(
+          "en-US",
+          {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit"
+          }
+        )
+    );
+
+    const colors = [
+    "#00c2ff",
+    "#ff4d4d",
+    "#ffd500",
+    "#7c4dff",
+    "#00e676",
+    "#ff9100",
+    "#ff1744",
+    "#00b0ff",
+    "#76ff03",
+    "#f50057",
+    "#c51162"
+  ];
+
+   const datasets =
+    Object.entries(groupedSystems).map(
+      ([system, values], index) => ({
+
+        label: system,
+
+        data:
+          timestamps.map(timestamp => {
+
+            const point =
+              values.find(
+                value =>
+                  value.timestamp === timestamp
+              );
+
+            return point
+              ? point.score
+              : null;
+
+          }),
+
+        borderColor:
+          colors[
+            index % colors.length
+          ],
+
+        backgroundColor:
+          "transparent",
+
+        borderWidth: 2,
+
+        tension: 0.3,
+
+        spanGaps: true,
+
+        pointRadius: 2,
+
+        pointHoverRadius: 4,
+
+        fill: false
+
+      })
+    );
+
+  const upperThreshold =
+    timestamps.map(() => 2);
+
+  const lowerThreshold =
+    timestamps.map(() => -2);
+
+  const allSystemsChart =
+    new Chart(allSystemsContext, {
+
+      type: "line",
+
+      data: {
+
+        labels,
+
+        datasets: [
+
+          ...datasets,
+
+          {
+
+            label:
+              "Upper Threshold (+2)",
+
+            data:
+              upperThreshold,
+
+            borderColor:
+              "#ef4444",
+
+            borderDash: [8, 8],
+
+            pointRadius: 0,
+
+            fill: false
+
+          },
+
+          {
+
+            label:
+              "Lower Threshold (-2)",
+
+            data:
+              lowerThreshold,
+
+            borderColor:
+              "#10b981",
+
+            borderDash: [8, 8],
+
+            pointRadius: 0,
+
+            fill: false
+
+          }
+
+        ]
+
+      },
+
+      options: {
+
+        responsive: false,
+
+        animation: false,
+
+        plugins: {
+
+          legend: {
+
+            display: true
+
+          }
+
+        },
+
+        scales: {
+
+          y: {
+
+            title: {
+
+              display: true,
+
+              text:
+                "Detection Score"
+
+            }
+
+          },
+
+          x: {
+
+            ticks: {
+
+              maxTicksLimit: 12
+
+            }
+
+          }
+
+        }
+
+      }
+
+    });
+
+  allSystemsChart.update();
+
+  const allSystemsImage =
+    allSystemsCanvas.toDataURL(
+      "image/png"
+    );
+
+  pdf.setFontSize(16);
+
+  pdf.text(
+    "All Systems Detection",
+    14,
+    18
+  );
+
+  pdf.addImage(
+    allSystemsImage,
+    "PNG",
+    14,
+    25,
+    180,
+    80
+  );
+
+  autoTable(pdf, {
+
+    startY: 113,
+
+    head: [[
+
+      "System",
+
+      "Timestamp",
+
+      "Detection Score"
+
+    ]],
+
+    body:
+      allSystemRows.map(
+        row => [
+
+          row.system,
+
+          new Date(
+            row.timestamp
+          ).toLocaleString(),
+
+          row.score.toFixed(2)
+
+        ]
+      )
+
+  });
+
+  if (
+    bySystemRows.length > 0
+  ) {
+
+    pdf.addPage();
+
+    const systemCanvas =
+      document.createElement(
+        "canvas"
+      );
+
+    systemCanvas.width = 1200;
+
+    systemCanvas.height = 500;
+
+    const systemContext =
+      systemCanvas.getContext("2d");
+
+    if (!systemContext) {
+      return;
+    }
+
+    systemContext.fillStyle =
+      "#FFFFFF";
+
+    systemContext.fillRect(
+      0,
+      0,
+      systemCanvas.width,
+      systemCanvas.height
+    );
+    
+        const systemLabels =
+      bySystemRows.map(
+        ([timestamp]) =>
+          new Date(timestamp).toLocaleString(
+            "en-US",
+            {
+              month: "short",
+              day: "numeric",
+              hour: "2-digit"
+            }
+          )
+      );
+
+    const systemValues =
+      bySystemRows.map(
+        ([, score]) =>
+          Number(score)
+      );
+
+    const upperThreshold =
+      systemValues.map(
+        () => 2
+      );
+
+    const lowerThreshold =
+      systemValues.map(
+        () => -2
+      );
+
+    const systemChart =
+      new Chart(systemContext, {
+
+        type: "line",
+
+        data: {
+
+          labels:
+            systemLabels,
+
+          datasets: [
+
+            {
+
+              label:
+                "Detection Score",
+
+              data:
+                systemValues,
+
+              borderColor:
+                "#00c2ff",
+
+              backgroundColor:
+                "rgba(0,194,255,0.20)",
+
+              tension: 0.3,
+
+              pointRadius: 2,
+
+              pointHoverRadius: 4,
+
+              fill: false
+
+            },
+
+            {
+
+              label:
+                "Upper Threshold (+2)",
+
+              data:
+                upperThreshold,
+
+              borderColor:
+                "#ef4444",
+
+              borderDash: [8, 8],
+
+              pointRadius: 0,
+
+              fill: false
+
+            },
+
+            {
+
+              label:
+                "Lower Threshold (-2)",
+
+              data:
+                lowerThreshold,
+
+              borderColor:
+                "#10b981",
+
+              borderDash: [8, 8],
+
+              pointRadius: 0,
+
+              fill: false
+
+            }
+
+          ]
+
+        },
+
+        options: {
+
+          responsive: false,
+
+          animation: false,
+
+          plugins: {
+
+            legend: {
+
+              display: true
+
+            }
+
+          },
+
+          scales: {
+
+            y: {
+
+              title: {
+
+                display: true,
+
+                text:
+                  "Detection Score"
+
+              }
+
+            },
+
+            x: {
+
+              ticks: {
+
+                maxTicksLimit: 12
+
+              }
+
+            }
+
+          }
+
+        }
+
+      });
+
+    systemChart.update();
+
+    const systemImage =
+      systemCanvas.toDataURL(
+        "image/png"
+      );
+
+    pdf.setFontSize(16);
+
+    pdf.text(
+      "Detection by System",
+      14,
+      18
+    );
+
+    pdf.addImage(
+      systemImage,
+      "PNG",
+      14,
+      25,
+      180,
+      80
+    );
+
+    autoTable(pdf, {
+
+      startY: 113,
+
+      head: [[
+
+        "Timestamp",
+
+        "Detection Score"
+
+      ]],
+
+      body:
+        bySystemRows.map(
+          ([timestamp, score]) => [
+
+            new Date(timestamp)
+              .toLocaleString(),
+
+            Number(score)
+              .toFixed(2)
+
+          ]
+        )
+
+    });
+
+    systemChart.destroy();
+
+  }
+
+  pdf.save(
+    "detection-analysis-report.pdf"
+  );
+
+  allSystemsChart.destroy();
+
+};
+
+
+
+
