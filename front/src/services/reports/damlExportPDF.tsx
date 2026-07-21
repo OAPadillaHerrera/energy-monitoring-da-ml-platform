@@ -80,6 +80,48 @@ type DetectionReport = {
   by_system: Record<string, number>;
 };
 
+type ClassificationEvent = {
+  timestamp: string;
+  z_score: number;
+  anomaly_type: string;
+
+  root_cause?: string;
+
+  system_name?: string;
+
+  voltage_120v?: number;
+  voltage_240v?: number;
+
+  quality_flag?: string;
+};
+
+type ClassificationData = {
+  classify_anomaly_examples: Record<string, string>;
+
+  all_systems_summary: Record<
+    string,
+    ClassificationEvent[]
+  >;
+
+  all_systems_with_context: Record<
+    string,
+    ClassificationEvent[]
+  >;
+
+  root_cause_examples: Record<
+    string,
+    string
+  >;
+
+  full_pipeline: ClassificationEvent[];
+
+  system?: string;
+
+  by_system: ClassificationEvent[];
+
+  context_classification: ClassificationEvent[];
+};
+
 export const exportBasicMetricsPDF = (
   report: BasicMetricsReport
 ): void => {
@@ -3476,6 +3518,630 @@ export const exportDetectionPDF = (
   );
 
   allSystemsChart.destroy();
+
+};
+
+export const exportClassificationPDF = (
+  report: ClassificationData
+): void => {
+
+  if (!report) {
+    return;
+  }
+
+  const classificationRows =
+    Object.entries(report.classify_anomaly_examples)
+      .map(
+        ([score, classification]) => ({
+          score,
+          classification
+        })
+      );
+
+  const rootCauseRows =
+    Object.entries(report.root_cause_examples)
+      .map(
+        ([scenario, cause]) => ({
+          scenario,
+          cause
+        })
+      );
+
+  const fullPipelineRows =
+    [...report.full_pipeline]
+      .sort(
+        (a, b) =>
+          new Date(a.timestamp).getTime() -
+          new Date(b.timestamp).getTime()
+      )
+      .slice(-72);
+
+  const bySystemRows =
+  Array.isArray(report.by_system)
+    ? report.by_system
+        .sort(
+          (a, b) =>
+            new Date(a.timestamp).getTime() -
+            new Date(b.timestamp).getTime()
+        )
+        .slice(-72)
+    : [];
+
+  const contextRows =
+  Array.isArray(report.context_classification)
+    ? report.context_classification
+        .sort(
+          (a, b) =>
+            new Date(a.timestamp).getTime() -
+            new Date(b.timestamp).getTime()
+        )
+        .slice(-72)
+    : [];
+
+  const classificationCanvas =
+    document.createElement("canvas");
+
+  classificationCanvas.width = 1200;
+
+  classificationCanvas.height = 500;
+
+  const classificationContext =
+    classificationCanvas.getContext("2d");
+
+  if (!classificationContext) {
+    return;
+  }
+
+  classificationContext.fillStyle =
+    "#FFFFFF";
+
+  classificationContext.fillRect(
+    0,
+    0,
+    classificationCanvas.width,
+    classificationCanvas.height
+  );
+
+  const barColors = [
+    "#00c2ff",
+    "#ff4d4d",
+    "#ffd500",
+    "#7c4dff",
+    "#00e676",
+    "#ff9100",
+    "#ff1744",
+    "#00b0ff",
+    "#76ff03",
+    "#f50057",
+    "#c51162"
+  ];
+
+  const classificationChart =
+    new Chart(classificationContext, {
+
+      type: "bar",
+
+      data: {
+
+        labels:
+          classificationRows.map(
+            row => row.score
+          ),
+
+        datasets: [
+
+          {
+
+            label:
+              "Classification Examples",
+
+            data:
+              classificationRows.map(
+                (_, index) => index + 1
+              ),
+
+            backgroundColor:
+              barColors.slice(
+                0,
+                classificationRows.length
+              ),
+
+            borderWidth: 1
+
+          }
+
+        ]
+
+      },
+
+      options: {
+
+        responsive: false,
+
+        animation: false,
+
+        plugins: {
+
+          legend: {
+
+            display: false
+
+          },
+
+          tooltip: {
+
+            callbacks: {
+
+              label: (context: any) =>
+                classificationRows[
+                  context.dataIndex
+                ].classification
+
+            }
+
+          }
+
+        },
+
+        scales: {
+
+          y: {
+
+            beginAtZero: true,
+
+            ticks: {
+
+              precision: 0
+
+            },
+
+            title: {
+
+              display: true,
+
+              text: "Example"
+
+            }
+
+          }
+
+        }
+
+      }
+
+    });
+
+  classificationChart.update();
+
+  const classificationImage =
+    classificationCanvas.toDataURL(
+      "image/png"
+    );
+
+  const pdf =
+    new jsPDF(
+      "p",
+      "mm",
+      "a4"
+    );
+
+  pdf.setFontSize(18);
+
+  pdf.text(
+    "Classification Analysis Report",
+    14,
+    18
+  );
+
+  pdf.setFontSize(10);
+
+  pdf.text(
+    `Generated: ${new Date().toLocaleString()}`,
+    14,
+    26
+  );
+
+  if (report.system) {
+
+    pdf.text(
+      `System: ${report.system}`,
+      14,
+      32
+    );
+
+  }
+
+  pdf.setFontSize(14);
+
+  pdf.text(
+    "Classification Examples",
+    14,
+    report.system ? 42 : 38
+  );
+
+  pdf.addImage(
+    classificationImage,
+    "PNG",
+    14,
+    report.system ? 47 : 43,
+    180,
+    70
+  );
+
+  autoTable(pdf, {
+
+    startY:
+      report.system ? 123 : 119,
+
+    head: [[
+
+      "Z-Score",
+
+      "Classification"
+
+    ]],
+
+    body:
+      classificationRows.map(
+        row => [
+
+          row.score,
+
+          row.classification
+
+        ]
+      )
+
+  });
+
+    pdf.addPage();
+
+  pdf.setFontSize(16);
+
+  pdf.text(
+    "Root Cause Examples",
+    14,
+    18
+  );
+
+  autoTable(pdf, {
+
+    startY: 25,
+
+    head: [[
+
+      "Scenario",
+
+      "Root Cause"
+
+    ]],
+
+    body:
+      rootCauseRows.map(
+        row => [
+
+          row.scenario,
+
+          row.cause
+
+        ]
+      )
+
+  });
+
+  pdf.addPage();
+
+  const frequency: Record<string, number> = {};
+
+  (
+    report.system
+      ? bySystemRows
+      : fullPipelineRows
+  ).forEach(event => {
+
+    const key =
+      event.root_cause ??
+      "Unknown";
+
+    frequency[key] =
+      (frequency[key] ?? 0) + 1;
+
+  });
+
+  const frequencyLabels =
+    Object.keys(frequency);
+
+  const frequencyValues =
+    Object.values(frequency);
+
+  const frequencyCanvas =
+    document.createElement("canvas");
+
+  frequencyCanvas.width = 1200;
+
+  frequencyCanvas.height = 500;
+
+  const frequencyContext =
+    frequencyCanvas.getContext("2d");
+
+  if (!frequencyContext) {
+    return;
+  }
+
+  frequencyContext.fillStyle =
+    "#FFFFFF";
+
+  frequencyContext.fillRect(
+    0,
+    0,
+    frequencyCanvas.width,
+    frequencyCanvas.height
+  );
+
+  const frequencyChart =
+    new Chart(frequencyContext, {
+
+      type: "bar",
+
+      data: {
+
+        labels:
+          frequencyLabels,
+
+        datasets: [
+
+          {
+
+            label:
+              "Root Cause Frequency",
+
+            data:
+              frequencyValues,
+
+            backgroundColor:
+              barColors.slice(
+                0,
+                frequencyLabels.length
+              ),
+
+            borderWidth: 1
+
+          }
+
+        ]
+
+      },
+
+      options: {
+
+        responsive: false,
+
+        animation: false,
+
+        plugins: {
+
+          legend: {
+
+            display: false
+
+          }
+
+        },
+
+        scales: {
+
+          y: {
+
+            beginAtZero: true,
+
+            ticks: {
+
+              precision: 0
+
+            },
+
+            title: {
+
+              display: true,
+
+              text: "Occurrences"
+
+            }
+
+          },
+
+          x: {
+
+            ticks: {
+
+              maxRotation: 45,
+
+              minRotation: 0
+
+            }
+
+          }
+
+        }
+
+      }
+
+    });
+
+  frequencyChart.update();
+
+  const frequencyImage =
+    frequencyCanvas.toDataURL(
+      "image/png"
+    );
+
+  pdf.setFontSize(16);
+
+  pdf.text(
+    "Root Cause Frequency",
+    14,
+    18
+  );
+
+  pdf.addImage(
+    frequencyImage,
+    "PNG",
+    14,
+    25,
+    180,
+    80
+  );
+
+  autoTable(pdf, {
+
+    startY: 113,
+
+    head: [[
+
+      "Root Cause",
+
+      "Occurrences"
+
+    ]],
+
+    body:
+      frequencyLabels.map(
+        (label, index) => [
+
+          label,
+
+          frequencyValues[index]
+
+        ]
+      )
+
+  });
+
+    pdf.addPage();
+
+  pdf.setFontSize(16);
+
+  pdf.text(
+    report.system
+      ? "Classification Events by System"
+      : "Classification Events",
+    14,
+    18
+  );
+
+  autoTable(pdf, {
+
+    startY: 25,
+
+    head: [[
+
+      ...(report.system
+        ? []
+        : ["System"]),
+
+      "Timestamp",
+
+      "Anomaly Type",
+
+      "Root Cause",
+
+      "Z-Score"
+
+    ]],
+
+    body:
+      (report.system
+        ? bySystemRows
+        : fullPipelineRows
+      ).map(event => [
+
+        ...(report.system
+          ? []
+          : [event.system_name ?? "-"]),
+
+        new Date(
+          event.timestamp
+        ).toLocaleString(),
+
+        event.anomaly_type,
+
+        event.root_cause ?? "-",
+
+        event.z_score.toFixed(2)
+
+      ])
+
+  });
+
+  if (
+    report.system &&
+    contextRows.length > 0
+  ) {
+
+    pdf.addPage();
+
+    pdf.setFontSize(16);
+
+    pdf.text(
+      "Context Classification",
+      14,
+      18
+    );
+
+    autoTable(pdf, {
+
+      startY: 25,
+
+      head: [[
+
+        "Timestamp",
+
+        "Z-Score",
+
+        "Type",
+
+        "Root Cause",
+
+        "120V",
+
+        "240V",
+
+        "Quality"
+
+      ]],
+
+      body:
+        contextRows.map(event => [
+
+          new Date(
+            event.timestamp
+          ).toLocaleString(),
+
+          event.z_score.toFixed(2),
+
+          event.anomaly_type,
+
+          event.root_cause ?? "-",
+
+          event.voltage_120v ?? "",
+
+          event.voltage_240v ?? "",
+
+          event.quality_flag ?? ""
+
+        ])
+
+    });
+
+  }
+
+  pdf.save(
+    "classification-analysis-report.pdf"
+  );
+
+  classificationChart.destroy();
+
+  frequencyChart.destroy();
 
 };
 
