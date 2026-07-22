@@ -15,6 +15,7 @@ import api from "../../../../services/api";
 import RootCauseDistributionChartDAML from "../../../../components/charts/RootCauseDistributionChartDAML";
 import RootCauseEventsTableDAML from "../../../../components/tables/RootCauseEventsTableDAML";
 import { exportRootCauseCSV } from "../../../../services/reports/damlExportCSV";
+import { exportRootCausePDF } from "../../../../services/reports/damlExportPDF";
 
 type Alert = {
   level: string;
@@ -160,7 +161,7 @@ function ML() {
       );
 
       setExecutionMessage(
-        "Root Cause CSV exported successfully."
+        "Root Cause Pipeline CSV exported successfully."
       );
 
        return;
@@ -175,8 +176,24 @@ function ML() {
 
   const handleExportPDF = (): void => {
 
+    if (
+      rootCauseReport
+    ) {
+
+      exportRootCausePDF(
+        rootCauseReport
+      );
+
+      setExecutionMessage(
+        "Root Cause Pipeline PDF exported successfully."
+      );
+
+      return;
+
+    }
+
     setExecutionMessage(
-      "PDF report exported successfully."
+      "PDF export not implemented for this report yet."
     );
 
   };

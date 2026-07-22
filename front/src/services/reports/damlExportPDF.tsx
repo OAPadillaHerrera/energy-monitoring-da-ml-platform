@@ -122,6 +122,31 @@ type ClassificationData = {
   context_classification: ClassificationEvent[];
 };
 
+type Alert = {
+  level: string;
+  message: string;
+};
+
+type PredictionEvent = {
+  timestamp: string;
+  system_name?: string;
+  prediction: string;
+  risk_level: string;
+  action: string;
+  alerts: Alert[];
+};
+
+type RootCauseReport = {
+  system?: string;
+
+  by_system: PredictionEvent[];
+
+  all_systems_prediction: Record<
+    string,
+    PredictionEvent[]
+  >;
+};
+
 export const exportBasicMetricsPDF = (
   report: BasicMetricsReport
 ): void => {
@@ -4145,6 +4170,353 @@ export const exportClassificationPDF = (
 
 };
 
+export const exportRootCausePDF = (
+  report: RootCauseReport
+): void => {
 
+  if (!report) {
+    return;
+  }
 
+  const rows =
+    (
+      report.system
+
+        ? [...(report.by_system ?? [])]
+
+        : Object.values(
+            report.all_systems_prediction ?? {}
+          ).flat()
+
+    )
+
+      .filter(
+        event =>
+          event.prediction !== "normal"
+      )
+
+      .sort(
+        (a, b) =>
+          new Date(a.timestamp).getTime() -
+          new Date(b.timestamp).getTime()
+      )
+
+      .slice(-72);
+
+  const predictionFrequency:
+    Record<string, number> = {};
+
+  rows.forEach(event => {
+
+    const key =
+      event.prediction ?? "Unknown";
+
+    predictionFrequency[key] =
+      (predictionFrequency[key] ?? 0) + 1;
+
+  });
+
+  const predictionLabels =
+    Object.keys(
+      predictionFrequency
+    );
+
+  const predictionValues =
+    Object.values(
+      predictionFrequency
+    );
+
+  const barColors = [
+    "#00c2ff",
+    "#ff4d4d",
+    "#ffd500",
+    "#7c4dff",
+    "#00e676",
+    "#ff9100",
+    "#ff1744",
+    "#00b0ff",
+    "#76ff03",
+    "#f50057",
+    "#c51162"
+  ];
+
+  const predictionCanvas =
+    document.createElement("canvas");
+
+  predictionCanvas.width = 1200;
+
+  predictionCanvas.height = 500;
+
+  const predictionContext =
+    predictionCanvas.getContext("2d");
+
+  if (!predictionContext) {
+    return;
+  }
+
+  predictionContext.fillStyle =
+    "#FFFFFF";
+
+  predictionContext.fillRect(
+    0,
+    0,
+    predictionCanvas.width,
+    predictionCanvas.height
+  );
+
+  const predictionChart =
+    new Chart(
+      predictionContext,
+      {
+
+        type: "bar",
+
+        data: {
+
+          labels:
+            predictionLabels,
+
+          datasets: [
+
+            {
+
+              label:
+                "Predictions",
+
+              data:
+                predictionValues,
+
+              backgroundColor:
+                barColors.slice(
+                  0,
+                  predictionLabels.length
+                ),
+
+              borderWidth: 1
+
+            }
+
+          ]
+
+        },
+
+        options: {
+
+          responsive: false,
+
+          animation: false,
+
+          plugins: {
+
+            legend: {
+
+              display: false
+
+            }
+
+          },
+
+          scales: {
+
+            x: {
+
+              title: {
+
+                display: true,
+
+                text:
+                  "Prediction"
+
+              }
+
+            },
+
+            y: {
+
+              beginAtZero: true,
+
+              ticks: {
+
+                precision: 0
+
+              },
+
+              title: {
+
+                display: true,
+
+                text:
+                  "Occurrences"
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+    );
+
+  predictionChart.update();
+
+  const predictionImage =
+    predictionCanvas.toDataURL(
+      "image/png"
+    );
+
+  const pdf =
+    new jsPDF(
+      "p",
+      "mm",
+      "a4"
+    );
+
+  pdf.setFontSize(18);
+
+  pdf.text(
+    "Root Cause Analysis Report",
+    14,
+    18
+  );
+
+  pdf.setFontSize(10);
+
+  pdf.text(
+    `Generated: ${new Date().toLocaleString()}`,
+    14,
+    26
+  );
+
+  if (report.system) {
+
+    pdf.text(
+      `System: ${report.system}`,
+      14,
+      32
+    );
+
+  }
+
+  pdf.setFontSize(14);
+
+  pdf.text(
+    "Prediction Summary",
+    14,
+    report.system
+      ? 42
+      : 38
+  );
+
+  pdf.addImage(
+    predictionImage,
+    "PNG",
+    14,
+    report.system
+      ? 47
+      : 43,
+    180,
+    80
+  );
+
+  autoTable(pdf, {
+
+    startY:
+      report.system
+        ? 135
+        : 131,
+
+    head: [[
+      "Prediction",
+      "Occurrences"
+    ]],
+
+    body:
+      predictionLabels.map(
+        (
+          prediction,
+          index
+        ) => [
+
+          prediction,
+
+          predictionValues[
+            index
+          ]
+
+        ]
+      )
+
+  });
+
+  pdf.addPage();
+
+  pdf.setFontSize(16);
+
+  pdf.text(
+    report.system
+      ? "Prediction Events by System"
+      : "Prediction Events",
+    14,
+    18
+  );
+
+  autoTable(pdf, {
+
+    startY: 25,
+
+    head: [[
+
+      ...(report.system
+        ? []
+        : ["System"]),
+
+      "Timestamp",
+
+      "Prediction",
+
+      "Risk Level",
+
+      "Action",
+
+      "Alerts"
+
+    ]],
+
+    body:
+      rows.map(event => [
+
+        ...(report.system
+          ? []
+          : [event.system_name ?? "-"]),
+
+        new Date(
+          event.timestamp
+        ).toLocaleString(),
+
+        event.prediction,
+
+        event.risk_level,
+
+        event.action,
+
+        (event.alerts ?? [])
+          .map(
+            alert =>
+              `${alert.level}: ${alert.message}`
+          )
+          .join(" | ")
+
+      ])
+
+  });
+  
+   pdf.save(
+    "root-cause-analysis-report.pdf"
+  );
+
+  predictionChart.destroy();
+
+}; 
 
