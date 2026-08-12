@@ -1,6 +1,7 @@
 
 
 .mainPanel {
+
   height: 100%;
 
   position: relative;
@@ -15,13 +16,53 @@
   min-height: 0;
 
   overflow-y: auto;
+
+}
+
+.contentRow {
+
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) 320px;
+
+  gap: 12px;
+
+  align-items: stretch;
+
+  flex: 1;
+
+  min-height: 0;
+
+}
+
+@media (max-width: 1200px) {
+
+  .contentRow {
+
+    grid-template-columns: 1fr;
+
+  }
+
 }
 
 @media (max-height: 820px) {
 
   .mainPanel {
+
     padding: 10px;
 
     gap: 10px;
+
   }
+
+  .contentRow {
+
+    gap: 10px;
+
+  }
+
 }
+
+
+
+

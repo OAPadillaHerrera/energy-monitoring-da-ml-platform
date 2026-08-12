@@ -1,383 +1,729 @@
 
 
 .container {
+
   height: 100vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  overflow: hidden;
+
+  color: #FFFFFF;
 
   background:
     radial-gradient(
       circle at top,
-      #07152f 0%,
+      #07152F 0%,
       #020617 55%,
       #000814 100%
     );
 
-  position: relative;
-
-  overflow: hidden;
-
   font-family:
     "Courier New",
     Consolas,
     monospace;
 
-  color: white;
 }
 
 .container * {
-  font-family:
-    "Courier New",
-    Consolas,
-    monospace;
+
+  font-family: inherit;
+
 }
 
 .topbar {
-  position: relative;
-  z-index: 2;
 
-  height: 68px;
+  height: 72px;
 
-  padding: 0 22px;
+  flex-shrink: 0;
+
+  padding: 0 28px;
 
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
 
   border-bottom:
-    1px solid rgba(0, 194, 255, 0.08);
+    1px solid rgba(0,194,255,.12);
+
+  backdrop-filter: blur(10px);
+
 }
 
 .stationBlock {
+
   display: flex;
+
   flex-direction: column;
+
+  gap: 4px;
+
 }
 
 .stationLabel {
-  font-size: 13px;
 
-  letter-spacing: 3px;
+  font-size: 18px;
 
-  color:
-    rgba(125, 211, 252, 0.58);
-}
-
-.stationName {
-  margin: 0;
-
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.systemBlock {
-  display: flex;
-  flex-direction: column;
-
-  align-items: flex-end;
-}
-
-.systemTitle {
-  font-size: 13px;
-
-  letter-spacing: 2px;
-
-  color:
-    rgba(125, 211, 252, 0.68);
-}
-
-.systemStatus {
-  display: flex;
-
-  gap: 8px;
-
-  align-items: center;
-}
-
-.statusDot {
-  width: 8px;
-  height: 8px;
-
-  border-radius: 50%;
-
-  display: inline-block;
-
-  background: #00ff9d;
-
-  animation: pulseGlow 1.5s infinite ease-in-out;
-
-  box-shadow: 0 0 2px #00ff9d;
-}
-
-@keyframes pulseGlow {
-  0% {
-    transform: scale(1);
-    opacity: 0.75;
-    box-shadow: 0 0 2px #00ff9d;
-  }
-
-  50% {
-    transform: scale(1.08);
-    opacity: 1;
-    box-shadow: 0 0 6px #00ff9d;
-  }
-
-  100% {
-    transform: scale(1);
-    opacity: 0.75;
-    box-shadow: 0 0 2px #00ff9d;
-  }
-}
-
-.statusText {
-  font-size: 14px;
-
-  color:
-    rgba(125, 211, 252, 0.9);
-}
-
-.content {
-  display: flex;
-
-  height: calc(100vh - 68px);
-
-  min-height: 0;
-}
-
-.sidebar {
-  flex: 0 0 220px;
-
-  padding: 16px;
-
-  border-right:
-    1px solid rgba(0, 194, 255, 0.08);
-}
-
-.sidebarLogo {
-  display: flex;
-
-  align-items: center;
-
-  gap: 12px;
-
-  margin-bottom: 20px;
-}
-
-.logo {
-  width: 56px;
-
-  flex-shrink: 0;
-}
-
-.brandContainer {
-  display: flex;
-  flex-direction: column;
-
-  justify-content: center;
-}
-
-.brandMain {
-  font-family: "Inter", sans-serif;
-
-  font-size: 24px;
-  font-weight: 800;
-
-  letter-spacing: 1px;
-
-  color: #e7edf3;
-
-  line-height: 1;
-}
-
-.brandSub {
-  margin-top: 4px;
-
-  font-family: "Inter", sans-serif;
-
-  font-size: 11px;
-  font-weight: 400;
+  font-weight: 700;
 
   letter-spacing: 4px;
 
-  color: #39cfff;
+  text-transform: uppercase;
+
+  color:
+    rgba(125,211,252,.60);
+
+}
+
+.stationName {
+
+  margin: 0;
+
+  font-size: 30px;
+
+  font-weight: 700;
+
+  line-height: 1.1;
+
+  color: #FFFFFF;
+
+}
+
+.systemBlock {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: 4px;
+
+}
+
+.systemTitle {
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  letter-spacing: 3px;
+
+  text-transform: uppercase;
+
+  color:
+    rgba(125,211,252,.70);
+
+}
+
+.systemStatus {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+}
+
+.statusDot {
+
+  width: 10px;
+
+  height: 10px;
+
+  border-radius: 50%;
+
+  background: #00FF9D;
+
+  box-shadow:
+    0 0 10px rgba(0,255,157,.75);
+
+  animation:
+    pulseGlow 1.6s ease-in-out infinite;
+
+}
+
+@keyframes pulseGlow {
+
+  0% {
+
+    transform: scale(1);
+
+    opacity: .75;
+
+  }
+
+  50% {
+
+    transform: scale(1.18);
+
+    opacity: 1;
+
+  }
+
+  100% {
+
+    transform: scale(1);
+
+    opacity: .75;
+
+  }
+
+}
+
+.statusText {
+
+  font-size: 30px;
+
+  font-weight: 600;
+
+  color:
+    rgba(255,255,255,.88);
+
+}
+
+.content {
+
+  flex: 1;
+
+  display: flex;
+
+  min-height: 0;
+
+  overflow: hidden;
+
+}
+
+.sidebar {
+
+  width: 260px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  padding: /*26px 18px*/13px 9px;
+
+  border-right:
+    1px solid rgba(0,194,255,.10);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10,28,52,.28),
+      rgba(2,12,24,.10)
+    );
+
+}
+
+.sidebarTop {
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+.navSection {
+
+  flex: 1;
+
+  display: flex;
+
+  justify-content: flex-start;
+
+  align-items: flex-start;
+
+}
+
+.sidebarLogo {
+
+  width: 200px;     
+
+  margin: 0 auto 30px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:flex-start;
+
+  gap:4px;
+
+  margin-bottom: 30px;
+
+}
+
+.logo {
+
+  width: 53px;
+
+  min-width: 51px;
+
+  max-width: 51px;
+
+  height: auto;
+
+  display:block;
+
+  flex-shrink: 0;
+
+  filter:
+    drop-shadow(
+      0 0 12px rgba(0,194,255,.20)
+    );
+
+}
+
+.brandContainer {
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: flex-start;
+
+}
+
+.brandMain {
+
+  font-size: 33px;
+
+  font-weight:700;
+
+  letter-spacing: 1px;
 
   line-height: 1;
+
+  color: #F8FAFC;
+
+}
+
+.brandSub {
+
+  margin-top: 2px;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  color: #39CFFF;
+
 }
 
 .nav {
+
+  width: 100%;
+
   display: flex;
+
   flex-direction: column;
 
+  align-items: center;
+
   gap: 10px;
+
 }
 
 .navButton,
 .navButtonActive {
-  height: 38px;
+
+  width: 200px;
+
+  height: 46px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-start;
+
+  gap: 14px;
 
   padding: 0 16px;
 
-  border-radius: 8px;
+  box-sizing: border-box;
+
+  border-radius: 10px;
 
   border:
-    1px solid rgba(0, 194, 255, 0.12);
+    1px solid rgba(0,194,255,.12);
 
   background:
-    rgba(8, 28, 52, 0.85);
+    rgba(8,28,52,.82);
 
   color:
-    rgba(255, 255, 255, 0.75);
-
-  font-size: 13px;
-  font-weight: 700;
-
-  letter-spacing: 1px;
+    rgba(255,255,255,.78);
 
   text-decoration: none;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 16px;
+
+  font-weight: 700;
+
+  letter-spacing: .6px;
 
   line-height: 1;
 
-  box-sizing: border-box;
+  transition:
+
+    transform .20s ease,
+
+    background .20s ease,
+
+    border-color .20s ease,
+
+    box-shadow .20s ease,
+
+    color .20s ease,
+
+    filter .20s ease;
+
+}
+
+.navButton span,
+.navButtonActive span {
+
+  white-space: nowrap;
+
+  flex: 1;
+
+}
+
+.navIcon {
+
+  width: 18px;
+
+  height: 18px;
+
+  flex-shrink: 0;
 
   transition:
-    opacity 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease,
-    background 0.2s ease;
+
+    transform .20s ease,
+
+    color .20s ease;
+
+}
+
+.navButton:hover {
+
+  transform:
+    translateX(5px);
+
+  color:
+    #FFFFFF;
+
+  background:
+    rgba(2,15,32,.95);
+
+  border-color:
+    rgba(0,194,255,.35);
+
+  box-shadow:
+
+    inset 0 0 18px rgba(0,0,0,.35),
+
+    0 0 14px rgba(0,194,255,.18);
+
+}
+
+.navButton:hover .navIcon {
+
+  transform:
+    scale(1.15);
+
 }
 
 .navButtonActive {
+
+  transform:
+    translateX(5px);
+
+  color:
+    #FFFFFF;
+
   border:
-    1px solid rgba(0, 194, 255, 0.28);
+    1px solid rgba(0,194,255,.45);
 
   background:
     linear-gradient(
       90deg,
-      #008cff,
-      #00c2ff
+      #008CFF,
+      #00C2FF
     );
 
-  color: white;
-
   box-shadow:
-    0 0 14px rgba(0, 194, 255, 0.35);
+    0 0 20px rgba(0,194,255,.30);
+
 }
 
-.navButton:hover {
-  opacity: 0.88;
+.navButtonActive .navIcon {
 
-  border-color:
-    rgba(0, 194, 255, 0.35);
+  color:
+    #FFFFFF;
 
-  background:
-    rgba(10, 34, 64, 0.95);
+  transform:
+    scale(1.12);
+
 }
 
 .navButtonActive:hover {
-  opacity: 0.92;
+
+  filter:
+    brightness(.88);
 
   box-shadow:
-    0 0 18px rgba(0, 194, 255, 0.45);
+    0 0 28px rgba(0,194,255,.45);
 
-  border-color:
-    rgba(0, 194, 255, 0.4);
+}
+
+.navButtonActive:hover .navIcon {
+
+  transform:
+    scale(1.18);
+
 }
 
 .pageContent {
+
   flex: 1;
 
   min-width: 0;
+
   min-height: 0;
 
-  overflow: hidden;
+  overflow: auto;
+
 }
 
-@media (max-width: 1100px) {
+.sidebarFooter {
 
-  .sidebar {
-    flex: 0 0 190px;
+  margin-top: auto;
 
-    padding: 12px;
+  padding-top: 20px;
+
+  border-top:
+    1px solid rgba(0,194,255,.10);
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 6px;
+
+}
+
+.productName {
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  color:
+    rgba(125,211,252,.80);
+
+  text-align: center;
+
+}
+
+.version {
+
+  font-size: 15px;
+
+  letter-spacing: 1px;
+
+  color:
+    rgba(255,255,255,.45);
+
+  text-align: center;
+
+}
+
+@media (max-width:1200px){
+
+  .topbar{
+
+    padding:0 20px;
+
   }
 
-  .stationName {
-    font-size: 20px;
+  .sidebar{
+
+    width:240px;
+
+    padding:22px 16px;
+
   }
 
-  .brandMain {
-    font-size: 20px;
+  .sidebarLogo{
+
+    gap:14px;
+
+    margin-bottom:32px;
+
+  }
+
+  .nav{
+
+    gap:10px;
+
   }
 
   .navButton,
-  .navButtonActive {
-    height: 34px;
+  .navButtonActive{
 
-    font-size: 12px;
+    width:180px;
+
+    height:42px;
+
+    font-size:16px;
+
   }
+
 }
 
-@media (max-height: 820px) {
+@media (max-width:992px){
 
-  .topbar {
-    height: 56px;
+  .topbar{
 
-    padding: 0 16px;
+    padding:0 16px;
+
   }
 
-  .content {
-    height: calc(100vh - 56px);
+  .stationName{
+
+    font-size:18x;
+
   }
 
-  .stationLabel,
-  .systemTitle {
-    font-size: 11px;
+  .sidebar{
+
+    width:220px;
+
+    padding:20px 14px;
+
   }
 
-  .stationName {
-    font-size: 18px;
+  .sidebarLogo{
+
+    gap:12px;
+
+    margin-bottom:28px;
+
   }
 
-  .statusText {
-    font-size: 12px;
+  .navButton,
+  .navButtonActive{
+
+    width:170px;
+
+    height:40px;
+
+    font-size:16px;
+
+    gap:10px;
+
   }
 
-  .sidebar {
-    flex: 0 0 190px;
+}
 
-    padding: 12px;
+@media (max-height:820px){
+
+  .topbar{
+
+    height:60px;
+
   }
 
-  .sidebarLogo {
-    gap: 10px;
+  .stationName{
 
-    margin-bottom: 16px;
+    font-size:17px;
+
   }
+
+  .statusText{
+
+    font-size:15px;
+
+  }
+
+  .sidebar{
+
+    width:240px;
+
+    padding:18px 14px;
+
+  }
+
+ .sidebarLogo {
+
+  justify-content: flex-start;
+
+  gap: 1px;
+
+  margin-bottom: 34px;
+
+}
 
   .logo {
-    width: 46px;
-  }
 
-  .brandMain {
-    font-size: 20px;
-  }
+  height: auto;
 
-  .brandSub {
-    font-size: 10px;
+  flex-shrink: 0;
 
-    letter-spacing: 3px;
-  }
+  display: block;
 
-  .nav {
-    gap: 8px;
+  filter:
+    drop-shadow(
+      0 0 12px rgba(0,194,255,.20)
+    );
+
+}
+
+  .nav{
+
+    gap:8px;
+
   }
 
   .navButton,
-  .navButtonActive {
-    height: 32px;
+  .navButtonActive{
 
-    font-size: 11px;
+    width:175px;
 
-    padding: 0 12px;
+    height:36px;
+
+    font-size:16px;
+
   }
+
+  .productName{
+
+    font-size:12px;
+
+  }
+
+  .version{
+
+    font-size:11px;
+
+  }
+
 }
+

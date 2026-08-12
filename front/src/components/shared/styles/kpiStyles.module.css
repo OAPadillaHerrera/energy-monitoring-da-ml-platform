@@ -1,0 +1,172 @@
+
+
+.kpiRow {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(180px, 1fr));
+
+  gap: 16px;
+
+  margin-top: 18px;
+
+  flex-shrink: 0;
+
+  width: 100%;
+
+}
+
+.kpiCard {
+
+  min-width: 0;
+
+  min-height: 110px;
+
+  padding: 20px;
+
+  border-radius: 16px;
+
+  border: 1px solid rgba(0, 194, 255, 0.12);
+
+  background: linear-gradient(
+    180deg,
+    rgba(8, 22, 40, 0.90),
+    rgba(4, 16, 30, 0.82)
+  );
+
+  box-shadow:
+    0 0 14px rgba(0, 194, 255, 0.08);
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 14px;
+
+  box-sizing: border-box;
+
+}
+
+.kpiHeader {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 12px;
+
+  width: 100%;
+
+}
+
+.kpiIcon {
+
+  width: 28px;
+
+  height: 28px;
+
+  color: #00C2FF;
+
+  flex-shrink: 0;
+
+}
+
+.kpiLabel {
+
+  font-size: 24px;
+
+  font-weight: 600;
+
+  letter-spacing: 1px;
+
+  color: #FFFFFF;
+
+  line-height: 1.2;
+
+  text-align: center;
+
+}
+
+.kpiValue {
+
+  margin: 0;
+
+  font-size: 22px;
+
+  font-weight: 600;
+
+  color: rgba(255,255,255,0.70);
+
+  text-align: center;
+
+  line-height: 1;
+
+}
+
+@media (max-width: 1400px) {
+
+  .kpiRow {
+
+    grid-template-columns:
+      repeat(2, minmax(220px, 1fr));
+
+  }
+
+}
+
+@media (max-height: 820px) {
+
+  .kpiRow {
+
+    gap: 10px;
+
+    margin-top: 10px;
+
+  }
+
+  .kpiCard {
+
+    min-height: 78px;
+
+    padding: 10px 14px;
+
+    gap: 8px;
+
+  }
+
+  .kpiHeader {
+
+    gap: 10px;
+
+  }
+
+  .kpiIcon {
+
+    width: 22px;
+
+    height: 22px;
+
+  }
+
+  .kpiLabel {
+
+    font-size: 18px;
+
+  }
+
+  .kpiValue {
+
+    margin: 0;
+
+    font-size: 16px;
+
+  }
+
+}

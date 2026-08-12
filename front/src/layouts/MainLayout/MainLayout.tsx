@@ -8,31 +8,57 @@ import {
   Outlet
 } from "react-router-dom";
 
+import {
+  LayoutDashboard,
+  FlaskConical,
+  BrainCircuit,
+  FileChartColumn,
+  CircleHelp
+} from "lucide-react";
+
 const navItems = [
+
   {
     to: "/",
-    label: "Dashboard"
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    color: "#38BDF8"
   },
+
   {
     to: "/simulation",
-    label: "Simulation"
+    label: "Simulation",
+    icon: FlaskConical,
+    color: "#FB923C"
   },
+
   {
     to: "/daml",
-    label: "DA/ML"
+    label: "DA/ML",
+    icon: BrainCircuit,
+    color: "#A78BFA"
   },
+
   {
     to: "/reports",
-    label: "Reports"
+    label: "Reports",
+    icon: FileChartColumn,
+    color: "#4ADE80"
   },
+
   {
     to: "/about",
-    label: "About"
+    label: "About",
+    icon: CircleHelp,
+    color: "#CBD5E1"
   }
+
 ];
 
 function MainLayout() {
+
   return (
+
     <main className={styles.container}>
 
       <header className={styles.topbar}>
@@ -84,47 +110,88 @@ function MainLayout() {
             <div className={styles.brandContainer}>
 
               <div className={styles.brandMain}>
-                ENERGON
+                Energon
               </div>
 
               <div className={styles.brandSub}>
-                ANALYTICS
+                DA/ML Platform
               </div>
 
             </div>
 
           </div>
 
-          <nav className={styles.nav}>
+          <div className={styles.navSection}>
 
-            {navItems.map((item) => (
+            <nav className={styles.nav}>
 
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) =>
-                  isActive
-                    ? styles.navButtonActive
-                    : styles.navButton
-                }
-              >
-                {item.label}
-              </NavLink>
+              {
 
-            ))}
+                navItems.map((item) => {
 
-          </nav>
+                  const Icon = item.icon;
+
+                  return (
+
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      className={({ isActive }) =>
+                        isActive
+                          ? styles.navButtonActive
+                          : styles.navButton
+                      }
+                    >
+
+                      <Icon
+                        size={18}
+                        strokeWidth={2}
+                        className={styles.navIcon}
+                        color={item.color}
+                      />
+
+                      <span>
+                        {item.label}
+                      </span>
+
+                    </NavLink>
+
+                  );
+
+                })
+
+              }
+
+            </nav>
+
+          </div>
+
+          <div className={styles.sidebarFooter}>
+
+            <div className={styles.productName}>
+              Energon DA/ML Platform
+            </div>
+
+            <div className={styles.version}>
+              2027 Edition
+            </div>
+
+          </div>
 
         </aside>
 
         <section className={styles.pageContent}>
+
           <Outlet />
+
         </section>
 
       </section>
 
     </main>
+
   );
+
 }
 
 export default MainLayout;

@@ -2,107 +2,316 @@
 
 .chartPanel,
 .controlPanel {
-border-radius: 14px;
 
-border: 1px solid rgba(0, 194, 255, 0.08);
+  border-radius: 16px;
 
-background: rgba(4, 16, 30, 0.76);
+  border: 1px solid rgba(0, 194, 255, 0.10);
 
-overflow: hidden;
+  background: rgba(4, 16, 30, 0.76);
+
+  overflow: hidden;
+
 }
 
 .chartPanel {
-display: flex;
-flex-direction: column;
 
-min-height: 260px;
+  display: flex;
+
+  flex-direction: column;
+
+  min-height: 500px;
+
 }
 
 .panelHeader {
-height: 42px;
 
-padding: 0 16px;
+  height: 68px;
 
-display: flex;
-align-items: center;
+  padding: 0 28px;
 
-border-bottom: 1px solid rgba(0, 194, 255, 0.08);
+  display: flex;
 
-flex-shrink: 0;
+  align-items: center;
 
-color: white;
+  border-bottom: 1px solid rgba(0, 194, 255, 0.10);
 
-font-size: 13px;
-font-weight: 700;
-letter-spacing: 2px;
+  flex-shrink: 0;
+
+  color: white;
+
+  font-size: 30px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
 }
 
 .chartPlaceholder {
-position: relative;
 
-flex: 1;
+  position: relative;
 
-display: flex;
-justify-content: center;
-align-items: center;
+  flex: 1;
 
-overflow: hidden;
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  overflow: hidden;
+
+  padding: 24px;
+
 }
 
 .chartGrid {
-position: absolute;
 
-inset: 0;
+  position: absolute;
 
-background:
-linear-gradient(
-rgba(0, 194, 255, 0.04) 1px,
-transparent 1px
-),
-linear-gradient(
-90deg,
-rgba(0, 194, 255, 0.04) 1px,
-transparent 1px
-);
+  inset: 0;
 
-background-size: 48px 48px;
+  background:
+
+    linear-gradient(
+
+      rgba(0, 194, 255, 0.04) 1px,
+
+      transparent 1px
+
+    ),
+
+    linear-gradient(
+
+      90deg,
+
+      rgba(0, 194, 255, 0.04) 1px,
+
+      transparent 1px
+
+    );
+
+  background-size: 56px 56px;
+
 }
 
 .placeholderText {
-position: relative;
 
-z-index: 2;
+  position: relative;
 
-text-align: center;
+  z-index: 2;
 
-color: rgba(125, 211, 252, 0.58);
+  text-align: center;
 
-font-size: 15px;
-font-weight: 700;
-letter-spacing: 2px;
+  color: rgba(125, 211, 252, 0.58);
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
 }
 
 @media (max-width: 1000px) {
-.chartPanel {
-min-height: 340px;
-}
+
+  .chartPanel {
+
+    min-height: 420px;
+
+  }
+
 }
 
 @media (max-height: 820px) {
-.panelHeader {
-height: 34px;
 
-padding: 0 14px;
+  .panelHeader {
 
-font-size: 11px;
+    height: 54px;
+
+    padding: 0 20px;
+
+    font-size: 24px;
+
+    letter-spacing: 1px;
+
+  }
+
+  .chartPanel {
+
+    min-height: 300px;
+
+  }
+
+  .chartPlaceholder {
+
+    padding: 14px;
+
+  }
+
+  .placeholderText {
+
+    font-size: 14px;
+
+  }
+
+}
+
+.chartPanel,
+.controlPanel {
+
+  border-radius: 16px;
+
+  border: 1px solid rgba(0, 194, 255, 0.10);
+
+  background: rgba(4, 16, 30, 0.76);
+
+  overflow: hidden;
 
 }
 
 .chartPanel {
-min-height: 190px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  min-height: 360px;
+
+  height: 55vh;
+
+  max-height: 620px;
+
+}
+
+.panelHeader {
+
+  height: 68px;
+
+  padding: 0 28px;
+
+  display: flex;
+
+  align-items: center;
+
+  border-bottom: 1px solid rgba(0, 194, 255, 0.10);
+
+  flex-shrink: 0;
+
+  color: white;
+
+  font-size: 30px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+}
+
+.chartPlaceholder {
+
+  position: relative;
+
+  flex: 1;
+
+  display: flex;
+
+  justify-content: flex-start;
+
+  align-items: center;
+
+  overflow-x: auto;
+
+  overflow-y: hidden;
+
+  padding: 14px;
+
+}
+
+.chartGrid {
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+
+    linear-gradient(
+      rgba(0, 194, 255, 0.04) 1px,
+      transparent 1px
+    ),
+
+    linear-gradient(
+      90deg,
+      rgba(0, 194, 255, 0.04) 1px,
+      transparent 1px
+    );
+
+  background-size: 56px 56px;
+
 }
 
 .placeholderText {
-font-size: 12px;
+
+  position: relative;
+
+  z-index: 2;
+
+  text-align: center;
+
+  color: rgba(125, 211, 252, 0.58);
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
 }
+
+@media (max-width: 1000px) {
+
+  .chartPanel {
+
+    min-height: 320px;
+
+    height: 50vh;
+
+  }
+
 }
+
+@media (max-height: 820px) {
+
+  .panelHeader {
+
+    height: 48px;
+
+    padding: 0 18px;
+
+    font-size: 22px;
+
+  }
+
+  .chartPanel {
+
+    min-height: 220px;
+
+    height: 38vh;
+
+  }
+
+  .chartPlaceholder {
+
+    padding: 8px;
+
+  }
+
+  .placeholderText {
+
+    font-size: 14px;
+
+  }
+
+}
+
