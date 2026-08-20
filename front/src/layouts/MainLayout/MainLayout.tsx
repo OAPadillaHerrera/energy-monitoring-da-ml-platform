@@ -22,35 +22,35 @@ const navItems = [
     to: "/",
     label: "Dashboard",
     icon: LayoutDashboard,
-    color: "#38BDF8"
+    color: "#FACC15" 
   },
 
   {
     to: "/simulation",
     label: "Simulation",
     icon: FlaskConical,
-    color: "#FB923C"
+    color: "#FB923C" 
   },
 
   {
     to: "/daml",
     label: "DA/ML",
     icon: BrainCircuit,
-    color: "#A78BFA"
+    color: "#A78BFA" 
   },
 
   {
     to: "/reports",
     label: "Reports",
     icon: FileChartColumn,
-    color: "#4ADE80"
+    color: "#4ADE80" 
   },
 
   {
     to: "/about",
     label: "About",
     icon: CircleHelp,
-    color: "#CBD5E1"
+    color: "#CBD5E1" 
   }
 
 ];

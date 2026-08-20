@@ -1,4 +1,5 @@
 
+
 .container {
   height: 100vh;
   display: flex;
@@ -41,17 +42,16 @@
 }
 
 .stationLabel {
-  font-size: 18px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color:
-    rgba(125, 211, 252, 0.60);
+  color: rgba(125, 211, 252, 0.60);
 }
 
 .stationName {
   margin: 0;
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 700;
   line-height: 1.1;
   color: #FFFFFF;
@@ -65,12 +65,11 @@
 }
 
 .systemTitle {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color:
-    rgba(125, 211, 252, 0.70);
+  color: rgba(125, 211, 252, 0.70);
 }
 
 .systemStatus {
@@ -80,12 +79,12 @@
 }
 
 .statusDot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #00FF9D;
   box-shadow:
-    0 0 10px rgba(0, 255, 157, 0.75);
+    0 0 8px rgba(0, 255, 157, 0.75);
   animation:
     pulseGlow 1.6s ease-in-out infinite;
 }
@@ -108,10 +107,9 @@
 }
 
 .statusText {
-  font-size: 30px;
+  font-size: 14px;
   font-weight: 600;
-  color:
-    rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.88);
 }
 
 .content {
@@ -174,7 +172,7 @@
 }
 
 .brandMain {
-  font-size: 33px;
+  font-size: 30px;
   font-weight: 700;
   letter-spacing: 1px;
   line-height: 1;
@@ -183,7 +181,7 @@
 
 .brandSub {
   margin-top: 2px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 2px;
   color: #39CFFF;
@@ -215,7 +213,7 @@
   color:
     rgba(255, 255, 255, 0.78);
   text-decoration: none;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.6px;
   line-height: 1;
@@ -356,7 +354,7 @@
   .navButtonActive {
     width: 180px;
     height: 42px;
-    font-size: 16px;
+    font-size: 15px;
   }
 }
 
@@ -383,7 +381,7 @@
   .navButtonActive {
     width: 170px;
     height: 40px;
-    font-size: 16px;
+    font-size: 15px;
     gap: 10px;
   }
 }
@@ -398,7 +396,7 @@
   }
 
   .statusText {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .sidebar {
@@ -430,7 +428,7 @@
   .navButtonActive {
     width: 175px;
     height: 36px;
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .productName {
