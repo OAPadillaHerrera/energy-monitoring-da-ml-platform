@@ -1,17 +1,10 @@
 
-
 .container {
-
   height: 100vh;
-
   display: flex;
-
   flex-direction: column;
-
   overflow: hidden;
-
   color: #FFFFFF;
-
   background:
     radial-gradient(
       circle at top,
@@ -19,711 +12,432 @@
       #020617 55%,
       #000814 100%
     );
-
   font-family:
     "Courier New",
     Consolas,
     monospace;
-
 }
 
 .container * {
-
   font-family: inherit;
-
 }
 
 .topbar {
-
   height: 72px;
-
   flex-shrink: 0;
-
   padding: 0 28px;
-
   display: flex;
-
   justify-content: space-between;
-
   align-items: center;
-
   border-bottom:
-    1px solid rgba(0,194,255,.12);
-
+    1px solid rgba(0, 194, 255, 0.12);
   backdrop-filter: blur(10px);
-
 }
 
 .stationBlock {
-
   display: flex;
-
   flex-direction: column;
-
   gap: 4px;
-
 }
 
 .stationLabel {
-
   font-size: 18px;
-
   font-weight: 700;
-
   letter-spacing: 4px;
-
   text-transform: uppercase;
-
   color:
-    rgba(125,211,252,.60);
-
+    rgba(125, 211, 252, 0.60);
 }
 
 .stationName {
-
   margin: 0;
-
   font-size: 30px;
-
   font-weight: 700;
-
   line-height: 1.1;
-
   color: #FFFFFF;
-
 }
 
 .systemBlock {
-
   display: flex;
-
   flex-direction: column;
-
   align-items: flex-end;
-
   gap: 4px;
-
 }
 
 .systemTitle {
-
   font-size: 14px;
-
   font-weight: 700;
-
   letter-spacing: 3px;
-
   text-transform: uppercase;
-
   color:
-    rgba(125,211,252,.70);
-
+    rgba(125, 211, 252, 0.70);
 }
 
 .systemStatus {
-
   display: flex;
-
   align-items: center;
-
   gap: 10px;
-
 }
 
 .statusDot {
-
   width: 10px;
-
   height: 10px;
-
   border-radius: 50%;
-
   background: #00FF9D;
-
   box-shadow:
-    0 0 10px rgba(0,255,157,.75);
-
+    0 0 10px rgba(0, 255, 157, 0.75);
   animation:
     pulseGlow 1.6s ease-in-out infinite;
-
 }
 
 @keyframes pulseGlow {
-
   0% {
-
     transform: scale(1);
-
-    opacity: .75;
-
+    opacity: 0.75;
   }
 
   50% {
-
     transform: scale(1.18);
-
     opacity: 1;
-
   }
 
   100% {
-
     transform: scale(1);
-
-    opacity: .75;
-
+    opacity: 0.75;
   }
-
 }
 
 .statusText {
-
   font-size: 30px;
-
   font-weight: 600;
-
   color:
-    rgba(255,255,255,.88);
-
+    rgba(255, 255, 255, 0.88);
 }
 
 .content {
-
   flex: 1;
-
   display: flex;
-
   min-height: 0;
-
   overflow: hidden;
-
 }
 
 .sidebar {
-
   width: 260px;
-
   flex-shrink: 0;
-
   display: flex;
-
   flex-direction: column;
-
-  padding: /*26px 18px*/13px 9px;
-
+  padding: 13px 9px;
   border-right:
-    1px solid rgba(0,194,255,.10);
-
+    1px solid rgba(0, 194, 255, 0.10);
   background:
     linear-gradient(
       180deg,
-      rgba(10,28,52,.28),
-      rgba(2,12,24,.10)
+      rgba(10, 28, 52, 0.28),
+      rgba(2, 12, 24, 0.10)
     );
-
-}
-
-.sidebarTop {
-
-  display: flex;
-
-  flex-direction: column;
-
 }
 
 .navSection {
-
   flex: 1;
-
   display: flex;
-
   justify-content: flex-start;
-
   align-items: flex-start;
-
 }
 
 .sidebarLogo {
-
-  width: 200px;     
-
+  width: 200px;
   margin: 0 auto 30px;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:flex-start;
-
-  gap:4px;
-
-  margin-bottom: 30px;
-
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .logo {
-
   width: 53px;
-
   min-width: 51px;
-
   max-width: 51px;
-
   height: auto;
-
-  display:block;
-
+  display: block;
   flex-shrink: 0;
-
   filter:
     drop-shadow(
-      0 0 12px rgba(0,194,255,.20)
+      0 0 12px rgba(0, 194, 255, 0.20)
     );
-
 }
 
 .brandContainer {
-
   display: flex;
-
   flex-direction: column;
-
   justify-content: center;
-
   align-items: flex-start;
-
 }
 
 .brandMain {
-
   font-size: 33px;
-
-  font-weight:700;
-
+  font-weight: 700;
   letter-spacing: 1px;
-
   line-height: 1;
-
   color: #F8FAFC;
-
 }
 
 .brandSub {
-
   margin-top: 2px;
-
   font-size: 11px;
-
   font-weight: 700;
-
   letter-spacing: 2px;
-
   color: #39CFFF;
-
 }
 
 .nav {
-
   width: 100%;
-
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-
   gap: 10px;
-
 }
 
 .navButton,
 .navButtonActive {
-
   width: 200px;
-
   height: 46px;
-
   display: flex;
-
   align-items: center;
-
   justify-content: flex-start;
-
   gap: 14px;
-
   padding: 0 16px;
-
   box-sizing: border-box;
-
   border-radius: 10px;
-
   border:
-    1px solid rgba(0,194,255,.12);
-
+    1px solid rgba(0, 194, 255, 0.12);
   background:
-    rgba(8,28,52,.82);
-
+    rgba(8, 28, 52, 0.82);
   color:
-    rgba(255,255,255,.78);
-
+    rgba(255, 255, 255, 0.78);
   text-decoration: none;
-
   font-size: 16px;
-
   font-weight: 700;
-
-  letter-spacing: .6px;
-
+  letter-spacing: 0.6px;
   line-height: 1;
-
   transition:
-
-    transform .20s ease,
-
-    background .20s ease,
-
-    border-color .20s ease,
-
-    box-shadow .20s ease,
-
-    color .20s ease,
-
-    filter .20s ease;
-
+    transform 0.20s ease,
+    background 0.20s ease,
+    border-color 0.20s ease,
+    box-shadow 0.20s ease,
+    color 0.20s ease,
+    filter 0.20s ease;
 }
 
 .navButton span,
 .navButtonActive span {
-
   white-space: nowrap;
-
   flex: 1;
-
 }
 
 .navIcon {
-
   width: 18px;
-
   height: 18px;
-
   flex-shrink: 0;
-
   transition:
-
-    transform .20s ease,
-
-    color .20s ease;
-
+    transform 0.20s ease,
+    color 0.20s ease;
 }
 
 .navButton:hover {
-
   transform:
     translateX(5px);
-
   color:
     #FFFFFF;
-
   background:
-    rgba(2,15,32,.95);
-
+    rgba(2, 15, 32, 0.95);
   border-color:
-    rgba(0,194,255,.35);
-
+    rgba(0, 194, 255, 0.35);
   box-shadow:
-
-    inset 0 0 18px rgba(0,0,0,.35),
-
-    0 0 14px rgba(0,194,255,.18);
-
+    inset 0 0 18px rgba(0, 0, 0, 0.35),
+    0 0 14px rgba(0, 194, 255, 0.18);
 }
 
 .navButton:hover .navIcon {
-
   transform:
     scale(1.15);
-
 }
 
 .navButtonActive {
-
   transform:
     translateX(5px);
-
   color:
     #FFFFFF;
-
   border:
-    1px solid rgba(0,194,255,.45);
-
+    1px solid rgba(0, 194, 255, 0.45);
   background:
     linear-gradient(
       90deg,
       #008CFF,
       #00C2FF
     );
-
   box-shadow:
-    0 0 20px rgba(0,194,255,.30);
-
+    0 0 20px rgba(0, 194, 255, 0.30);
 }
 
 .navButtonActive .navIcon {
-
   color:
     #FFFFFF;
-
   transform:
     scale(1.12);
-
 }
 
 .navButtonActive:hover {
-
   filter:
-    brightness(.88);
-
+    brightness(0.88);
   box-shadow:
-    0 0 28px rgba(0,194,255,.45);
-
+    0 0 28px rgba(0, 194, 255, 0.45);
 }
 
 .navButtonActive:hover .navIcon {
-
   transform:
     scale(1.18);
-
 }
 
 .pageContent {
-
   flex: 1;
-
   min-width: 0;
-
   min-height: 0;
-
   overflow: auto;
-
 }
 
 .sidebarFooter {
-
   margin-top: auto;
-
   padding-top: 20px;
-
   border-top:
-    1px solid rgba(0,194,255,.10);
-
+    1px solid rgba(0, 194, 255, 0.10);
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-
   gap: 6px;
-
 }
 
 .productName {
-
   font-size: 13px;
-
   font-weight: 700;
-
   letter-spacing: 2px;
-
   color:
-    rgba(125,211,252,.80);
-
+    rgba(125, 211, 252, 0.80);
   text-align: center;
-
 }
 
 .version {
-
   font-size: 15px;
-
   letter-spacing: 1px;
-
   color:
-    rgba(255,255,255,.45);
-
+    rgba(255, 255, 255, 0.45);
   text-align: center;
-
 }
 
-@media (max-width:1200px){
-
-  .topbar{
-
-    padding:0 20px;
-
+@media (max-width: 1200px) {
+  .topbar {
+    padding: 0 20px;
   }
 
-  .sidebar{
-
-    width:240px;
-
-    padding:22px 16px;
-
+  .sidebar {
+    width: 240px;
+    padding: 22px 16px;
   }
 
-  .sidebarLogo{
-
-    gap:14px;
-
-    margin-bottom:32px;
-
+  .sidebarLogo {
+    gap: 14px;
+    margin-bottom: 32px;
   }
 
-  .nav{
-
-    gap:10px;
-
+  .nav {
+    gap: 10px;
   }
 
   .navButton,
-  .navButtonActive{
-
-    width:180px;
-
-    height:42px;
-
-    font-size:16px;
-
+  .navButtonActive {
+    width: 180px;
+    height: 42px;
+    font-size: 16px;
   }
-
 }
 
-@media (max-width:992px){
-
-  .topbar{
-
-    padding:0 16px;
-
+@media (max-width: 992px) {
+  .topbar {
+    padding: 0 16px;
   }
 
-  .stationName{
-
-    font-size:18x;
-
+  .stationName {
+    font-size: 18px;
   }
 
-  .sidebar{
-
-    width:220px;
-
-    padding:20px 14px;
-
+  .sidebar {
+    width: 220px;
+    padding: 20px 14px;
   }
 
-  .sidebarLogo{
-
-    gap:12px;
-
-    margin-bottom:28px;
-
+  .sidebarLogo {
+    gap: 12px;
+    margin-bottom: 28px;
   }
 
   .navButton,
-  .navButtonActive{
-
-    width:170px;
-
-    height:40px;
-
-    font-size:16px;
-
-    gap:10px;
-
+  .navButtonActive {
+    width: 170px;
+    height: 40px;
+    font-size: 16px;
+    gap: 10px;
   }
-
 }
 
-@media (max-height:820px){
-
-  .topbar{
-
-    height:60px;
-
+@media (max-height: 820px) {
+  .topbar {
+    height: 60px;
   }
 
-  .stationName{
-
-    font-size:17px;
-
+  .stationName {
+    font-size: 17px;
   }
 
-  .statusText{
-
-    font-size:15px;
-
+  .statusText {
+    font-size: 15px;
   }
 
-  .sidebar{
-
-    width:240px;
-
-    padding:18px 14px;
-
+  .sidebar {
+    width: 240px;
+    padding: 18px 14px;
   }
 
- .sidebarLogo {
-
-  justify-content: flex-start;
-
-  gap: 1px;
-
-  margin-bottom: 34px;
-
-}
+  .sidebarLogo {
+    justify-content: flex-start;
+    gap: 1px;
+    margin-bottom: 34px;
+  }
 
   .logo {
+    height: auto;
+    flex-shrink: 0;
+    display: block;
+    filter:
+      drop-shadow(
+        0 0 12px rgba(0, 194, 255, 0.20)
+      );
+  }
 
-  height: auto;
-
-  flex-shrink: 0;
-
-  display: block;
-
-  filter:
-    drop-shadow(
-      0 0 12px rgba(0,194,255,.20)
-    );
-
-}
-
-  .nav{
-
-    gap:8px;
-
+  .nav {
+    gap: 8px;
   }
 
   .navButton,
-  .navButtonActive{
-
-    width:175px;
-
-    height:36px;
-
-    font-size:16px;
-
+  .navButtonActive {
+    width: 175px;
+    height: 36px;
+    font-size: 16px;
   }
 
-  .productName{
-
-    font-size:12px;
-
+  .productName {
+    font-size: 12px;
   }
 
-  .version{
-
-    font-size:11px;
-
+  .version {
+    font-size: 11px;
   }
-
 }
-
