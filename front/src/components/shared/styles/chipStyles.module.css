@@ -41,19 +41,17 @@
 
 }
 
-
 .chipIcon {
 
   width: 16px;
 
   height: 16px;
 
-  color: #00c2ff;
+  color: #FACC15;
 
   flex-shrink: 0;
 
 }
-
 
 @media (max-height: 820px) {
 
@@ -69,14 +67,13 @@
 
   }
 
-
   .chipIcon {
 
     width: 16px;
 
     height: 16px;
 
-    color: #00c2ff;
+    color: #FACC15;
 
   }
 
