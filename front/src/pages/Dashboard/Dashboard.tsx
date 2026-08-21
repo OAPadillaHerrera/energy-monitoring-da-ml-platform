@@ -8,24 +8,23 @@ import chipStyles from "../../components/shared/styles/chipStyles.module.css";
 import kpiStyles from "../../components/shared/styles/kpiStyles.module.css";
 import ConsumptionChart from "../../components/charts/SystemConsumptionChart";
 import api from "../../services/api";
-import { Activity, BarChart, Gauge, TrendingUp, Zap } from "lucide-react";
+import {
+  Activity,
+  BarChart,
+  Gauge,
+  TrendingUp,
+  Zap,
+} from "lucide-react";
 
 type DashboardSummary = {
-
   total_consumption: number;
-
   average_consumption: number;
-
   peak_demand: number;
-
   load_factor: number;
-
   consumption_by_system: Record<string, number>;
-
 };
 
 function Dashboard() {
-
   const [summary, setSummary] =
     useState<DashboardSummary | null>(null);
 
@@ -36,14 +35,10 @@ function Dashboard() {
     useState<string | null>(null);
 
   useEffect(() => {
-
     const fetchDashboard =
       async (): Promise<void> => {
-
         try {
-
           setLoading(true);
-
           setError(null);
 
           const response =
@@ -55,236 +50,178 @@ function Dashboard() {
             response.data;
 
           if (
-
             !dashboardData?.consumption_by_system ||
-
             Object.keys(
               dashboardData.consumption_by_system
             ).length === 0
-
           ) {
-
             throw new Error(
               "consumption_by_system is empty or missing"
             );
-
           }
 
           setSummary(
             dashboardData
           );
-
-        }
-
-        catch (error: any) {
-
+        } catch (error: any) {
           console.error(
             "Error loading dashboard summary:",
             error
           );
 
           setError(
-
             error.message ??
-
-            "Failed to load dashboard summary"
-
+              "Failed to load dashboard summary"
           );
-
-        }
-
-        finally {
-
+        } finally {
           setLoading(false);
-
         }
-
       };
 
     void fetchDashboard();
-
   }, []);
 
   return (
+    <section className={layoutStyles.mainPanel}>
 
-  <section className={layoutStyles.mainPanel}>
-
-    <div className={tabStyles.tabs}>
-      <span className={chipStyles.chipPrimary}>
-        <BarChart className={chipStyles.chipIcon} />
-        Overview
-      </span>
-    </div>
-
-    <section className={panelStyles.chartPanel}>
-
-      <div className={panelStyles.panelHeader}>
-        Energy Consumption by System
+      <div className={tabStyles.tabs}>
+        <span className={chipStyles.chipPrimary}>
+          <BarChart
+            className={chipStyles.chipIcon}
+          />
+          Overview
+        </span>
       </div>
 
-      <div className={panelStyles.chartPlaceholder}>
+      <div className={kpiStyles.kpiRow}>
 
-        <div className={panelStyles.chartGrid}></div>
-
-        {
-
-          loading && (
-
-            <span className={panelStyles.placeholderText}>
-              Loading dashboard data...
-            </span>
-
-          )
-
-        }
-
-        {
-
-          error && (
-
-            <span className={panelStyles.placeholderText}>
-              Error: {error}
-            </span>
-
-          )
-
-        }
-
-        {
-
-          !loading &&
-          !error &&
-          summary &&
-          Object.keys(
-            summary.consumption_by_system
-          ).length > 0 && (
-
-            <ConsumptionChart
-              data={
-                summary.consumption_by_system
-              }
+        <div className={kpiStyles.kpiCard}>
+          <div className={kpiStyles.kpiHeader}>
+            <Zap
+              className={kpiStyles.kpiIcon}
             />
 
-          )
+            <span className={kpiStyles.kpiLabel}>
+              Total Consumption
+            </span>
+          </div>
 
-        }
+          <h2 className={kpiStyles.kpiValue}>
+            {summary
+              ? `${summary.total_consumption.toFixed(2)} kWh`
+              : "--"}
+          </h2>
+        </div>
+
+        <div className={kpiStyles.kpiCard}>
+          <div className={kpiStyles.kpiHeader}>
+            <Activity
+              className={kpiStyles.kpiIcon}
+            />
+
+            <span className={kpiStyles.kpiLabel}>
+              Average Consumption
+            </span>
+          </div>
+
+          <h2 className={kpiStyles.kpiValue}>
+            {summary
+              ? `${summary.average_consumption.toFixed(2)} kWh`
+              : "--"}
+          </h2>
+        </div>
+
+        <div className={kpiStyles.kpiCard}>
+          <div className={kpiStyles.kpiHeader}>
+            <TrendingUp
+              className={kpiStyles.kpiIcon}
+            />
+
+            <span className={kpiStyles.kpiLabel}>
+              Peak Demand
+            </span>
+          </div>
+
+          <h2 className={kpiStyles.kpiValue}>
+            {summary
+              ? `${summary.peak_demand.toFixed(2)} kWh`
+              : "--"}
+          </h2>
+        </div>
+
+        <div className={kpiStyles.kpiCard}>
+          <div className={kpiStyles.kpiHeader}>
+            <Gauge
+              className={kpiStyles.kpiIcon}
+            />
+
+            <span className={kpiStyles.kpiLabel}>
+              Load Factor
+            </span>
+          </div>
+
+          <h2 className={kpiStyles.kpiValue}>
+            {summary
+              ? summary.load_factor.toFixed(2)
+              : "--"}
+          </h2>
+        </div>
 
       </div>
+
+      <section className={panelStyles.chartPanel}>
+
+        <div className={panelStyles.panelHeader}>
+          Energy Consumption by System
+        </div>
+
+        <div className={panelStyles.chartPlaceholder}>
+
+          <div
+            className={
+              panelStyles.chartGrid
+            }
+          />
+
+          {loading && (
+            <span
+              className={
+                panelStyles.placeholderText
+              }
+            >
+              Loading dashboard data...
+            </span>
+          )}
+
+          {error && (
+            <span
+              className={
+                panelStyles.placeholderText
+              }
+            >
+              Error: {error}
+            </span>
+          )}
+
+          {!loading &&
+            !error &&
+            summary &&
+            Object.keys(
+              summary.consumption_by_system
+            ).length > 0 && (
+              <ConsumptionChart
+                data={
+                  summary.consumption_by_system
+                }
+              />
+            )}
+
+        </div>
+
+      </section>
 
     </section>
-
-    <div className={kpiStyles.kpiRow}>
-
-      <div className={kpiStyles.kpiCard}>
-
-        <div className={kpiStyles.kpiHeader}>
-
-          <Zap className={kpiStyles.kpiIcon} />
-
-          <span className={kpiStyles.kpiLabel}>
-            Total Consumption
-          </span>
-
-        </div>
-
-        <h2 className={kpiStyles.kpiValue}>
-
-          {
-
-            summary
-              ? `${summary.total_consumption.toFixed(2)} kWh`
-              : "--"
-
-          }
-
-        </h2>
-
-      </div>
-
-      <div className={kpiStyles.kpiCard}>
-
-        <div className={kpiStyles.kpiHeader}>
-
-          <Activity className={kpiStyles.kpiIcon} />
-
-          <span className={kpiStyles.kpiLabel}>
-            Average Consumption
-          </span>
-
-        </div>
-
-        <h2 className={kpiStyles.kpiValue}>
-
-          {
-
-            summary
-              ? `${summary.average_consumption.toFixed(2)} kWh`
-              : "--"
-
-          }
-
-        </h2>
-
-      </div>
-
-      <div className={kpiStyles.kpiCard}>
-
-        <div className={kpiStyles.kpiHeader}>
-
-          <TrendingUp className={kpiStyles.kpiIcon} />
-
-          <span className={kpiStyles.kpiLabel}>
-            Peak Demand
-          </span>
-
-        </div>
-
-        <h2 className={kpiStyles.kpiValue}>
-
-          {
-
-            summary
-              ? `${summary.peak_demand.toFixed(2)} kWh`
-              : "--"
-
-          }
-
-        </h2>
-
-      </div>
-
-      <div className={kpiStyles.kpiCard}>
-
-        <div className={kpiStyles.kpiHeader}>
-
-          <Gauge className={kpiStyles.kpiIcon} />
-
-          <span className={kpiStyles.kpiLabel}>
-            Load Factor
-          </span>
-
-        </div>
-
-        <h2 className={kpiStyles.kpiValue}>
-
-          {
-
-            summary
-              ? summary.load_factor.toFixed(2)
-              : "--"
-
-          }
-
-        </h2>
-
-      </div>
-
-    </div>
-
-  </section>
-
-);
-
+  );
 }
 
 export default Dashboard;
