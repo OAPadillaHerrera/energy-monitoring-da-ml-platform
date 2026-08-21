@@ -116,6 +116,11 @@ function Dashboard() {
               ? `${summary.total_consumption.toFixed(2)} kWh`
               : "--"}
           </h2>
+
+          <p className={kpiStyles.kpiDescription}>
+            Total energy consumed
+          </p>
+
         </div>
 
         <div className={kpiStyles.kpiCard}>
@@ -134,6 +139,11 @@ function Dashboard() {
               ? `${summary.average_consumption.toFixed(2)} kWh`
               : "--"}
           </h2>
+
+          <p className={kpiStyles.kpiDescription}>
+            Average energy consumption
+          </p>
+
         </div>
 
         <div className={kpiStyles.kpiCard}>
@@ -149,9 +159,14 @@ function Dashboard() {
 
           <h2 className={kpiStyles.kpiValue}>
             {summary
-              ? `${summary.peak_demand.toFixed(2)} kWh`
+              ? `${summary.peak_demand.toFixed(2)} kW`
               : "--"}
           </h2>
+
+          <p className={kpiStyles.kpiDescription}>
+            Maximum recorded demand
+          </p>
+
         </div>
 
         <div className={kpiStyles.kpiCard}>
@@ -170,6 +185,11 @@ function Dashboard() {
               ? summary.load_factor.toFixed(2)
               : "--"}
           </h2>
+
+          <p className={kpiStyles.kpiDescription}>
+            Average / peak demand
+          </p>
+
         </div>
 
       </div>
