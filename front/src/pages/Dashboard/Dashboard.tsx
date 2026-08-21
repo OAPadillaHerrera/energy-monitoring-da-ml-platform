@@ -93,6 +93,10 @@ function Dashboard() {
         </span>
       </div>
 
+      <h1 className={layoutStyles.pageTitle}>
+        DA/ML Summary
+      </h1>
+
       <div className={kpiStyles.kpiRow}>
 
         <div className={kpiStyles.kpiCard}>

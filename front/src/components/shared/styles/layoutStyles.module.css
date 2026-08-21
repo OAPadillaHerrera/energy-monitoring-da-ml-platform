@@ -19,6 +19,24 @@
 
 }
 
+.pageTitle {
+
+  margin: 0;
+
+  font-size: 24px;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  color: #F8FAFC;
+
+}
+
 .contentRow {
 
   display: grid;
@@ -52,6 +70,14 @@
     padding: 10px;
 
     gap: 10px;
+
+  }
+
+  .pageTitle {
+
+    font-size: 20px;
+
+    letter-spacing: 1.5px;
 
   }
 
