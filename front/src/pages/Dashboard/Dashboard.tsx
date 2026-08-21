@@ -94,7 +94,7 @@ function Dashboard() {
       </div>
 
       <h1 className={layoutStyles.pageTitle}>
-        DA/ML Summary
+        DA/ML Metrics
       </h1>
 
       <div className={kpiStyles.kpiRow}>
