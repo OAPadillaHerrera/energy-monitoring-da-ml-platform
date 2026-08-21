@@ -93,9 +93,10 @@ function Dashboard() {
         </span>
       </div>
 
-      <h1 className={layoutStyles.pageTitle}>
-        DA/ML Metrics
-      </h1>
+      <div className={layoutStyles.sectionHeading}>
+        <h1>DA/ML Metrics</h1>
+        <span>Station-level metrics</span>
+      </div>
 
       <div className={kpiStyles.kpiRow}>
 

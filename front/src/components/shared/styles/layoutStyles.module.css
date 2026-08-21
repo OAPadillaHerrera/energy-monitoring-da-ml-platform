@@ -19,21 +19,45 @@
 
 }
 
-.pageTitle {
+.sectionHeading {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+
+  flex-shrink: 0;
+
+}
+
+.sectionHeading h1 {
 
   margin: 0;
 
-  font-size: 24px;
+  font-size: 20px;
 
   font-weight: 700;
 
   line-height: 1.2;
 
-  letter-spacing: 2px;
-
-  text-transform: uppercase;
+  letter-spacing: 1.5px;
 
   color: #F8FAFC;
+
+}
+
+.sectionHeading span {
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  line-height: 1.2;
+
+  letter-spacing: 1.5px;
+
+  color: rgba(125, 211, 252, 0.65);
 
 }
 
@@ -73,7 +97,7 @@
 
   }
 
-  .pageTitle {
+  .sectionHeading h1 {
 
     font-size: 20px;
 
