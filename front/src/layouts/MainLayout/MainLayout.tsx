@@ -78,7 +78,7 @@ function MainLayout() {
         <div className={styles.systemBlock}>
 
           <span className={styles.systemTitle}>
-            Energy DA/ML Engine
+            ENERGON SYSTEM
           </span>
 
           <div className={styles.systemStatus}>
@@ -169,7 +169,7 @@ function MainLayout() {
           <div className={styles.sidebarFooter}>
 
             <div className={styles.productName}>
-              Energon DA/ML Platform
+              ENERGON DA/ML PLATFORM
             </div>
 
             <div className={styles.version}>
