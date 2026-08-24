@@ -112,9 +112,16 @@ function Dashboard() {
           </div>
 
           <h2 className={kpiStyles.kpiValue}>
-            {summary
-              ? `${summary.total_consumption.toFixed(2)} kWh`
-              : "--"}
+            {summary ? (
+              <>
+                {summary.total_consumption.toFixed(2)}
+                <span className={kpiStyles.kpiUnit}>
+                  kWh
+                </span>
+              </>
+            ) : (
+              "--"
+            )}
           </h2>
 
           <p className={kpiStyles.kpiDescription}>
@@ -135,9 +142,16 @@ function Dashboard() {
           </div>
 
           <h2 className={kpiStyles.kpiValue}>
-            {summary
-              ? `${summary.average_consumption.toFixed(2)} kWh`
-              : "--"}
+            {summary ? (
+              <>
+                {summary.average_consumption.toFixed(2)}
+                <span className={kpiStyles.kpiUnit}>
+                  kWh
+                </span>
+              </>
+            ) : (
+              "--"
+            )}
           </h2>
 
           <p className={kpiStyles.kpiDescription}>
@@ -158,9 +172,16 @@ function Dashboard() {
           </div>
 
           <h2 className={kpiStyles.kpiValue}>
-            {summary
-              ? `${summary.peak_demand.toFixed(2)} kW`
-              : "--"}
+            {summary ? (
+              <>
+                {summary.peak_demand.toFixed(2)}
+                <span className={kpiStyles.kpiUnit}>
+                  kW
+                </span>
+              </>
+            ) : (
+              "--"
+            )}
           </h2>
 
           <p className={kpiStyles.kpiDescription}>

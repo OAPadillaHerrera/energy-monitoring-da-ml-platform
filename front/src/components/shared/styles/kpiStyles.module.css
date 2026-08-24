@@ -132,6 +132,22 @@
 
 }
 
+.kpiUnit {
+
+  margin-left: 6px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  letter-spacing: 1px;
+
+  color: rgba(203, 213, 225, 0.55);
+
+  vertical-align: baseline;
+
+}
+
 .kpiDescription {
 
   margin: 0;
