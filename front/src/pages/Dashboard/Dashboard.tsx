@@ -202,9 +202,16 @@ function Dashboard() {
           </div>
 
           <h2 className={kpiStyles.kpiValue}>
-            {summary
-              ? summary.load_factor.toFixed(2)
-              : "--"}
+            {summary ? (
+              <>
+                {(summary.load_factor * 100).toFixed(0)}
+                <span className={kpiStyles.kpiUnit}>
+                  %
+                </span>
+              </>
+            ) : (
+              "--"
+            )}
           </h2>
 
           <p className={kpiStyles.kpiDescription}>
