@@ -74,6 +74,32 @@
 
 }
 
+/* KPI icon colors */
+
+.kpiIconConsumption {
+
+  color: #FACC15;
+
+}
+
+.kpiIconAverage {
+
+  color: #FB923C;
+
+}
+
+.kpiIconPeak {
+
+  color: #A855F7;
+
+}
+
+.kpiIconLoadFactor {
+
+  color: #22C55E;
+
+}
+
 .kpiLabel {
 
   font-size: 11px;

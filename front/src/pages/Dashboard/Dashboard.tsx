@@ -103,7 +103,7 @@ function Dashboard() {
         <div className={kpiStyles.kpiCard}>
           <div className={kpiStyles.kpiHeader}>
             <Zap
-              className={kpiStyles.kpiIcon}
+              className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconConsumption}`}
             />
 
             <span className={kpiStyles.kpiLabel}>
@@ -126,7 +126,7 @@ function Dashboard() {
         <div className={kpiStyles.kpiCard}>
           <div className={kpiStyles.kpiHeader}>
             <Activity
-              className={kpiStyles.kpiIcon}
+              className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconAverage}`}
             />
 
             <span className={kpiStyles.kpiLabel}>
@@ -149,7 +149,7 @@ function Dashboard() {
         <div className={kpiStyles.kpiCard}>
           <div className={kpiStyles.kpiHeader}>
             <TrendingUp
-              className={kpiStyles.kpiIcon}
+              className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconPeak}`}
             />
 
             <span className={kpiStyles.kpiLabel}>
@@ -172,7 +172,7 @@ function Dashboard() {
         <div className={kpiStyles.kpiCard}>
           <div className={kpiStyles.kpiHeader}>
             <Gauge
-              className={kpiStyles.kpiIcon}
+              className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconLoadFactor}`}
             />
 
             <span className={kpiStyles.kpiLabel}>
