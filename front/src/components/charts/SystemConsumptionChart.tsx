@@ -222,7 +222,7 @@ export default function SystemConsumptionChart({
           true,
 
         displayColors:
-          false,
+          true,
 
         backgroundColor:
           "rgba(0,0,0,0.90)",
