@@ -136,19 +136,19 @@ export default function SystemConsumptionChart({
           2,
 
         borderRadius:
-          0,
+          2,
 
         barThickness:
-          50,
+          44,
 
         maxBarThickness:
-          60,
+          56,
 
         categoryPercentage:
-          0.90,
+          0.82,
 
         barPercentage:
-          1.0
+          0.90  
 
       }
 
