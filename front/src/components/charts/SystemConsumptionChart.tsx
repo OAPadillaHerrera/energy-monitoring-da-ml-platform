@@ -176,39 +176,6 @@ export default function SystemConsumptionChart({
 
     plugins: {
 
-      title: {
-
-        display:
-          true,
-
-        text:
-          "Consumption (kWh)",
-
-        color:
-          "#FFFFFF",      
-
-        font: {
-
-          family:
-            "Cascadia Code",
-
-          size:
-            18,
-
-          weight:
-            400
-
-        },
-
-        padding: {
-
-          bottom:
-            20
-
-        }
-
-      },
-
       legend: {
 
         display:
