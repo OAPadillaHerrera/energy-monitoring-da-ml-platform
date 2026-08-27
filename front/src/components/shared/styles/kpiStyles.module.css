@@ -9,15 +9,17 @@
 
   gap: 16px;
 
+  width: 100%;
+
   margin-top: 18px;
 
   flex-shrink: 0;
 
-  width: 100%;
-
 }
 
 .kpiCard {
+
+  display: flex;
 
   min-width: 0;
 
@@ -25,16 +27,7 @@
 
   padding: 16px 18px;
 
-  border-radius: 16px;
-
-  border: 1px solid rgba(0, 194, 255, 0.12);
-
-  background: rgba(8, 22, 40, 0.90);
-
-  box-shadow:
-    0 0 14px rgba(0, 194, 255, 0.08);
-
-  display: flex;
+  box-sizing: border-box;
 
   flex-direction: column;
 
@@ -44,7 +37,14 @@
 
   gap: 8px;
 
-  box-sizing: border-box;
+  border-radius: 16px;
+
+  border: 1px solid rgba(0, 194, 255, 0.12);
+
+  background: rgba(8, 22, 40, 0.90);
+
+  box-shadow:
+    0 0 14px rgba(0, 194, 255, 0.08);
 
 }
 
@@ -116,13 +116,13 @@
 
 .kpiValue {
 
-  margin: 2px 0 0 0;
+  margin: 2px 0 0;
 
   font-size: 26px;
 
   font-weight: 700;
 
-  color: rgba(255,255,255,0.70);
+  color: rgba(255, 255, 255, 0.70);
 
   text-align: center;
 
@@ -219,7 +219,7 @@
 
   .kpiValue {
 
-    margin: 2px 0 0 0;
+    margin: 2px 0 0;
 
     font-size: 24px;
 

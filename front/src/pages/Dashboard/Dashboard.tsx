@@ -14,6 +14,7 @@ import {
   Gauge,
   TrendingUp,
   Zap,
+  type LucideIcon,
 } from "lucide-react";
 
 type DashboardSummary = {
@@ -23,6 +24,54 @@ type DashboardSummary = {
   load_factor: number;
   consumption_by_system: Record<string, number>;
 };
+
+type DashboardKpi = {
+  label: string;
+  description: string;
+  icon: LucideIcon;
+  iconClass: string;
+  getValue: (summary: DashboardSummary) => string;
+  unit: string;
+};
+
+const DASHBOARD_KPIS: DashboardKpi[] = [
+  {
+    label: "Total Consumption",
+    description: "Total energy consumed",
+    icon: Zap,
+    iconClass: kpiStyles.kpiIconConsumption,
+    getValue: (summary) =>
+      summary.total_consumption.toFixed(2),
+    unit: "kWh",
+  },
+  {
+    label: "Average Consumption",
+    description: "Average energy consumption",
+    icon: Activity,
+    iconClass: kpiStyles.kpiIconAverage,
+    getValue: (summary) =>
+      summary.average_consumption.toFixed(2),
+    unit: "kWh",
+  },
+  {
+    label: "Peak Demand",
+    description: "Maximum recorded demand",
+    icon: TrendingUp,
+    iconClass: kpiStyles.kpiIconPeak,
+    getValue: (summary) =>
+      summary.peak_demand.toFixed(2),
+    unit: "kW",
+  },
+  {
+    label: "Load Factor",
+    description: "Average / peak demand",
+    icon: Gauge,
+    iconClass: kpiStyles.kpiIconLoadFactor,
+    getValue: (summary) =>
+      (summary.load_factor * 100).toFixed(0),
+    unit: "%",
+  },
+];
 
 function Dashboard() {
   const [summary, setSummary] =
@@ -42,7 +91,7 @@ function Dashboard() {
           setError(null);
 
           const response =
-            await api.get(
+            await api.get<DashboardSummary>(
               "/dashboard/summary"
             );
 
@@ -50,7 +99,6 @@ function Dashboard() {
             response.data;
 
           if (
-            !dashboardData?.consumption_by_system ||
             Object.keys(
               dashboardData.consumption_by_system
             ).length === 0
@@ -63,15 +111,16 @@ function Dashboard() {
           setSummary(
             dashboardData
           );
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error(
             "Error loading dashboard summary:",
             error
           );
 
           setError(
-            error.message ??
-              "Failed to load dashboard summary"
+            error instanceof Error
+              ? error.message
+              : "Failed to load dashboard summary"
           );
         } finally {
           setLoading(false);
@@ -100,125 +149,51 @@ function Dashboard() {
 
       <div className={kpiStyles.kpiRow}>
 
-        <div className={kpiStyles.kpiCard}>
-          <div className={kpiStyles.kpiHeader}>
-            <Zap
-              className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconConsumption}`}
-            />
+        {DASHBOARD_KPIS.map((kpi) => {
 
-            <span className={kpiStyles.kpiLabel}>
-              Total Consumption
-            </span>
-          </div>
+          const Icon = kpi.icon;
 
-          <h2 className={kpiStyles.kpiValue}>
-            {summary ? (
-              <>
-                {summary.total_consumption.toFixed(2)}
-                <span className={kpiStyles.kpiUnit}>
-                  kWh
+          return (
+            <div
+              key={kpi.label}
+              className={kpiStyles.kpiCard}
+            >
+
+              <div className={kpiStyles.kpiHeader}>
+
+                <Icon
+                  className={`${kpiStyles.kpiIcon} ${kpi.iconClass}`}
+                />
+
+                <span className={kpiStyles.kpiLabel}>
+                  {kpi.label}
                 </span>
-              </>
-            ) : (
-              "--"
-            )}
-          </h2>
 
-          <p className={kpiStyles.kpiDescription}>
-            Total energy consumed
-          </p>
+              </div>
 
-        </div>
+              <h2 className={kpiStyles.kpiValue}>
 
-        <div className={kpiStyles.kpiCard}>
-          <div className={kpiStyles.kpiHeader}>
-            <Activity
-              className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconAverage}`}
-            />
+                {summary ? (
+                  <>
+                    {kpi.getValue(summary)}
 
-            <span className={kpiStyles.kpiLabel}>
-              Average Consumption
-            </span>
-          </div>
+                    <span className={kpiStyles.kpiUnit}>
+                      {kpi.unit}
+                    </span>
+                  </>
+                ) : (
+                  "--"
+                )}
 
-          <h2 className={kpiStyles.kpiValue}>
-            {summary ? (
-              <>
-                {summary.average_consumption.toFixed(2)}
-                <span className={kpiStyles.kpiUnit}>
-                  kWh
-                </span>
-              </>
-            ) : (
-              "--"
-            )}
-          </h2>
+              </h2>
 
-          <p className={kpiStyles.kpiDescription}>
-            Average energy consumption
-          </p>
+              <p className={kpiStyles.kpiDescription}>
+                {kpi.description}
+              </p>
 
-        </div>
-
-        <div className={kpiStyles.kpiCard}>
-          <div className={kpiStyles.kpiHeader}>
-            <TrendingUp
-              className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconPeak}`}
-            />
-
-            <span className={kpiStyles.kpiLabel}>
-              Peak Demand
-            </span>
-          </div>
-
-          <h2 className={kpiStyles.kpiValue}>
-            {summary ? (
-              <>
-                {summary.peak_demand.toFixed(2)}
-                <span className={kpiStyles.kpiUnit}>
-                  kW
-                </span>
-              </>
-            ) : (
-              "--"
-            )}
-          </h2>
-
-          <p className={kpiStyles.kpiDescription}>
-            Maximum recorded demand
-          </p>
-
-        </div>
-
-        <div className={kpiStyles.kpiCard}>
-          <div className={kpiStyles.kpiHeader}>
-            <Gauge
-              className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconLoadFactor}`}
-            />
-
-            <span className={kpiStyles.kpiLabel}>
-              Load Factor
-            </span>
-          </div>
-
-          <h2 className={kpiStyles.kpiValue}>
-            {summary ? (
-              <>
-                {(summary.load_factor * 100).toFixed(0)}
-                <span className={kpiStyles.kpiUnit}>
-                  %
-                </span>
-              </>
-            ) : (
-              "--"
-            )}
-          </h2>
-
-          <p className={kpiStyles.kpiDescription}>
-            Average / peak demand
-          </p>
-
-        </div>
+            </div>
+          );
+        })}
 
       </div>
 

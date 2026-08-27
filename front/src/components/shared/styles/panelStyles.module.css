@@ -19,163 +19,6 @@
 
   flex-direction: column;
 
-  min-height: 500px;
-
-}
-
-.panelHeader {
-
-  height: 68px;
-
-  padding: 0 28px;
-
-  display: flex;
-
-  align-items: center;
-
-  border-bottom: 1px solid rgba(0, 194, 255, 0.10);
-
-  flex-shrink: 0;
-
-  color: white;
-
-  font-size: 30px;
-
-  font-weight: 700;
-
-  letter-spacing: 1px;
-
-}
-
-.chartPlaceholder {
-
-  position: relative;
-
-  flex: 1;
-
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  overflow: hidden;
-
-  padding: 14px;
-
-}
-
-.chartGrid {
-
-  position: absolute;
-
-  inset: 0;
-
-  background:
-
-    linear-gradient(
-
-      rgba(0, 194, 255, 0.04) 1px,
-
-      transparent 1px
-
-    ),
-
-    linear-gradient(
-
-      90deg,
-
-      rgba(0, 194, 255, 0.04) 1px,
-
-      transparent 1px
-
-    );
-
-  background-size: 56px 56px;
-
-}
-
-.placeholderText {
-
-  position: relative;
-
-  z-index: 2;
-
-  text-align: center;
-
-  color: rgba(125, 211, 252, 0.58);
-
-  font-size: 18px;
-
-  font-weight: 700;
-
-  letter-spacing: 2px;
-
-}
-
-@media (max-width: 1000px) {
-
-  .chartPanel {
-
-    min-height: 420px;
-
-  }
-
-}
-
-@media (max-height: 820px) {
-
-  .panelHeader {
-
-    height: 54px;
-
-    padding: 0 20px;
-
-    font-size: 24px;
-
-    letter-spacing: 1px;
-
-  }
-
-  .chartPanel {
-
-    min-height: 300px;
-
-  }
-
-  .chartPlaceholder {
-
-    padding: 14px;
-
-  }
-
-  .placeholderText {
-
-    font-size: 24px;
-
-  }
-
-}
-
-.chartPanel,
-.controlPanel {
-
-  border-radius: 16px;
-
-  border: 1px solid rgba(0, 194, 255, 0.10);
-
-  background: rgba(4, 16, 30, 0.76);
-
-  overflow: hidden;
-
-}
-
-.chartPanel {
-
-  display: flex;
-
-  flex-direction: column;
-
   min-height: 360px;
 
   height: 55vh;
@@ -186,17 +29,17 @@
 
 .panelHeader {
 
+  display: flex;
+
   height: 68px;
 
   padding: 0 28px;
 
-  display: flex;
-
   align-items: center;
 
-  border-bottom: 1px solid rgba(0, 194, 255, 0.10);
-
   flex-shrink: 0;
+
+  border-bottom: 1px solid rgba(0, 194, 255, 0.10);
 
   color: white;
 
@@ -212,19 +55,19 @@
 
   position: relative;
 
-  flex: 1;
-
   display: flex;
+
+  flex: 1;
 
   justify-content: flex-start;
 
   align-items: center;
 
+  padding: 14px;
+
   overflow-x: auto;
 
   overflow-y: hidden;
-
-  padding: 14px;
 
 }
 
@@ -235,12 +78,10 @@
   inset: 0;
 
   background:
-
     linear-gradient(
       rgba(0, 194, 255, 0.04) 1px,
       transparent 1px
     ),
-
     linear-gradient(
       90deg,
       rgba(0, 194, 255, 0.04) 1px,

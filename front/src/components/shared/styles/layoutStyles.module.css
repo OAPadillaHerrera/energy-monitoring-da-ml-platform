@@ -2,18 +2,21 @@
 
 .mainPanel {
 
+  position: relative;
+
+  display: flex;
+
+  flex-direction: column;
+
+  width: 100%;
+
   height: 100%;
 
-  position: relative;
+  min-height: 0;
 
   padding: 14px;
 
-  display: flex;
-  flex-direction: column;
-
   gap: 12px;
-
-  min-height: 0;
 
   overflow-y: auto;
 
@@ -25,9 +28,9 @@
 
   flex-direction: column;
 
-  gap: 4px;
-
   flex-shrink: 0;
+
+  gap: 4px;
 
 }
 
@@ -65,15 +68,16 @@
 
   display: grid;
 
-  grid-template-columns: minmax(0, 1fr) 320px;
-
-  gap: 12px;
-
-  align-items: stretch;
+  grid-template-columns:
+    minmax(0, 1fr) 320px;
 
   flex: 1;
 
   min-height: 0;
+
+  gap: 12px;
+
+  align-items: stretch;
 
 }
 
