@@ -2,6 +2,7 @@
 
 import {
   type ChangeEvent,
+  useEffect,
   useState
 } from "react";
 
@@ -22,6 +23,12 @@ type SimulationInfo = {
 
   simulation_date?: string;
 
+  start_date?: string;
+
+  end_date?: string;
+
+  effective_start_date?: string;
+
   daily_records_inserted?: number;
 
   hourly_records_inserted?: number;
@@ -32,7 +39,7 @@ type SimulationInfo = {
 function Consumption() {
 
   const [mode, setMode] =
-    useState<SimulationMode>("daily");
+    useState<SimulationMode>("range");
 
   const [chartData, setChartData] =
     useState<Record<string, number> | null>(
@@ -53,6 +60,69 @@ function Consumption() {
 
   const [endDate, setEndDate] =
     useState("");
+
+  const loadRangeData =
+    async (): Promise<void> => {
+
+      try {
+
+        setLoading(true);
+
+        setError(null);
+
+        const metricsResponse =
+          await api.get(
+            "/metrics/station/daily"
+          );
+
+        const dailyEnergy =
+          metricsResponse.data?.daily_energy;
+
+        if (
+          dailyEnergy &&
+          Object.keys(dailyEnergy).length > 0
+        ) {
+
+          setChartData(
+            dailyEnergy
+          );
+
+        } else {
+
+          setChartData(null);
+
+        }
+
+      } catch (error: any) {
+
+        console.error(
+          "Failed to load Range simulation data:",
+          error
+        );
+
+        setChartData(null);
+
+        setError(
+          error?.response?.data?.message ||
+          error.message ||
+          "Failed to load Range simulation data."
+        );
+
+      } finally {
+
+        setLoading(false);
+      }
+    };
+
+  useEffect(() => {
+
+    if (mode === "range") {
+
+      loadRangeData();
+
+    }
+
+  }, [mode]);
 
   const handleRunSimulation =
     async (): Promise<void> => {
@@ -148,14 +218,18 @@ function Consumption() {
     event: ChangeEvent<HTMLInputElement>
   ): void => {
 
-    setStartDate(event.target.value);
+    setStartDate(
+      event.target.value
+    );
   };
 
   const handleEndDateChange = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
 
-    setEndDate(event.target.value);
+    setEndDate(
+      event.target.value
+    );
   };
 
   return (
@@ -182,13 +256,18 @@ function Consumption() {
             loading && (
 
               <span className={panelStyles.placeholderText}>
-                Running simulation...
+                {
+                  mode === "range"
+                    ? "Loading simulation data..."
+                    : "Running simulation..."
+                }
               </span>
 
             )
           }
 
           {
+            !loading &&
             error && (
 
               <span className={panelStyles.placeholderText}>
@@ -204,7 +283,11 @@ function Consumption() {
             !chartData && (
 
               <span className={panelStyles.placeholderText}>
-                Waiting for Simulation execution...
+                {
+                  mode === "range"
+                    ? "No Range simulation data available. Run a simulation."
+                    : "Waiting for Simulation execution..."
+                }
               </span>
 
             )
@@ -253,6 +336,7 @@ function Consumption() {
                 setSimulationInfo(null);
 
                 setError(null);
+
               }}
             >
               Daily Simulation
@@ -274,6 +358,7 @@ function Consumption() {
                 setSimulationInfo(null);
 
                 setError(null);
+
               }}
             >
               Range Simulation
@@ -335,6 +420,8 @@ function Consumption() {
             className={controlStyles.runButton}
 
             onClick={handleRunSimulation}
+
+            disabled={loading}
           >
             Run Simulation
           </button>
@@ -347,6 +434,7 @@ function Consumption() {
                 <span>
                   Simulation executed successfully
                 </span>
+
 
                 {
                   simulationInfo.simulation_date && (
@@ -363,13 +451,55 @@ function Consumption() {
                 }
 
                 {
-                  simulationInfo.hourly_records_inserted && (
+                  simulationInfo.start_date && (
+
+                    <strong>
+                      Start:
+                      {" "}
+                      {
+                        simulationInfo.start_date
+                      }
+                    </strong>
+
+                  )
+                }
+
+                {
+                  simulationInfo.end_date && (
+
+                    <strong>
+                      End:
+                      {" "}
+                      {
+                        simulationInfo.end_date
+                      }
+                    </strong>
+
+                  )
+                }
+
+                {
+                  simulationInfo.hourly_records_inserted !== undefined && (
 
                     <strong>
                       Hourly records:
                       {" "}
                       {
                         simulationInfo.hourly_records_inserted
+                      }
+                    </strong>
+
+                  )
+                }
+
+                {
+                  simulationInfo.daily_records_inserted !== undefined && (
+
+                    <strong>
+                      Daily records:
+                      {" "}
+                      {
+                        simulationInfo.daily_records_inserted
                       }
                     </strong>
 
@@ -390,6 +520,11 @@ function Consumption() {
 }
 
 export default Consumption;
+
+
+
+
+
 
 
 
