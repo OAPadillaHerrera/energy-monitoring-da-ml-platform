@@ -8,7 +8,8 @@ import {
   LineElement,
   Tooltip,
   Legend,
-  Filler
+  Filler,
+  type ChartOptions
 } from "chart.js";
 
 import { Line } from "react-chartjs-2";
@@ -24,11 +25,11 @@ ChartJS.register(
 );
 
 type Props = {
-
   data: Record<string, number>;
-
   mode: "daily" | "range";
 };
+
+const CHART_FONT = "Cascadia Code";
 
 export default function SimulationConsumptionChart({
   data,
@@ -43,7 +44,6 @@ export default function SimulationConsumptionChart({
     .sort((a, b) => {
 
       if (mode === "daily") {
-
         return Number(a[0]) - Number(b[0]);
       }
 
@@ -56,7 +56,6 @@ export default function SimulationConsumptionChart({
   const labels = sorted.map(([label]) => {
 
     if (mode === "daily") {
-
       return `${label}:00`;
     }
 
@@ -68,7 +67,6 @@ export default function SimulationConsumptionChart({
   );
 
   const chartData = {
-
     labels,
 
     datasets: [
@@ -91,34 +89,43 @@ export default function SimulationConsumptionChart({
 
         fill: true,
 
-        pointStyle: "rect",
+        pointStyle: "rect" as const,
 
         pointRadius: 5,
 
-        pointHoverRadius: 6,
+        pointHoverRadius: 8,
 
-        pointBackgroundColor: "#00c2ff",
+        pointBackgroundColor: "#FB923C",
 
-        pointBorderWidth: 0
+        pointHoverBackgroundColor:
+          "rgba(0, 194, 255, 0)",
+
+        pointBorderColor: "#00c2ff",
+
+        pointHoverBorderColor: "#00c2ff",
+
+        pointBorderWidth: 1,
+
+        pointHoverBorderWidth: 2
       }
     ]
   };
 
-  const options = {
+  const options: ChartOptions<"line"> = {
 
     responsive: true,
 
     maintainAspectRatio: false,
 
     interaction: {
-      mode: "index" as const,
-      intersect: false
+      mode: "nearest",
+      intersect: true
     },
 
     plugins: {
 
       legend: {
-        display: true
+        display: false
       },
 
       tooltip: {
@@ -127,11 +134,42 @@ export default function SimulationConsumptionChart({
 
         displayColors: false,
 
+        backgroundColor:
+          "rgba(0,0,0,0.90)",
+
+        padding: 14,
+
+        titleFont: {
+          family: CHART_FONT,
+          size: 16,
+          weight: 400
+        },
+
+        bodyFont: {
+          family: CHART_FONT,
+          size: 15,
+          weight: 400
+        },
+
+        titleColor: "#FFFFFF",
+
+        bodyColor: "#FFFFFF",
+
         callbacks: {
 
-          label: (context: any) => {
+          title: (tooltipItems) => {
+            return tooltipItems[0].label;
+          },
 
-            return `${context.parsed.y.toFixed(2)} kWh`;
+          label: (context) => {
+
+            const value = context.parsed.y;
+
+            if (value === null) {
+              return "0.00 kWh";
+            }
+
+            return `${value.toFixed(2)} kWh`;
           }
         }
       }
@@ -141,21 +179,59 @@ export default function SimulationConsumptionChart({
 
       x: {
 
+        title: {
+
+          display: true,
+
+          text:
+            mode === "daily"
+              ? "Hours"
+              : "Date",
+
+          color: "#FFFFFF",
+
+          font: {
+            family: CHART_FONT,
+            size: 16,
+            weight: 400
+          },
+
+          padding: {
+            top: 12
+          }
+        },
+
         ticks: {
 
           maxRotation: 0,
+
+          minRotation: 0,
 
           autoSkip: true,
 
           maxTicksLimit:
             mode === "daily"
               ? 24
-              : 12
+              : 12,
+
+          color:
+            "rgba(255,255,255,0.70)",
+
+          font: {
+            family: CHART_FONT,
+            size: 15,
+            weight: 400
+          }
         },
 
         grid: {
+
+          display: true,
+
           color:
-            "rgba(255,255,255,0.04)"
+            "rgba(255,255,255,0.25)",
+
+          lineWidth: 1
         }
       },
 
@@ -163,9 +239,30 @@ export default function SimulationConsumptionChart({
 
         beginAtZero: true,
 
-        grid: {
+        ticks: {
+
           color:
-            "rgba(255,255,255,0.05)"
+            "rgba(255,255,255,0.70)",
+
+          font: {
+            family: CHART_FONT,
+            size: 15,
+            weight: 400
+          },
+
+          callback(value) {
+            return Number(value).toLocaleString();
+          }
+        },
+
+        grid: {
+
+          display: true,
+
+          color:
+            "rgba(255,255,255,0.25)",
+
+          lineWidth: 1
         }
       }
     }
@@ -177,6 +274,8 @@ export default function SimulationConsumptionChart({
       style={{
         width: "100%",
         height: "100%",
+        minWidth: 0,
+        overflow: "hidden",
         position: "relative"
       }}
     >
@@ -189,3 +288,8 @@ export default function SimulationConsumptionChart({
     </div>
   );
 }
+
+
+
+
+
