@@ -234,7 +234,17 @@ function Consumption() {
 
   return (
 
-    <section className={layoutStyles.mainPanel}>
+    <>
+
+      <div className={layoutStyles.sectionHeading}>
+
+        <h2>Consumption</h2>
+
+        <span>
+          Station energy consumption over time
+        </span>
+
+      </div>
 
       <section className={panelStyles.chartPanel}>
 
@@ -435,7 +445,6 @@ function Consumption() {
                   Simulation executed successfully
                 </span>
 
-
                 {
                   simulationInfo.simulation_date && (
 
@@ -515,11 +524,15 @@ function Consumption() {
 
       </section>
 
-    </section>
+    </>
   );
 }
 
 export default Consumption;
+
+
+
+
 
 
 
