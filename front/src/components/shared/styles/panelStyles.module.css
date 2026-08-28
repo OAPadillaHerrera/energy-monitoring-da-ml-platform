@@ -31,9 +31,9 @@
 
   display: flex;
 
-  height: 68px;
+  height: 48px;
 
-  padding: 0 28px;
+  padding: 0 20px;
 
   align-items: center;
 
@@ -41,13 +41,15 @@
 
   border-bottom: 1px solid rgba(0, 194, 255, 0.10);
 
-  color: white;
+  color: #F8FAFC;
 
-  font-size: 30px;
+  font-size: 16px;
 
   font-weight: 700;
 
   letter-spacing: 1px;
+
+  line-height: 1.2;
 
 }
 
@@ -126,11 +128,13 @@
 
   .panelHeader {
 
-    height: 48px;
+    height: 44px;
 
     padding: 0 18px;
 
-    font-size: 22px;
+    font-size: 16px;
+
+    letter-spacing: 1px;
 
   }
 
@@ -155,4 +159,6 @@
   }
 
 }
+
+
 

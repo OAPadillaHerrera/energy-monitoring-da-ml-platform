@@ -252,8 +252,8 @@ function Consumption() {
 
           {
             mode === "daily"
-              ? "Hourly Station Consumption"
-              : "Daily Station Consumption"
+              ? "Hourly Station Energy Consumption"
+              : "Daily Station Energy Consumption"
           }
 
         </div>
