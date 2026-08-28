@@ -6,6 +6,11 @@ import {
   useState
 } from "react";
 
+import {
+  CalendarDays,
+  CalendarRange
+} from "lucide-react";
+
 import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
@@ -331,10 +336,12 @@ function Consumption() {
           <div className={controlStyles.modeSelector}>
 
             <button
+              type="button"
+
               className={
                 mode === "daily"
-                  ? tabStyles.tabButtonActive
-                  : tabStyles.tabButton
+                  ? tabStyles.simulationModeButtonActive
+                  : tabStyles.simulationModeButton
               }
 
               onClick={() => {
@@ -349,14 +356,22 @@ function Consumption() {
 
               }}
             >
+
+              <CalendarDays
+                className={tabStyles.simulationModeIcon}
+              />
+
               Daily Simulation
+
             </button>
 
             <button
+              type="button"
+
               className={
                 mode === "range"
-                  ? tabStyles.tabButtonActive
-                  : tabStyles.tabButton
+                  ? tabStyles.simulationModeButtonActive
+                  : tabStyles.simulationModeButton
               }
 
               onClick={() => {
@@ -371,7 +386,13 @@ function Consumption() {
 
               }}
             >
+
+              <CalendarRange
+                className={tabStyles.simulationModeIcon}
+              />
+
               Range Simulation
+
             </button>
 
           </div>
@@ -427,6 +448,8 @@ function Consumption() {
           }
 
           <button
+            type="button"
+
             className={controlStyles.runButton}
 
             onClick={handleRunSimulation}
@@ -529,6 +552,9 @@ function Consumption() {
 }
 
 export default Consumption;
+
+
+
 
 
 
