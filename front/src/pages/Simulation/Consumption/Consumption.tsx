@@ -8,7 +8,8 @@ import {
 
 import {
   CalendarDays,
-  CalendarRange
+  CalendarRange,
+  Play
 } from "lucide-react";
 
 import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
@@ -456,7 +457,17 @@ function Consumption() {
 
             disabled={loading}
           >
-            Run Simulation
+
+            <Play
+              className={controlStyles.runButtonIcon}
+            />
+
+            {
+              loading
+                ? "Running Simulation..."
+                : "Run Simulation"
+            }
+
           </button>
 
           {
@@ -552,6 +563,8 @@ function Consumption() {
 }
 
 export default Consumption;
+
+
 
 
 
