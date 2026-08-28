@@ -1,73 +1,95 @@
 
 
 .controlContent {
-padding: 16px;
 
-display: flex;
-flex-direction: column;
+  padding: 16px;
 
-gap: 16px;
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 16px;
+
 }
 
 .modeSelector {
-display: flex;
 
-gap: 12px;
+  display: flex;
 
-flex-wrap: wrap;
+  gap: 12px;
+
+  flex-wrap: wrap;
+
 }
 
 .rangeInputs {
-display: flex;
 
-gap: 14px;
+  display: flex;
 
-flex-wrap: wrap;
+  gap: 14px;
+
+  flex-wrap: wrap;
+
 }
 
 .inputGroup {
-display: flex;
-flex-direction: column;
 
-gap: 6px;
+  display: flex;
 
-align-items: center;
+  flex-direction: column;
+
+  gap: 6px;
+
+  align-items: center;
+
 }
 
 .input {
-height: 38px;
 
-padding: 0 12px;
+  width: 150px;
 
-border-radius: 8px;
+  height: 38px;
 
-border: 1px solid rgba(0, 194, 255, 0.12);
+  box-sizing: border-box;
 
-background: rgba(2, 12, 24, 0.92);
+  padding: 0 12px;
 
-color: white;
+  border-radius: 8px;
 
-text-align: center;
+  border: 1px solid rgba(0, 194, 255, 0.12);
 
-font-size: 14px;
-font-weight: 700;
+  background: rgba(2, 12, 24, 0.92);
 
-font-family: inherit;
+  color: white;
+
+  text-align: center;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  font-family: inherit;
+
 }
 
 .inputLabel {
-width: 100%;
 
-text-align: center;
+  width: 100%;
 
-color: rgba(125, 211, 252, 0.62);
+  text-align: center;
 
-font-size: 12px;
-font-weight: 700;
-letter-spacing: 1px;
+  color: rgba(125, 211, 252, 0.62);
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
 }
 
 .runButton {
+
   height: 38px;
 
   padding: 0 18px;
@@ -81,15 +103,21 @@ letter-spacing: 1px;
   border: 1px solid rgba(0, 255, 157, 0.25);
 
   background:
+
     linear-gradient(
+
       90deg,
+
       #00b894,
+
       #00ff9d
+
     );
 
   color: #02120d;
 
   font-size: 13px;
+
   font-weight: 700;
 
   letter-spacing: 1px;
@@ -99,13 +127,19 @@ letter-spacing: 1px;
   font-family: inherit;
 
   transition:
+
     opacity 0.2s ease,
+
     box-shadow 0.2s ease,
+
     border-color 0.2s ease,
+
     transform 0.12s ease;
+
 }
 
 .runButton:hover {
+
   opacity: 0.9;
 
   border-color:
@@ -113,140 +147,187 @@ letter-spacing: 1px;
 
   box-shadow:
     0 0 18px rgba(0, 255, 157, 0.35);
+
 }
 
 .runButton:active {
+
   transform: translateY(3px);
 
   box-shadow:
     inset 0 4px 12px rgba(0, 0, 0, 0.35),
+
     0 0 10px rgba(0, 255, 157, 0.2);
+
 }
 
 .executionInfo {
-display: flex;
 
-flex-direction: column;
+  display: flex;
 
-gap: 4px;
+  flex-direction: column;
 
-margin-top: 4px;
+  gap: 4px;
 
-font-size: 13px;
-font-weight: 700;
+  margin-top: 4px;
 
-letter-spacing: 1px;
+  font-size: 13px;
 
-color: rgba(125, 211, 252, 0.82);
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+  color: rgba(125, 211, 252, 0.82);
+
 }
 
 .executionInfo strong {
-font-size: 16px;
 
-color: white;
+  font-size: 16px;
+
+  color: white;
+
 }
 
 @media (max-width: 1000px) {
-.rangeInputs {
-flex-direction: column;
-}
+
+  .rangeInputs {
+
+    flex-direction: column;
+
+  }
+
 }
 
 @media (max-height: 820px) {
-.controlContent {
-padding: 10px;
 
-gap: 10px;
+  .controlContent {
 
+    padding: 10px;
+
+    gap: 10px;
+
+  }
+
+  .rangeInputs {
+
+    gap: 10px;
+
+  }
+
+  .input {
+
+    width: 150px;
+
+    height: 32px;
+
+    font-size: 12px;
+
+  }
+
+  .inputLabel {
+
+    font-size: 10px;
+
+  }
+
+  .runButton {
+
+    box-sizing: border-box;
+
+    height: 38px;
+
+    padding: 0 18px;
+
+    width: fit-content;
+
+    align-self: flex-start;
+
+    border-radius: 8px;
+
+    border: 1px solid rgba(0, 255, 157, 0.25);
+
+    background:
+
+      linear-gradient(
+
+        90deg,
+
+        #00b894,
+
+        #00ff9d
+
+      );
+
+    color: #02120d;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    line-height: 1;
+
+    font-family: inherit;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    appearance: none;
+
+    transition:
+
+      opacity 0.2s ease,
+
+      box-shadow 0.2s ease,
+
+      border-color 0.2s ease,
+
+      transform 0.12s ease;
+
+  }
+
+  .runButton:hover {
+
+    opacity: 0.9;
+
+    border-color:
+      rgba(0, 255, 157, 0.4);
+
+    box-shadow:
+      0 0 18px rgba(0, 255, 157, 0.35);
+
+  }
+
+  .runButton:active {
+
+    transform: translateY(3px);
+
+    box-shadow:
+      inset 0 4px 12px rgba(0, 0, 0, 0.35),
+
+      0 0 10px rgba(0, 255, 157, 0.2);
+
+  }
+
+  .executionInfo {
+
+    font-size: 11px;
+
+  }
+
+  .executionInfo strong {
+
+    font-size: 13px;
+
+  }
 
 }
 
-.rangeInputs {
-gap: 10px;
-}
 
-.input {
-height: 32px;
-
-font-size: 12px;
-
-}
-
-.inputLabel {
-font-size: 10px;
-}
-
-.runButton {
-  box-sizing: border-box;
-
-  height: 38px;
-
-  padding: 0 18px;
-
-  width: fit-content;
-
-  align-self: flex-start;
-
-  border-radius: 8px;
-
-  border: 1px solid rgba(0, 255, 157, 0.25);
-
-  background:
-    linear-gradient(
-      90deg,
-      #00b894,
-      #00ff9d
-    );
-
-  color: #02120d;
-
-  font-size: 13px;
-  font-weight: 700;
-
-  letter-spacing: 1px;
-
-  line-height: 1;
-
-  font-family: inherit;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-
-  appearance: none;
-
-  transition:
-    opacity 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.12s ease;
-}
-
-.runButton:hover {
-  opacity: 0.9;
-
-  border-color:
-    rgba(0, 255, 157, 0.4);
-
-  box-shadow:
-    0 0 18px rgba(0, 255, 157, 0.35);
-}
-
-.runButton:active {
-  transform: translateY(3px);
-
-  box-shadow:
-    inset 0 4px 12px rgba(0, 0, 0, 0.35),
-    0 0 10px rgba(0, 255, 157, 0.2);
-}
-
-.executionInfo {
-font-size: 11px;
-}
-
-.executionInfo strong {
-font-size: 13px;
-}
-}
