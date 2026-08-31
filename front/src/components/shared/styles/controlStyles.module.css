@@ -208,19 +208,95 @@
 
 .runButton:disabled {
 
-  opacity: 0.55;
+  opacity: 1;
 
-  cursor: not-allowed;
+  cursor: wait;
 
   transform: none;
-
-  box-shadow: none;
 
 }
 
 .runButton:disabled .runButtonIcon {
 
   transform: none;
+
+}
+
+.runButtonRunning {
+
+  animation:
+
+    simulationRunningGlow
+
+    1.6s
+
+    ease-in-out
+
+    infinite;
+
+}
+
+.runButtonIconRunning {
+
+  animation:
+
+    simulationRunningIcon
+
+    1.2s
+
+    ease-in-out
+
+    infinite;
+
+}
+
+.runButtonRunning:hover {
+
+  opacity: 1;
+
+  transform: none;
+
+}
+
+@keyframes simulationRunningGlow {
+
+  0%,
+  100% {
+
+    box-shadow:
+
+      0 0 10px rgba(0, 255, 157, 0.20);
+
+  }
+
+  50% {
+
+    box-shadow:
+
+      0 0 22px rgba(0, 255, 157, 0.50);
+
+  }
+
+}
+
+@keyframes simulationRunningIcon {
+
+  0%,
+  100% {
+
+    transform: scale(1);
+
+    opacity: 0.85;
+
+  }
+
+  50% {
+
+    transform: scale(1.12);
+
+    opacity: 1;
+
+  }
 
 }
 
@@ -325,6 +401,8 @@
   }
 
 }
+
+
 
 
 

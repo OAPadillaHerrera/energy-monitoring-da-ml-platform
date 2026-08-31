@@ -58,6 +58,9 @@ function Consumption() {
   const [loading, setLoading] =
     useState(false);
 
+  const [runningSimulation, setRunningSimulation] =
+    useState(false);
+
   const [error, setError] =
     useState<string | null>(null);
 
@@ -73,6 +76,8 @@ function Consumption() {
       try {
 
         setLoading(true);
+
+        setRunningSimulation(false);
 
         setError(null);
 
@@ -136,6 +141,8 @@ function Consumption() {
       try {
 
         setLoading(true);
+
+        setRunningSimulation(true);
 
         setError(null);
 
@@ -217,6 +224,8 @@ function Consumption() {
       } finally {
 
         setLoading(false);
+
+        setRunningSimulation(false);
       }
     };
 
@@ -269,14 +278,11 @@ function Consumption() {
           <div className={panelStyles.chartGrid}></div>
 
           {
-            loading && (
+            loading &&
+            !runningSimulation && (
 
               <span className={panelStyles.placeholderText}>
-                {
-                  mode === "range"
-                    ? "Loading simulation data..."
-                    : "Running simulation..."
-                }
+                Loading simulation data...
               </span>
 
             )
@@ -355,7 +361,11 @@ function Consumption() {
 
                 setError(null);
 
+                setRunningSimulation(false);
+
               }}
+
+              disabled={loading}
             >
 
               <CalendarDays
@@ -385,7 +395,11 @@ function Consumption() {
 
                 setError(null);
 
+                setRunningSimulation(false);
+
               }}
+
+              disabled={loading}
             >
 
               <CalendarRange
@@ -415,6 +429,8 @@ function Consumption() {
                     onChange={
                       handleStartDateChange
                     }
+
+                    disabled={loading}
                   />
 
                   <div className={controlStyles.inputLabel}>
@@ -435,6 +451,8 @@ function Consumption() {
                     onChange={
                       handleEndDateChange
                     }
+
+                    disabled={loading}
                   />
 
                   <div className={controlStyles.inputLabel}>
@@ -451,7 +469,11 @@ function Consumption() {
           <button
             type="button"
 
-            className={controlStyles.runButton}
+            className={`${controlStyles.runButton} ${
+              runningSimulation
+                ? controlStyles.runButtonRunning
+                : ""
+            }`}
 
             onClick={handleRunSimulation}
 
@@ -459,11 +481,15 @@ function Consumption() {
           >
 
             <Play
-              className={controlStyles.runButtonIcon}
+              className={`${controlStyles.runButtonIcon} ${
+                runningSimulation
+                  ? controlStyles.runButtonIconRunning
+                  : ""
+              }`}
             />
 
             {
-              loading
+              runningSimulation
                 ? "Running Simulation..."
                 : "Run Simulation"
             }
