@@ -77,7 +77,7 @@ function Voltage() {
         <h2>Voltage</h2>
 
         <span>
-          Voltage monitoring and power quality
+          Voltage monitoring and voltage quality - Daily average values
         </span>
 
       </div>

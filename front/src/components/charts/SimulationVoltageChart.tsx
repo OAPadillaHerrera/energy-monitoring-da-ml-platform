@@ -115,8 +115,6 @@ export default function SimulationVoltageChart({
 
     datasets: [
       {
-        label: "120V (Avg)",
-
         data: voltage120,
 
         borderColor: "#00c2ff",
@@ -137,7 +135,7 @@ export default function SimulationVoltageChart({
         pointHoverRadius: 8,
 
         pointBackgroundColor:
-          "#00c2ff",
+          "#FB923C",
 
         pointHoverBackgroundColor:
           "rgba(0, 194, 255, 0)",
@@ -154,14 +152,12 @@ export default function SimulationVoltageChart({
       },
 
       {
-        label: "240V (Avg)",
-
         data: voltage240,
 
-        borderColor: "#ffb020",
+        borderColor: "#FB923C",
 
         backgroundColor:
-          "rgba(255, 176, 32, 0.18)",
+          "rgba(251, 146, 60, 0.18)",
 
         borderWidth: 2,
 
@@ -176,16 +172,16 @@ export default function SimulationVoltageChart({
         pointHoverRadius: 8,
 
         pointBackgroundColor:
-          "#ffb020",
+          "#00c2ff",
 
         pointHoverBackgroundColor:
-          "rgba(255, 176, 32, 0)",
+          "rgba(251, 146, 60, 0)",
 
         pointBorderColor:
-          "#ffb020",
+          "#FB923C",
 
         pointHoverBorderColor:
-          "#ffb020",
+          "#FB923C",
 
         pointBorderWidth: 1,
 
@@ -208,24 +204,14 @@ export default function SimulationVoltageChart({
     plugins: {
 
       legend: {
-        display: true,
-
-        labels: {
-          color: "#FFFFFF",
-
-          font: {
-            family: CHART_FONT,
-            size: 15,
-            weight: 400
-          }
-        }
+        display: false
       },
 
       tooltip: {
 
         enabled: true,
 
-        displayColors: false,
+        displayColors: true,
 
         backgroundColor:
           "rgba(0,0,0,0.90)",
@@ -259,11 +245,16 @@ export default function SimulationVoltageChart({
             const value =
               context.parsed.y;
 
+            const voltageLabel =
+              context.datasetIndex === 0
+                ? "120V"
+                : "240V";
+
             if (value === null) {
-              return "0.00 V";
+              return `${voltageLabel}: 0.00 V`;
             }
 
-            return `${value.toFixed(2)} V`;
+            return `${voltageLabel}: ${value.toFixed(2)} V`;
           }
         }
       }
@@ -376,4 +367,7 @@ export default function SimulationVoltageChart({
     </div>
   );
 }
+
+
+
 
