@@ -1,7 +1,8 @@
 
 
 .chartPanel,
-.controlPanel {
+.controlPanel,
+.tablePanel {
 
   border-radius: 16px;
 
@@ -43,9 +44,11 @@
 
   color: #F8FAFC;
 
+  font-family: "Cascadia Code", monospace;
+
   font-size: 16px;
 
-  font-weight: 700;
+  font-weight: 400;
 
   letter-spacing: 1px;
 
@@ -104,6 +107,8 @@
 
   color: rgba(125, 211, 252, 0.58);
 
+  font-family: "Cascadia Code", monospace;
+
   font-size: 18px;
 
   font-weight: 700;
@@ -112,9 +117,132 @@
 
 }
 
+.tablePanel {
+
+  display: flex;
+
+  flex-direction: column;
+
+  min-height: 360px;
+
+  height: 55vh;
+
+  max-height: 620px;
+
+}
+
+.tableContainer {
+
+  position: relative;
+
+  width: 100%;
+
+  flex: 1;
+
+  overflow-x: auto;
+
+  overflow-y: auto;
+
+}
+
+.dataTable {
+
+  width: 100%;
+
+  border-collapse: collapse;
+
+  table-layout: fixed;
+
+  font-family: "Cascadia Code", monospace;
+
+}
+
+.dataTable thead {
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 2;
+
+  background: rgba(4, 16, 30, 0.98);
+
+}
+
+.dataTable th {
+
+  height: 42px;
+
+  padding: 0 12px;
+
+  border-bottom: 1px solid rgba(0, 194, 255, 0.10);
+
+  color: #FFFFFF;
+
+  font-family: "Cascadia Code", monospace;
+
+  font-size: 16px;
+
+  font-weight: 400;
+
+  letter-spacing: 1px;
+
+  line-height: 1;
+
+  text-align: left;
+
+  white-space: nowrap;
+
+}
+
+.dataTable td {
+
+  height: 34px;
+
+  padding: 0 12px;
+
+  border-bottom: 1px solid rgba(0, 194, 255, 0.08);
+
+  color: rgba(255, 255, 255, 0.70);
+
+  font-family: "Cascadia Code", monospace;
+
+  font-size: 15px;
+
+  font-weight: 400;
+
+  letter-spacing: 0;
+
+  line-height: 1;
+
+  text-align: left;
+
+  white-space: nowrap;
+
+}
+
+.dataTable tbody tr {
+
+  height: 34px;
+
+}
+
+.dataTable tbody tr:last-child td {
+
+  border-bottom: none;
+
+}
+
+.dataTable tbody tr:hover {
+
+  background: rgba(0, 194, 255, 0.035);
+
+}
+
 @media (max-width: 1000px) {
 
-  .chartPanel {
+  .chartPanel,
+  .tablePanel {
 
     min-height: 320px;
 
@@ -138,7 +266,8 @@
 
   }
 
-  .chartPanel {
+  .chartPanel,
+  .tablePanel {
 
     min-height: 220px;
 
@@ -158,7 +287,45 @@
 
   }
 
+  .dataTable th {
+
+    height: 36px;
+
+    padding: 0 10px;
+
+    font-size: 15px;
+
+  }
+
+  .dataTable td {
+
+    height: 30px;
+
+    padding: 0 10px;
+
+    font-size: 14px;
+
+  }
+
+  .dataTable tbody tr {
+
+    height: 30px;
+
+  }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

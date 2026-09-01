@@ -3,16 +3,12 @@
 import panelStyles from "../shared/styles/panelStyles.module.css";
 
 type SystemEventRecord = {
-
   timestamp: string;
-
   system_id: string;
-
   event_type: string;
 };
 
 type Props = {
-
   events: SystemEventRecord[];
 };
 
@@ -23,32 +19,24 @@ export default function SimulationSystemEventsTable({
   const systemLabels: Record<string, string> = {
 
     "1": "Price Display System",
-
     "2": "Corporate Lighting System",
-
     "3": "Canopy Lighting System",
-
     "4": "Perimeter Lighting System",
-
     "5": "Office and General Services System",
-
     "6": "Submersible Pump System",
-
     "7": "Fuel Dispenser System",
-
     "8": "Air Conditioning System - Server Room",
-
     "9": "Customer Service Kiosk System - Refrigeration",
-
     "10": "Air Conditioning System - Office Area",
-
     "11": "Customer Service Kiosk System - Coffee Machine"
+
   };
 
   const eventTypeLabels: Record<string, string> = {
 
     monthly_zero_consumption:
       "Monthly Zero Consumption"
+
   };
 
   const formatTimestamp = (
@@ -89,20 +77,15 @@ export default function SimulationSystemEventsTable({
 
           <tr>
 
-            <th>
+            <th className={panelStyles.timestampColumn}>
               Timestamp
             </th>
 
-            <th
-              style={{
-                textAlign: "center",
-                width: "460px"
-              }}
-            >
+            <th className={panelStyles.systemColumn}>
               System
             </th>
 
-            <th>
+            <th className={panelStyles.eventColumn}>
               Event Type
             </th>
 
@@ -117,7 +100,7 @@ export default function SimulationSystemEventsTable({
 
               <tr key={index}>
 
-                <td>
+                <td className={panelStyles.timestampColumn}>
                   {
                     formatTimestamp(
                       event.timestamp
@@ -125,19 +108,14 @@ export default function SimulationSystemEventsTable({
                   }
                 </td>
 
-                <td
-                  style={{
-                    textAlign: "center",
-                    width: "460px"
-                  }}
-                >
+                <td className={panelStyles.systemColumn}>
                   {
                     systemLabels[event.system_id] ||
                     event.system_id
                   }
                 </td>
 
-                <td>
+                <td className={panelStyles.eventColumn}>
                   {
                     eventTypeLabels[event.event_type] ||
                     event.event_type
@@ -156,3 +134,4 @@ export default function SimulationSystemEventsTable({
     </div>
   );
 }
+

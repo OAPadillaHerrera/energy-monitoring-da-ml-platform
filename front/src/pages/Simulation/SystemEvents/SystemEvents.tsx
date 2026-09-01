@@ -11,11 +11,8 @@ import api from "../../../services/api";
 import SimulationSystemEventsTable from "../../../components/tables/SimulationSystemEventsTable";
 
 type SystemEventRecord = {
-
   timestamp: string;
-
   system_id: string;
-
   event_type: string;
 };
 
@@ -71,24 +68,35 @@ function SystemEvents() {
 
   }, []);
 
+  const showPlaceholder =
+    loading ||
+    Boolean(error) ||
+    events.length === 0;
+
   return (
 
-    <section className={layoutStyles.mainPanel}>
+    <>
 
-      <section className={panelStyles.chartPanel}>
+      <div className={layoutStyles.sectionHeading}>
+
+        <h2>System Events</h2>
+
+        <span>
+          Zero-consumption events
+        </span>
+
+      </div>
+
+      <section className={panelStyles.tablePanel}>
 
         <div className={panelStyles.panelHeader}>
           System Event Records
         </div>
 
         {
-          (
-            loading ||
-            error ||
-            events.length === 0
-          ) && (
+          showPlaceholder && (
 
-            <div className={panelStyles.chartPlaceholder}>
+            <div className={panelStyles.tablePlaceholder}>
 
               <div className={panelStyles.chartGrid}></div>
 
@@ -103,6 +111,7 @@ function SystemEvents() {
               }
 
               {
+                !loading &&
                 error && (
 
                   <span className={panelStyles.placeholderText}>
@@ -143,7 +152,7 @@ function SystemEvents() {
 
       </section>
 
-    </section>
+    </>
   );
 }
 
