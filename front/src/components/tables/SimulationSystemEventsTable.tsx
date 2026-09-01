@@ -96,35 +96,49 @@ export default function SimulationSystemEventsTable({
         <tbody>
 
           {
-            events.map((event, index) => (
+            events.map((event, index) => {
 
-              <tr key={index}>
+              const isZeroConsumptionEvent =
+                event.event_type ===
+                "monthly_zero_consumption";
 
-                <td className={panelStyles.timestampColumn}>
-                  {
-                    formatTimestamp(
-                      event.timestamp
-                    )
-                  }
-                </td>
+              return (
 
-                <td className={panelStyles.systemColumn}>
-                  {
-                    systemLabels[event.system_id] ||
-                    event.system_id
-                  }
-                </td>
+                <tr key={index}>
 
-                <td className={panelStyles.eventColumn}>
-                  {
-                    eventTypeLabels[event.event_type] ||
-                    event.event_type
-                  }
-                </td>
+                  <td className={panelStyles.timestampColumn}>
+                    {
+                      formatTimestamp(
+                        event.timestamp
+                      )
+                    }
+                  </td>
 
-              </tr>
+                  <td className={panelStyles.systemColumn}>
+                    {
+                      systemLabels[event.system_id] ||
+                      event.system_id
+                    }
+                  </td>
 
-            ))
+                  <td
+                    className={`${panelStyles.eventColumn} ${
+                      isZeroConsumptionEvent
+                        ? panelStyles.eventWarning
+                        : ""
+                    }`}
+                  >
+                    {
+                      eventTypeLabels[event.event_type] ||
+                      event.event_type
+                    }
+                  </td>
+
+                </tr>
+
+              );
+
+            })
           }
 
         </tbody>
@@ -134,4 +148,6 @@ export default function SimulationSystemEventsTable({
     </div>
   );
 }
+
+
 

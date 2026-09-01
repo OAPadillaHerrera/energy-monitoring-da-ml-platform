@@ -139,15 +139,25 @@
 
   flex: 1;
 
+  min-height: 0;
+
   overflow-x: auto;
 
   overflow-y: auto;
+
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    rgba(0, 194, 255, 0.35)
+    transparent;
 
 }
 
 .dataTable {
 
   width: 100%;
+
+  min-width: 960px;
 
   border-collapse: collapse;
 
@@ -165,7 +175,8 @@
 
   z-index: 2;
 
-  background: rgba(4, 16, 30, 0.98);
+  background:
+    rgba(4, 16, 30, 0.98);
 
 }
 
@@ -175,7 +186,8 @@
 
   padding: 0 12px;
 
-  border-bottom: 1px solid rgba(0, 194, 255, 0.10);
+  border-bottom:
+    1px solid rgba(0, 194, 255, 0.10);
 
   color: #FFFFFF;
 
@@ -193,6 +205,10 @@
 
   white-space: nowrap;
 
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
 }
 
 .dataTable td {
@@ -201,9 +217,11 @@
 
   padding: 0 12px;
 
-  border-bottom: 1px solid rgba(0, 194, 255, 0.08);
+  border-bottom:
+    1px solid rgba(0, 194, 255, 0.08);
 
-  color: rgba(255, 255, 255, 0.70);
+  color:
+    rgba(255, 255, 255, 0.70);
 
   font-family: "Cascadia Code", monospace;
 
@@ -218,6 +236,10 @@
   text-align: left;
 
   white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
 
 }
 
@@ -235,7 +257,70 @@
 
 .dataTable tbody tr:hover {
 
-  background: rgba(0, 194, 255, 0.035);
+  background:
+    rgba(0, 194, 255, 0.035);
+
+}
+
+.timestampColumn {
+
+  width: 180px;
+
+  min-width: 180px;
+
+}
+
+.systemColumn {
+
+  width: 520px;
+
+  min-width: 520px;
+
+}
+
+.eventColumn {
+
+  width: 260px;
+
+  min-width: 260px;
+
+}
+
+.eventWarning {
+
+  color: #FB923C !important;
+
+  font-weight: 400;
+
+}
+
+.tableContainer::-webkit-scrollbar {
+
+  width: 8px;
+
+  height: 8px;
+
+}
+
+.tableContainer::-webkit-scrollbar-track {
+
+  background: transparent;
+
+}
+
+.tableContainer::-webkit-scrollbar-thumb {
+
+  background:
+    rgba(0, 194, 255, 0.28);
+
+  border-radius: 8px;
+
+}
+
+.tableContainer::-webkit-scrollbar-thumb:hover {
+
+  background:
+    rgba(0, 194, 255, 0.45);
 
 }
 

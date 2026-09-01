@@ -68,14 +68,9 @@ function SystemEvents() {
 
   }, []);
 
-  const showPlaceholder =
-    loading ||
-    Boolean(error) ||
-    events.length === 0;
-
   return (
 
-    <>
+    <section className={layoutStyles.mainPanel}>
 
       <div className={layoutStyles.sectionHeading}>
 
@@ -94,9 +89,13 @@ function SystemEvents() {
         </div>
 
         {
-          showPlaceholder && (
+          (
+            loading ||
+            error ||
+            events.length === 0
+          ) && (
 
-            <div className={panelStyles.tablePlaceholder}>
+            <div className={panelStyles.chartPlaceholder}>
 
               <div className={panelStyles.chartGrid}></div>
 
@@ -111,7 +110,6 @@ function SystemEvents() {
               }
 
               {
-                !loading &&
                 error && (
 
                   <span className={panelStyles.placeholderText}>
@@ -127,7 +125,7 @@ function SystemEvents() {
                 events.length === 0 && (
 
                   <span className={panelStyles.placeholderText}>
-                    Waiting for Simulation execution...
+                    No system events available. Run a simulation.
                   </span>
 
                 )
@@ -152,8 +150,11 @@ function SystemEvents() {
 
       </section>
 
-    </>
+    </section>
   );
 }
 
 export default SystemEvents;
+
+
+
