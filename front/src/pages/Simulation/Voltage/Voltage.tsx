@@ -72,6 +72,16 @@ function Voltage() {
 
     <section className={layoutStyles.mainPanel}>
 
+      <div className={layoutStyles.sectionHeading}>
+
+        <h2>Voltage</h2>
+
+        <span>
+          Voltage monitoring and power quality
+        </span>
+
+      </div>
+
       <section className={panelStyles.chartPanel}>
 
         <div className={panelStyles.panelHeader}>
@@ -84,17 +94,21 @@ function Voltage() {
 
           {
             loading && (
+
               <span className={panelStyles.placeholderText}>
                 Loading voltage data...
               </span>
+
             )
           }
 
           {
             error && (
+
               <span className={panelStyles.placeholderText}>
                 Error: {error}
               </span>
+
             )
           }
 
@@ -102,9 +116,11 @@ function Voltage() {
             !loading &&
             !error &&
             data.length === 0 && (
+
               <span className={panelStyles.placeholderText}>
                 Waiting for Simulation execution...
               </span>
+
             )
           }
 
@@ -112,7 +128,11 @@ function Voltage() {
             !loading &&
             !error &&
             data.length > 0 && (
-              <SimulationVoltageChart data={data} />
+
+              <SimulationVoltageChart
+                data={data}
+              />
+
             )
           }
 
