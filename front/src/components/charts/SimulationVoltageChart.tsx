@@ -369,5 +369,3 @@ export default function SimulationVoltageChart({
 }
 
 
-
-

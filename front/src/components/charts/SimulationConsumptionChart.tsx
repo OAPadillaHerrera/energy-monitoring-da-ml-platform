@@ -56,7 +56,7 @@ export default function SimulationConsumptionChart({
   const labels = sorted.map(([label]) => {
 
     if (mode === "daily") {
-      return `${label}:00`;
+      return `${String(label).split(":")[0].padStart(2, "0")}:00`;
     }
 
     return label;
@@ -132,7 +132,7 @@ export default function SimulationConsumptionChart({
 
         enabled: true,
 
-        displayColors: false,
+        displayColors: true,
 
         backgroundColor:
           "rgba(0,0,0,0.90)",
@@ -163,13 +163,14 @@ export default function SimulationConsumptionChart({
 
           label: (context) => {
 
-            const value = context.parsed.y;
+            const value =
+              context.parsed.y;
 
             if (value === null) {
-              return "0.00 kWh";
+              return "Consumption: 0.00 kWh";
             }
 
-            return `${value.toFixed(2)} kWh`;
+            return `Consumption: ${value.toFixed(2)} kWh`;
           }
         }
       }
@@ -288,5 +289,9 @@ export default function SimulationConsumptionChart({
     </div>
   );
 }
+
+
+
+
 
 

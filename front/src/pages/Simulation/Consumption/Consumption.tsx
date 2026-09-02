@@ -122,6 +122,7 @@ function Consumption() {
       } finally {
 
         setLoading(false);
+
       }
     };
 
@@ -226,6 +227,7 @@ function Consumption() {
         setLoading(false);
 
         setRunningSimulation(false);
+
       }
     };
 
@@ -236,6 +238,7 @@ function Consumption() {
     setStartDate(
       event.target.value
     );
+
   };
 
   const handleEndDateChange = (
@@ -245,6 +248,7 @@ function Consumption() {
     setEndDate(
       event.target.value
     );
+
   };
 
   return (
@@ -256,7 +260,7 @@ function Consumption() {
         <h2>Consumption</h2>
 
         <span>
-          Station energy consumption over time
+          Station energy consumption over time · Total values
         </span>
 
       </div>
@@ -305,11 +309,13 @@ function Consumption() {
             !chartData && (
 
               <span className={panelStyles.placeholderText}>
+
                 {
                   mode === "range"
                     ? "No Range simulation data available. Run a simulation."
                     : "Waiting for Simulation execution..."
                 }
+
               </span>
 
             )
@@ -585,10 +591,13 @@ function Consumption() {
       </section>
 
     </>
+
   );
 }
 
 export default Consumption;
+
+
 
 
 
