@@ -13,6 +13,44 @@
 }
 
 .tabButton,
+.tabButtonActive,
+.simulationTabButton,
+.simulationTabButtonActive,
+.simulationModeButton,
+.simulationModeButtonActive {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  text-decoration: none;
+
+  font-family: inherit;
+
+  font-weight: 700;
+
+  line-height: 1;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    transform .20s ease,
+    border-color .20s ease,
+    background .20s ease,
+    box-shadow .20s ease,
+    color .20s ease,
+    opacity .20s ease,
+    filter .20s ease;
+
+}
+
+.tabButton,
 .tabButtonActive {
 
   height: 40px;
@@ -25,41 +63,13 @@
 
   background: rgba(8,28,52,.85);
 
-  display: inline-flex;
-
-  align-items: center;
-
-  justify-content: center;
-
   gap: 10px;
-
-  flex-shrink: 0;
-
-  text-decoration: none;
 
   color: rgba(255,255,255,.78);
 
   font-size: 16px;
 
-  font-weight: 700;
-
   letter-spacing: .8px;
-
-  line-height: 1;
-
-  white-space: nowrap;
-
-  font-family: inherit;
-
-  cursor: pointer;
-
-  transition:
-    transform .20s ease,
-    border-color .20s ease,
-    background .20s ease,
-    box-shadow .20s ease,
-    color .20s ease,
-    opacity .20s ease;
 
 }
 
@@ -139,69 +149,6 @@
 
 }
 
-@media (max-width:1200px){
-
-  .tabs{
-
-    gap:10px;
-
-  }
-
-  .tabButton,
-  .tabButtonActive{
-
-    height:38px;
-
-    padding:0 16px;
-
-    font-size:15px;
-
-  }
-
-}
-
-@media (max-width:992px){
-
-  .tabs{
-
-    gap:8px;
-
-  }
-
-  .tabButton,
-  .tabButtonActive{
-
-    height:36px;
-
-    padding:0 14px;
-
-    font-size:14px;
-
-  }
-
-}
-
-@media (max-height:820px){
-
-  .tabs{
-
-    gap:8px;
-
-  }
-
-  .tabButton,
-  .tabButtonActive{
-
-    height:34px;
-
-    padding:0 14px;
-
-    font-size:14px;
-
-  }
-
-}
-
 .simulationTabButton,
 .simulationTabButtonActive {
 
@@ -215,41 +162,13 @@
 
   background: rgba(8,28,52,.85);
 
-  display: inline-flex;
-
-  align-items: center;
-
-  justify-content: center;
-
   gap: 10px;
-
-  flex-shrink: 0;
-
-  text-decoration: none;
 
   color: rgba(255,255,255,.78);
 
   font-size: 14px;
 
-  font-weight: 700;
-
   letter-spacing: 1px;
-
-  line-height: 1;
-
-  white-space: nowrap;
-
-  font-family: inherit;
-
-  cursor: pointer;
-
-  transition:
-    transform .20s ease,
-    border-color .20s ease,
-    background .20s ease,
-    box-shadow .20s ease,
-    color .20s ease,
-    opacity .20s ease;
 
 }
 
@@ -331,31 +250,6 @@
 
 }
 
-@media (max-height:820px){
-
-  .simulationTabButton,
-  .simulationTabButtonActive{
-
-    height:32px;
-
-    padding:0 14px;
-
-    font-size:14px;
-
-    gap:8px;
-
-  }
-
-  .simulationTabIcon{
-
-    width:16px;
-
-    height:16px;
-
-  }
-
-}
-
 .simulationModeButton,
 .simulationModeButtonActive {
 
@@ -369,42 +263,13 @@
 
   background: rgba(8,28,52,.85);
 
-  display: inline-flex;
-
-  align-items: center;
-
-  justify-content: center;
-
   gap: 8px;
-
-  flex-shrink: 0;
-
-  text-decoration: none;
 
   color: rgba(255,255,255,.78);
 
   font-size: 13px;
 
-  font-weight: 700;
-
   letter-spacing: .8px;
-
-  line-height: 1;
-
-  white-space: nowrap;
-
-  font-family: inherit;
-
-  cursor: pointer;
-
-  transition:
-    transform .20s ease,
-    border-color .20s ease,
-    background .20s ease,
-    box-shadow .20s ease,
-    color .20s ease,
-    opacity .20s ease,
-    filter .20s ease;
 
 }
 
@@ -486,51 +351,127 @@
 
 }
 
-@media (max-width:992px){
+@media (max-width: 1200px) {
 
-  .simulationModeButton,
-  .simulationModeButtonActive{
+  .tabs {
 
-    height:32px;
-
-    padding:0 13px;
-
-    font-size:12px;
-
-    gap:7px;
+    gap: 10px;
 
   }
 
-  .simulationModeIcon{
+  .tabButton,
+  .tabButtonActive {
 
-    width:14px;
+    height: 38px;
 
-    height:14px;
+    padding: 0 16px;
+
+    font-size: 15px;
 
   }
 
 }
 
-@media (max-height:820px){
+@media (max-width: 992px) {
 
-  .simulationModeButton,
-  .simulationModeButtonActive{
+  .tabs {
 
-    height:30px;
-
-    padding:0 12px;
-
-    font-size:12px;
-
-    gap:7px;
+    gap: 8px;
 
   }
 
-  .simulationModeIcon{
+  .tabButton,
+  .tabButtonActive {
 
-    width:14px;
+    height: 36px;
 
-    height:14px;
+    padding: 0 14px;
+
+    font-size: 14px;
+
+  }
+
+  .simulationModeButton,
+  .simulationModeButtonActive {
+
+    height: 32px;
+
+    padding: 0 13px;
+
+    font-size: 12px;
+
+    gap: 7px;
+
+  }
+
+  .simulationModeIcon {
+
+    width: 14px;
+
+    height: 14px;
+
+  }
+
+}
+
+@media (max-height: 820px) {
+
+  .tabs {
+
+    gap: 8px;
+
+  }
+
+  .tabButton,
+  .tabButtonActive {
+
+    height: 34px;
+
+    padding: 0 14px;
+
+    font-size: 14px;
+
+  }
+
+  .simulationTabButton,
+  .simulationTabButtonActive {
+
+    height: 32px;
+
+    padding: 0 14px;
+
+    font-size: 14px;
+
+    gap: 8px;
+
+  }
+
+  .simulationTabIcon {
+
+    width: 16px;
+
+    height: 16px;
+
+  }
+
+  .simulationModeButton,
+  .simulationModeButtonActive {
+
+    height: 30px;
+
+    padding: 0 12px;
+
+    font-size: 12px;
+
+    gap: 7px;
+
+  }
+
+  .simulationModeIcon {
+
+    width: 14px;
+
+    height: 14px;
 
   }
 
