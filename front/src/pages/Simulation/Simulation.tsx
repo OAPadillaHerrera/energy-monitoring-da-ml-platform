@@ -7,8 +7,27 @@ import { Outlet, NavLink } from "react-router-dom";
 import {
   Activity,
   Gauge,
-  Zap,
+  Zap
 } from "lucide-react";
+
+const simulationTabs = [
+  {
+    to: "/simulation",
+    label: "Consumption",
+    icon: Zap,
+    end: true
+  },
+  {
+    to: "system-events",
+    label: "System Events",
+    icon: Activity
+  },
+  {
+    to: "voltage",
+    label: "Voltage",
+    icon: Gauge
+  }
+];
 
 function Simulation() {
   return (
@@ -16,42 +35,27 @@ function Simulation() {
 
       <nav className={tabStyles.tabs}>
 
-        <NavLink
-          to="/simulation"
-          end
-          className={({ isActive }) =>
-            isActive
-              ? tabStyles.simulationTabButtonActive
-              : tabStyles.simulationTabButton
-          }
-        >
-          <Zap className={tabStyles.simulationTabIcon} />
-          Consumption
-        </NavLink>
+        {simulationTabs.map((tab) => {
 
-        <NavLink
-          to="system-events"
-          className={({ isActive }) =>
-            isActive
-              ? tabStyles.simulationTabButtonActive
-              : tabStyles.simulationTabButton
-          }
-        >
-          <Activity className={tabStyles.simulationTabIcon} />
-          System Events
-        </NavLink>
+          const Icon = tab.icon;
 
-        <NavLink
-          to="voltage"
-          className={({ isActive }) =>
-            isActive
-              ? tabStyles.simulationTabButtonActive
-              : tabStyles.simulationTabButton
-          }
-        >
-          <Gauge className={tabStyles.simulationTabIcon} />
-          Voltage
-        </NavLink>
+          return (
+            <NavLink
+              key={tab.to}
+              to={tab.to}
+              end={tab.end}
+              className={({ isActive }) =>
+                isActive
+                  ? tabStyles.simulationTabButtonActive
+                  : tabStyles.simulationTabButton
+              }
+            >
+              <Icon className={tabStyles.simulationTabIcon} />
+              {tab.label}
+            </NavLink>
+          );
+
+        })}
 
       </nav>
 
