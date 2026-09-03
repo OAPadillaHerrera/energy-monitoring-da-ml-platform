@@ -12,6 +12,10 @@ import {
   type ChartOptions
 } from "chart.js";
 
+import {
+  type CSSProperties
+} from "react";
+
 import { Line } from "react-chartjs-2";
 
 ChartJS.register(
@@ -30,6 +34,18 @@ type Props = {
 };
 
 const CHART_FONT = "Cascadia Code";
+
+const chartContainerStyle: CSSProperties = {
+  width: "100%",
+  height: "100%",
+  minWidth: 0,
+  overflow: "hidden",
+  position: "relative"
+};
+
+const formatDailyLabel = (label: string): string => {
+  return `${String(label).split(":")[0].padStart(2, "0")}:00`;
+};
 
 export default function SimulationConsumptionChart({
   data,
@@ -56,7 +72,7 @@ export default function SimulationConsumptionChart({
   const labels = sorted.map(([label]) => {
 
     if (mode === "daily") {
-      return `${String(label).split(":")[0].padStart(2, "0")}:00`;
+      return formatDailyLabel(label);
     }
 
     return label;
@@ -132,7 +148,7 @@ export default function SimulationConsumptionChart({
 
         enabled: true,
 
-        displayColors: true,
+        displayColors: false,
 
         backgroundColor:
           "rgba(0,0,0,0.90)",
@@ -272,13 +288,7 @@ export default function SimulationConsumptionChart({
   return (
 
     <div
-      style={{
-        width: "100%",
-        height: "100%",
-        minWidth: 0,
-        overflow: "hidden",
-        position: "relative"
-      }}
+      style={chartContainerStyle}
     >
 
       <Line
