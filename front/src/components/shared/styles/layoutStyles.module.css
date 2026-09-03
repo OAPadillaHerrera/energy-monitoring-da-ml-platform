@@ -1,136 +1,127 @@
 
 
-.mainPanel {
-
-  position: relative;
-
-  display: flex;
-
-  flex-direction: column;
-
-  width: 100%;
-
-  min-height: 100%;
-
-  padding: 14px;
-
-  gap: 12px;
-
-  box-sizing: border-box;
-
-}
-
-.sectionHeading {
-
-  display: flex;
-
-  flex-direction: column;
-
-  flex-shrink: 0;
-
-  gap: 4px;
-
-}
-
-.sectionHeading h1,
-.sectionHeading h2 {
-
-  margin: 0;
-
-  font-size: 20px;
-
-  font-weight: 700;
-
-  line-height: 1.2;
-
-  letter-spacing: 1.5px;
-
-  color: #F8FAFC;
-
-}
-
-.sectionHeading span {
-
-  font-size: 12px;
-
-  font-weight: 600;
-
-  line-height: 1.2;
-
-  letter-spacing: 1.5px;
-
-  color: rgba(125, 211, 252, 0.65);
-
-}
-
-.contentRow {
-
-  display: grid;
-
-  grid-template-columns:
-    minmax(0, 1fr) 320px;
-
-  flex: 1;
-
-  min-height: 0;
-
-  gap: 12px;
-
-  align-items: stretch;
-
-}
-
-@media (max-width: 1200px) {
-
-  .contentRow {
-
-    grid-template-columns: 1fr;
-
-  }
-
-}
-
-@media (max-height: 820px) {
-
-  .mainPanel {
-
-    padding: 10px;
-
-    gap: 10px;
-
-  }
-
-  .sectionHeading h1,
-  .sectionHeading h2 {
-
-    font-size: 20px;
-
-    letter-spacing: 1.5px;
-
-  }
-
-  .contentRow {
-
-    gap: 10px;
-
-  }
-
-}
-
-.pageContent {
-
-  flex: 1;
-
-  min-width: 0;
-
-  min-height: 0;
-
-  overflow-x: hidden;
-
-  overflow-y: auto;
-
-  box-sizing: border-box;
-
+.mainPanel { 
+ 
+  position: relative; 
+ 
+  display: flex; 
+ 
+  flex-direction: column; 
+ 
+  width: 100%; 
+ 
+  min-height: 100%; 
+ 
+  padding: 14px; 
+ 
+  gap: 12px; 
+ 
+  box-sizing: border-box; 
+ 
+} 
+ 
+.sectionHeading { 
+ 
+  display: flex; 
+ 
+  flex-direction: column; 
+ 
+  flex-shrink: 0; 
+ 
+  gap: 4px; 
+ 
+} 
+ 
+.sectionHeading h1, 
+.sectionHeading h2 { 
+ 
+  margin: 0; 
+ 
+  font-size: 20px; 
+ 
+  font-weight: 700; 
+ 
+  line-height: 1.2; 
+ 
+  letter-spacing: 1.5px; 
+ 
+  color: #F8FAFC; 
+ 
+} 
+ 
+.sectionHeading span { 
+ 
+  font-size: 12px; 
+ 
+  font-weight: 600; 
+ 
+  line-height: 1.2; 
+ 
+  letter-spacing: 1.5px; 
+ 
+  color: rgba(125, 211, 252, 0.65); 
+ 
+} 
+ 
+.contentRow { 
+ 
+  display: grid; 
+ 
+  grid-template-columns: 
+    minmax(0, 1fr) 320px; 
+ 
+  flex: 1; 
+ 
+  min-height: 0; 
+ 
+  gap: 12px; 
+ 
+  align-items: stretch; 
+ 
+} 
+ 
+@media (max-width: 1200px) { 
+ 
+  .contentRow { 
+ 
+    grid-template-columns: 1fr; 
+ 
+  } 
+ 
+} 
+ 
+@media (max-height: 820px) { 
+ 
+  .mainPanel { 
+ 
+    padding: 10px; 
+ 
+    gap: 10px; 
+ 
+  } 
+ 
+  .contentRow { 
+ 
+    gap: 10px; 
+ 
+  } 
+ 
+} 
+ 
+.pageContent { 
+ 
+  flex: 1; 
+ 
+  min-width: 0; 
+ 
+  min-height: 0; 
+ 
+  overflow-x: hidden; 
+ 
+  overflow-y: auto; 
+ 
+  box-sizing: border-box; 
+ 
 }
 
 

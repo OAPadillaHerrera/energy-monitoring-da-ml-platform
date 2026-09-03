@@ -1,14 +1,15 @@
 
 
-import layoutStyles from "../../components/shared/styles/layoutStyles.module.css";
-import tabStyles from "../../components/shared/styles/tabStyles.module.css";
-import { Outlet, NavLink } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 
 import {
   Activity,
   Gauge,
   Zap
 } from "lucide-react";
+
+import layoutStyles from "../../components/shared/styles/layoutStyles.module.css";
+import tabStyles from "../../components/shared/styles/tabStyles.module.css";
 
 const simulationTabs = [
   {
@@ -32,11 +33,8 @@ const simulationTabs = [
 function Simulation() {
   return (
     <section className={layoutStyles.mainPanel}>
-
       <nav className={tabStyles.tabs}>
-
         {simulationTabs.map((tab) => {
-
           const Icon = tab.icon;
 
           return (
@@ -54,13 +52,10 @@ function Simulation() {
               {tab.label}
             </NavLink>
           );
-
         })}
-
       </nav>
 
       <Outlet />
-
     </section>
   );
 }
