@@ -12,6 +12,10 @@ import {
   type ChartOptions
 } from "chart.js";
 
+import {
+  type CSSProperties
+} from "react";
+
 import { Line } from "react-chartjs-2";
 
 ChartJS.register(
@@ -36,6 +40,27 @@ type Props = {
 };
 
 const CHART_FONT = "Cascadia Code";
+
+const chartContainerStyle: CSSProperties = {
+  width: "100%",
+  height: "100%",
+  minWidth: 0,
+  overflow: "hidden",
+  position: "relative"
+};
+
+const calculateAverage = (
+  values: number[]
+): number => {
+  if (values.length === 0) {
+    return 0;
+  }
+
+  return values.reduce(
+    (sum, value) => sum + value,
+    0
+  ) / values.length;
+};
 
 export default function SimulationVoltageChart({
   data
@@ -73,20 +98,12 @@ export default function SimulationVoltageChart({
 
   });
 
-  const avg = (arr: number[]) =>
-    arr.length
-      ? arr.reduce(
-          (a, b) => a + b,
-          0
-        ) / arr.length
-      : 0;
-
   const sorted =
     Array.from(grouped.entries())
       .map(([day, values]) => ({
         day,
-        v120: avg(values.v120),
-        v240: avg(values.v240)
+        v120: calculateAverage(values.v120),
+        v240: calculateAverage(values.v240)
       }))
       .sort(
         (a, b) =>
@@ -350,13 +367,7 @@ export default function SimulationVoltageChart({
   return (
 
     <div
-      style={{
-        width: "100%",
-        height: "100%",
-        minWidth: 0,
-        overflow: "hidden",
-        position: "relative"
-      }}
+      style={chartContainerStyle}
     >
 
       <Line
