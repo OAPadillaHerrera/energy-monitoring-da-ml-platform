@@ -14,7 +14,8 @@
 
 }
 
-.chartPanel {
+.chartPanel,
+.tablePanel {
 
   display: flex;
 
@@ -117,20 +118,6 @@
 
 }
 
-.tablePanel {
-
-  display: flex;
-
-  flex-direction: column;
-
-  min-height: 360px;
-
-  height: 55vh;
-
-  max-height: 620px;
-
-}
-
 .tableContainer {
 
   position: relative;
@@ -180,6 +167,19 @@
 
 }
 
+.dataTable th,
+.dataTable td {
+
+  font-weight: 400;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+}
+
 .dataTable th {
 
   height: 42px;
@@ -191,23 +191,13 @@
 
   color: #FFFFFF;
 
-  font-family: "Cascadia Code", monospace;
-
   font-size: 16px;
-
-  font-weight: 400;
 
   letter-spacing: 1px;
 
   line-height: 1;
 
   text-align: left;
-
-  white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
 
 }
 
@@ -223,23 +213,13 @@
   color:
     rgba(255, 255, 255, 0.70);
 
-  font-family: "Cascadia Code", monospace;
-
   font-size: 15px;
-
-  font-weight: 400;
 
   letter-spacing: 0;
 
   line-height: 1;
 
   text-align: left;
-
-  white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
 
 }
 
@@ -399,6 +379,13 @@
   }
 
 }
+
+
+
+
+
+
+
 
 
 
