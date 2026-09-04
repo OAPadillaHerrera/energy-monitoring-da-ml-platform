@@ -138,10 +138,16 @@ function Metrics() {
 
     <section className={layoutStyles.mainPanel}>
 
+      {mode === "basic" && (
+        <div className={layoutStyles.sectionHeading}>
+          <h2>Basic Metrics</h2>
+          <span>Station-level metrics</span>
+        </div>
+      )}
+
       <section className={panelStyles.chartPanel}>
 
         <div className={panelStyles.panelHeader}>
-          {mode === "basic" && "Basic Metrics Visualization"}
           {mode === "station" && "Station Metrics Visualization"}
           {mode === "system" && "System Metrics Visualization"}
           {mode === "energy" && "Energy Metrics Visualization"}
@@ -398,3 +404,4 @@ function Metrics() {
 }
 
 export default Metrics;
+
