@@ -3,6 +3,7 @@
 import layoutStyles from "../../components/shared/styles/layoutStyles.module.css";
 import tabStyles from "../../components/shared/styles/tabStyles.module.css";
 import { Outlet, NavLink } from "react-router-dom";
+import { BarChart3, Activity, BrainCircuit } from "lucide-react";
 
 function Daml() {
   return (
@@ -15,10 +16,11 @@ function Daml() {
           end
           className={({ isActive }) =>
             isActive
-              ? tabStyles.tabButtonActive
-              : tabStyles.tabButton
+              ? tabStyles.damlTabButtonActive
+              : tabStyles.damlTabButton
           }
         >
+          <BarChart3 className={tabStyles.damlTabIcon} />
           Metrics
         </NavLink>
 
@@ -26,10 +28,11 @@ function Daml() {
           to="anomaly-detection"
           className={({ isActive }) =>
             isActive
-              ? tabStyles.tabButtonActive
-              : tabStyles.tabButton
+              ? tabStyles.damlTabButtonActive
+              : tabStyles.damlTabButton
           }
         >
+          <Activity className={tabStyles.damlTabIcon} />
           Anomaly
         </NavLink>
 
@@ -37,10 +40,11 @@ function Daml() {
           to="ml"
           className={({ isActive }) =>
             isActive
-              ? tabStyles.tabButtonActive
-              : tabStyles.tabButton
+              ? tabStyles.damlTabButtonActive
+              : tabStyles.damlTabButton
           }
         >
+          <BrainCircuit className={tabStyles.damlTabIcon} />
           ML
         </NavLink>
 
@@ -53,3 +57,7 @@ function Daml() {
 }
 
 export default Daml;
+
+
+
+

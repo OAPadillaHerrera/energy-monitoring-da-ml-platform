@@ -13,11 +13,20 @@
 }
 
 .tabButton,
+
 .tabButtonActive,
+
 .simulationTabButton,
+
 .simulationTabButtonActive,
+
 .simulationModeButton,
-.simulationModeButtonActive {
+
+.simulationModeButtonActive,
+
+.damlTabButton,
+
+.damlTabButtonActive {
 
   display: inline-flex;
 
@@ -40,17 +49,25 @@
   cursor: pointer;
 
   transition:
+
     transform .20s ease,
+
     border-color .20s ease,
+
     background .20s ease,
+
     box-shadow .20s ease,
+
     color .20s ease,
+
     opacity .20s ease,
+
     filter .20s ease;
 
 }
 
 .tabButton,
+
 .tabButtonActive {
 
   height: 40px;
@@ -82,6 +99,7 @@
   flex-shrink: 0;
 
   transition:
+
     transform .20s ease;
 
 }
@@ -97,7 +115,9 @@
   color: #FFFFFF;
 
   box-shadow:
+
     inset 0 0 18px rgba(0,0,0,.35),
+
     0 0 14px rgba(0,194,255,.18);
 
 }
@@ -115,15 +135,21 @@
   border: 1px solid rgba(0,194,255,.40);
 
   background:
+
     linear-gradient(
+
       90deg,
+
       #008CFF,
+
       #00C2FF
+
     );
 
   color: #FFFFFF;
 
   box-shadow:
+
     0 0 18px rgba(0,194,255,.35);
 
 }
@@ -139,6 +165,7 @@
   filter: brightness(.92);
 
   box-shadow:
+
     0 0 24px rgba(0,194,255,.45);
 
 }
@@ -150,6 +177,7 @@
 }
 
 .simulationTabButton,
+
 .simulationTabButtonActive {
 
   height: 38px;
@@ -183,6 +211,7 @@
   flex-shrink: 0;
 
   transition:
+
     transform .20s ease;
 
 }
@@ -198,7 +227,9 @@
   color: #FFFFFF;
 
   box-shadow:
+
     inset 0 0 18px rgba(0,0,0,.35),
+
     0 0 14px rgba(251,146,60,.18);
 
 }
@@ -216,15 +247,21 @@
   border: 1px solid rgba(251,146,60,.55);
 
   background:
+
     linear-gradient(
+
       90deg,
+
       #008CFF,
+
       #00C2FF
+
     );
 
   color: #FFFFFF;
 
   box-shadow:
+
     0 0 18px rgba(0,194,255,.35);
 
 }
@@ -240,6 +277,7 @@
   filter: brightness(.92);
 
   box-shadow:
+
     0 0 24px rgba(0,194,255,.45);
 
 }
@@ -250,7 +288,120 @@
 
 }
 
+.damlTabButton,
+
+.damlTabButtonActive {
+
+  height: 38px;
+
+  padding: 0 16px;
+
+  border-radius: 8px;
+
+  border: 1px solid rgba(167,139,250,.12);
+
+  background: rgba(8,28,52,.85);
+
+  gap: 10px;
+
+  color: rgba(255,255,255,.78);
+
+  font-size: 14px;
+
+  letter-spacing: 1px;
+
+}
+
+.damlTabIcon {
+
+  width: 16px;
+
+  height: 16px;
+
+  color: #A78BFA;
+
+  flex-shrink: 0;
+
+  transition:
+
+    transform .20s ease;
+
+}
+
+.damlTabButton:hover {
+
+  transform: translateY(-2px);
+
+  border-color: rgba(167,139,250,.45);
+
+  background: rgba(10,34,64,.95);
+
+  color: #FFFFFF;
+
+  box-shadow:
+
+    inset 0 0 18px rgba(0,0,0,.35),
+
+    0 0 14px rgba(167,139,250,.18);
+
+}
+
+.damlTabButton:hover .damlTabIcon {
+
+  transform: scale(1.15);
+
+}
+
+.damlTabButtonActive {
+
+  transform: translateY(-2px);
+
+  border: 1px solid rgba(167,139,250,.55);
+
+  background:
+
+    linear-gradient(
+
+      90deg,
+
+      #008CFF,
+
+      #00C2FF
+
+    );
+
+  color: #FFFFFF;
+
+  box-shadow:
+
+    0 0 18px rgba(0,194,255,.35);
+
+}
+
+.damlTabButtonActive .damlTabIcon {
+
+  transform: scale(1.12);
+
+}
+
+.damlTabButtonActive:hover {
+
+  filter: brightness(.92);
+
+  box-shadow:
+
+    0 0 24px rgba(0,194,255,.45);
+
+}
+
+.damlTabButtonActive:hover .damlTabIcon {
+
+  transform: scale(1.18);
+
+}
+
 .simulationModeButton,
+
 .simulationModeButtonActive {
 
   height: 34px;
@@ -284,6 +435,7 @@
   flex-shrink: 0;
 
   transition:
+
     transform .20s ease;
 
 }
@@ -299,7 +451,9 @@
   color: #FFFFFF;
 
   box-shadow:
+
     inset 0 0 18px rgba(0,0,0,.35),
+
     0 0 14px rgba(251,146,60,.18);
 
 }
@@ -317,15 +471,21 @@
   border: 1px solid rgba(251,146,60,.55);
 
   background:
+
     linear-gradient(
+
       90deg,
+
       #008CFF,
+
       #00C2FF
+
     );
 
   color: #FFFFFF;
 
   box-shadow:
+
     0 0 18px rgba(0,194,255,.35);
 
 }
@@ -341,6 +501,7 @@
   filter: brightness(.92);
 
   box-shadow:
+
     0 0 24px rgba(0,194,255,.45);
 
 }
@@ -360,6 +521,7 @@
   }
 
   .tabButton,
+
   .tabButtonActive {
 
     height: 38px;
@@ -381,6 +543,7 @@
   }
 
   .tabButton,
+
   .tabButtonActive {
 
     height: 36px;
@@ -392,6 +555,7 @@
   }
 
   .simulationModeButton,
+
   .simulationModeButtonActive {
 
     height: 32px;
@@ -423,6 +587,7 @@
   }
 
   .tabButton,
+
   .tabButtonActive {
 
     height: 34px;
@@ -434,7 +599,12 @@
   }
 
   .simulationTabButton,
-  .simulationTabButtonActive {
+
+  .simulationTabButtonActive,
+
+  .damlTabButton,
+
+  .damlTabButtonActive {
 
     height: 32px;
 
@@ -446,7 +616,9 @@
 
   }
 
-  .simulationTabIcon {
+  .simulationTabIcon,
+
+  .damlTabIcon {
 
     width: 16px;
 
@@ -455,6 +627,7 @@
   }
 
   .simulationModeButton,
+
   .simulationModeButtonActive {
 
     height: 30px;
@@ -476,11 +649,5 @@
   }
 
 }
-
-
-
-
-
-
 
 
