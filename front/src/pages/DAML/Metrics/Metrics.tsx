@@ -7,6 +7,7 @@ import {
 } from "react";
 
 import {
+  Activity,
   BarChart3,
   Building2,
   Cpu,
@@ -19,6 +20,7 @@ import panelStyles from "../../../components/shared/styles/panelStyles.module.cs
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
 import controlStyles from "../../../components/shared/styles/controlStyles.module.css";
 import dashboardStyles from "../../Dashboard/Dashboard.module.css";
+import kpiStyles from "../../../components/shared/styles/kpiStyles.module.css";
 import api from "../../../services/api";
 import BasicMetricsTable from "../../../components/tables/BasicMetricsTable";
 import StationEnergyByHourChart from "../../../components/charts/StationEnergyByHourChart";
@@ -99,7 +101,9 @@ function Metrics() {
         }
 
         if (mode === "system" && systemName.trim()) {
-          const response = await api.get(`/metrics/system?name=${systemName}`);
+          const response = await api.get(
+            `/metrics/system?name=${systemName}`
+          );
           setSystemMetrics(response.data);
         }
 
@@ -158,9 +162,72 @@ function Metrics() {
         </div>
       )}
 
+      {mode === "basic" && basicMetrics && (
+        <div className={kpiStyles.kpiRow}>
+
+          <div className={kpiStyles.kpiCard}>
+
+            <div className={kpiStyles.kpiHeader}>
+
+              <Zap
+                className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconConsumption}`}
+              />
+
+              <span className={kpiStyles.kpiLabel}>
+                Total Consumption
+              </span>
+
+            </div>
+
+            <h2 className={kpiStyles.kpiValue}>
+              {basicMetrics.total_consumption.toFixed(2)}
+
+              <span className={kpiStyles.kpiUnit}>
+                kWh
+              </span>
+            </h2>
+
+            <p className={kpiStyles.kpiDescription}>
+              Total energy consumed
+            </p>
+
+          </div>
+
+          <div className={kpiStyles.kpiCard}>
+
+            <div className={kpiStyles.kpiHeader}>
+
+              <Activity
+                className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconAverage}`}
+              />
+
+              <span className={kpiStyles.kpiLabel}>
+                Average Consumption
+              </span>
+
+            </div>
+
+            <h2 className={kpiStyles.kpiValue}>
+              {basicMetrics.average_consumption.toFixed(2)}
+
+              <span className={kpiStyles.kpiUnit}>
+                kWh
+              </span>
+            </h2>
+
+            <p className={kpiStyles.kpiDescription}>
+              Average energy consumption
+            </p>
+
+          </div>
+
+        </div>
+      )}
+
       <section className={panelStyles.chartPanel}>
 
         <div className={panelStyles.panelHeader}>
+          {mode === "basic" && "Basic Metrics"}
           {mode === "station" && "Station Metrics Visualization"}
           {mode === "system" && "System Metrics Visualization"}
           {mode === "energy" && "Energy Metrics Visualization"}
@@ -197,30 +264,6 @@ function Metrics() {
                 gap: "18px"
               }}
             >
-
-              <div className={dashboardStyles.kpiRow}>
-
-                <div className={dashboardStyles.kpiCard}>
-                  <span className={dashboardStyles.kpiLabel}>
-                    Total Consumption
-                  </span>
-
-                  <h2 className={dashboardStyles.kpiValue}>
-                    {basicMetrics.total_consumption.toFixed(2)} kWh
-                  </h2>
-                </div>
-
-                <div className={dashboardStyles.kpiCard}>
-                  <span className={dashboardStyles.kpiLabel}>
-                    Average Consumption
-                  </span>
-
-                  <h2 className={dashboardStyles.kpiValue}>
-                    {basicMetrics.average_consumption.toFixed(2)} kWh
-                  </h2>
-                </div>
-
-              </div>
 
               <BasicMetricsTable
                 data={basicMetrics.consumption_by_system}
@@ -541,6 +584,7 @@ function Metrics() {
 }
 
 export default Metrics;
+
 
 
 
