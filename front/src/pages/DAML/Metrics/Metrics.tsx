@@ -6,6 +6,13 @@ import {
   useState
 } from "react";
 
+import {
+  BarChart3,
+  Building2,
+  Cpu,
+  Zap
+} from "lucide-react";
+
 import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
@@ -67,49 +74,49 @@ function Metrics() {
     useState<SystemMetricsData | null>(null);
 
   const [energyMetrics, setEnergyMetrics] =
-  useState<EnergyMetricsData | null>(null);
+    useState<EnergyMetricsData | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
 
-  const fetchMetrics = async (): Promise<void> => {
+    const fetchMetrics = async (): Promise<void> => {
 
-    try {
-      setLoading(true);
-      setError(null);
+      try {
+        setLoading(true);
+        setError(null);
 
-      if (mode === "basic") {
-        const response = await api.get("/metrics/basic");
-        setBasicMetrics(response.data);
+        if (mode === "basic") {
+          const response = await api.get("/metrics/basic");
+          setBasicMetrics(response.data);
+        }
+
+        if (mode === "station") {
+          const response = await api.get("/metrics/station");
+          setStationMetrics(response.data);
+        }
+
+        if (mode === "system" && systemName.trim()) {
+          const response = await api.get(`/metrics/system?name=${systemName}`);
+          setSystemMetrics(response.data);
+        }
+
+        if (mode === "energy") {
+          const response = await api.get("/metrics/energy");
+          setEnergyMetrics(response.data);
+        }
+
+      } catch (error: any) {
+
+      } finally {
+        setLoading(false);
       }
+    };
 
-      if (mode === "station") {
-        const response = await api.get("/metrics/station");
-        setStationMetrics(response.data);
-      }
-      
-      if (mode === "system" && systemName.trim()) {
-        const response = await api.get(`/metrics/system?name=${systemName}`);
-        setSystemMetrics(response.data);
-      }      
+    void fetchMetrics();
 
-      if (mode === "energy") {
-        const response = await api.get("/metrics/energy");
-        setEnergyMetrics(response.data);
-      }
-
-    } catch (error: any) {
-      
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  void fetchMetrics();
-
-}, [mode, systemName]);
+  }, [mode, systemName]);
 
   const handleRunMetrics = async (): Promise<void> => {
 
@@ -122,7 +129,7 @@ function Metrics() {
     }
 
     if (mode === "system" && systemName.trim()) {
-       setExecutionMessage("System Metrics executed successfully.");
+      setExecutionMessage("System Metrics executed successfully.");
     }
 
     if (mode === "energy") {
@@ -308,11 +315,11 @@ function Metrics() {
 
               </div>
 
-              </div>
-            )}
+            </div>
+          )}
 
           {!loading && !error && mode === "energy" && energyMetrics && (
-  
+
             <div
               style={{
                 width: "100%",
@@ -331,6 +338,7 @@ function Metrics() {
               <div className={dashboardStyles.kpiRow}>
 
                 <div className={dashboardStyles.kpiCard}>
+
                   <span className={dashboardStyles.kpiLabel}>
                     Load Factor
                   </span>
@@ -338,18 +346,19 @@ function Metrics() {
                   <h2 className={dashboardStyles.kpiValue}>
                     {(energyMetrics.load_factor * 100).toFixed(1)}%
                   </h2>
+
                 </div>
 
               </div>
 
-              <EnergyLoadFactorTable 
-                data={energyMetrics.load_factor_by_system} 
-                />
+              <EnergyLoadFactorTable
+                data={energyMetrics.load_factor_by_system}
+              />
 
             </div>
           )}
 
-          </div>
+        </div>
 
       </section>
 
@@ -363,10 +372,61 @@ function Metrics() {
 
           <div className={tabStyles.tabs}>
 
-            <button className={mode === "basic" ? tabStyles.tabButtonActive : tabStyles.tabButton} onClick={() => setMode("basic")}>Basic</button>
-            <button className={mode === "station" ? tabStyles.tabButtonActive : tabStyles.tabButton} onClick={() => setMode("station")}>Station</button>
-            <button className={mode === "system" ? tabStyles.tabButtonActive : tabStyles.tabButton} onClick={() => setMode("system")}>System</button>
-            <button className={mode === "energy" ? tabStyles.tabButtonActive : tabStyles.tabButton} onClick={() => setMode("energy")}>Energy</button>
+            <button
+              className={
+                mode === "basic"
+                  ? tabStyles.damlTabButtonActive
+                  : tabStyles.damlTabButton
+              }
+              onClick={() => setMode("basic")}
+            >
+              <BarChart3
+                className={tabStyles.damlTabIcon}
+              />
+              Basic
+            </button>
+
+            <button
+              className={
+                mode === "station"
+                  ? tabStyles.damlTabButtonActive
+                  : tabStyles.damlTabButton
+              }
+              onClick={() => setMode("station")}
+            >
+              <Building2
+                className={tabStyles.damlTabIcon}
+              />
+              Station
+            </button>
+
+            <button
+              className={
+                mode === "system"
+                  ? tabStyles.damlTabButtonActive
+                  : tabStyles.damlTabButton
+              }
+              onClick={() => setMode("system")}
+            >
+              <Cpu
+                className={tabStyles.damlTabIcon}
+              />
+              System
+            </button>
+
+            <button
+              className={
+                mode === "energy"
+                  ? tabStyles.damlTabButtonActive
+                  : tabStyles.damlTabButton
+              }
+              onClick={() => setMode("energy")}
+            >
+              <Zap
+                className={tabStyles.damlTabIcon}
+              />
+              Energy
+            </button>
 
           </div>
 
@@ -404,4 +464,7 @@ function Metrics() {
 }
 
 export default Metrics;
+
+
+
 
