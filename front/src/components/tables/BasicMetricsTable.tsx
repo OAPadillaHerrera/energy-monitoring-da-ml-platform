@@ -3,7 +3,6 @@
 import panelStyles from "../shared/styles/panelStyles.module.css";
 
 type Props = {
-
   data: Record<string, number>;
 };
 
@@ -28,17 +27,11 @@ export default function BasicMetricsTable({
 
           <tr>
 
-            <th>
+            <th className={panelStyles.systemColumn}>
               System
             </th>
 
-            <th
-              style={{
-                textAlign: "right",
-                width: "220px",
-                paddingRight: "18px"
-              }}
-            >
+            <th className={panelStyles.eventColumn}>
               Consumption (kWh)
             </th>
 
@@ -54,17 +47,11 @@ export default function BasicMetricsTable({
 
                 <tr key={index}>
 
-                  <td>
+                  <td className={panelStyles.systemColumn}>
                     {system}
                   </td>
 
-                  <td
-                    style={{
-                      textAlign: "right",
-                      width: "220px",
-                      paddingRight: "18px"
-                    }}
-                  >
+                  <td className={panelStyles.eventColumn}>
                     {value.toFixed(2)}
                   </td>
 

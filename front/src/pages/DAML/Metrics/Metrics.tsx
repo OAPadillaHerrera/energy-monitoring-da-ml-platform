@@ -227,7 +227,7 @@ function Metrics() {
       <section className={panelStyles.chartPanel}>
 
         <div className={panelStyles.panelHeader}>
-          {mode === "basic" && "Basic Metrics"}
+          {mode === "basic" && "Energy Consumption by System"}
           {mode === "station" && "Station Metrics Visualization"}
           {mode === "system" && "System Metrics Visualization"}
           {mode === "energy" && "Energy Metrics Visualization"}
