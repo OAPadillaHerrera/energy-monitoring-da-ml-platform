@@ -266,6 +266,20 @@
 
 }
 
+.dataTable th.basicConsumptionHeader {
+
+  text-align: right;
+
+}
+
+.dataTable td.basicConsumptionValue {
+
+  text-align: right;
+
+  padding-right: 18px;
+
+}
+
 .eventWarning {
 
   color: #FB923C !important;
@@ -379,25 +393,6 @@
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

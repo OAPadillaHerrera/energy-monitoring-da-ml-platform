@@ -31,7 +31,9 @@ export default function BasicMetricsTable({
               System
             </th>
 
-            <th className={panelStyles.eventColumn}>
+            <th
+              className={`${panelStyles.eventColumn} ${panelStyles.basicConsumptionHeader}`}
+            >
               Consumption (kWh)
             </th>
 
@@ -51,7 +53,9 @@ export default function BasicMetricsTable({
                     {system}
                   </td>
 
-                  <td className={panelStyles.eventColumn}>
+                  <td
+                    className={`${panelStyles.eventColumn} ${panelStyles.basicConsumptionValue}`}
+                  >
                     {value.toFixed(2)}
                   </td>
 
