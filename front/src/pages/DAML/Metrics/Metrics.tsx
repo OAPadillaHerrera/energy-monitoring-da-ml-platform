@@ -153,7 +153,7 @@ function Metrics() {
 
   return (
 
-    <section className={layoutStyles.mainPanel}>
+    <>
 
       {mode === "basic" && (
         <div className={layoutStyles.sectionHeading}>
@@ -501,7 +501,8 @@ function Metrics() {
                   : tabStyles.damlTabButton
               }
               onClick={() => setMode("system")}
-            >
+              >
+  
               <Cpu
                 className={tabStyles.damlTabIcon}
               />
@@ -579,11 +580,15 @@ function Metrics() {
 
       </section>
 
-    </section>
+    </>
   );
 }
 
 export default Metrics;
+
+
+
+
 
 
 
