@@ -10,6 +10,7 @@ import {
   BarChart3,
   Building2,
   Cpu,
+  Eye,
   Zap
 } from "lucide-react";
 
@@ -137,9 +138,14 @@ function Metrics() {
     }
   };
 
-  const handleSystemChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleSystemChange = (
+    event: ChangeEvent<HTMLInputElement>
+  ): void => {
     setSystemName(event.target.value);
   };
+
+  const currentModeLabel =
+    mode.charAt(0).toUpperCase() + mode.slice(1);
 
   return (
 
@@ -183,19 +189,32 @@ function Metrics() {
           )}
 
           {!loading && !error && mode === "basic" && basicMetrics && (
-            <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "18px" }}>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "18px"
+              }}
+            >
 
               <div className={dashboardStyles.kpiRow}>
 
                 <div className={dashboardStyles.kpiCard}>
-                  <span className={dashboardStyles.kpiLabel}>Total Consumption</span>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Total Consumption
+                  </span>
+
                   <h2 className={dashboardStyles.kpiValue}>
                     {basicMetrics.total_consumption.toFixed(2)} kWh
                   </h2>
                 </div>
 
                 <div className={dashboardStyles.kpiCard}>
-                  <span className={dashboardStyles.kpiLabel}>Average Consumption</span>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Average Consumption
+                  </span>
+
                   <h2 className={dashboardStyles.kpiValue}>
                     {basicMetrics.average_consumption.toFixed(2)} kWh
                   </h2>
@@ -203,36 +222,56 @@ function Metrics() {
 
               </div>
 
-              <BasicMetricsTable data={basicMetrics.consumption_by_system} />
+              <BasicMetricsTable
+                data={basicMetrics.consumption_by_system}
+              />
 
             </div>
           )}
 
           {!loading && !error && mode === "station" && stationMetrics && (
-            <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "18px" }}>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "18px"
+              }}
+            >
 
               <div style={{ height: "260px", width: "100%" }}>
-                <StationEnergyByHourChart data={stationMetrics.energy_by_hour} />
+                <StationEnergyByHourChart
+                  data={stationMetrics.energy_by_hour}
+                />
               </div>
 
               <div className={dashboardStyles.kpiRow}>
 
                 <div className={dashboardStyles.kpiCard}>
-                  <span className={dashboardStyles.kpiLabel}>Total Energy</span>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Total Energy
+                  </span>
+
                   <h2 className={dashboardStyles.kpiValue}>
                     {stationMetrics.total_energy.toFixed(2)} kWh
                   </h2>
                 </div>
 
                 <div className={dashboardStyles.kpiCard}>
-                  <span className={dashboardStyles.kpiLabel}>Avg Load</span>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Avg Load
+                  </span>
+
                   <h2 className={dashboardStyles.kpiValue}>
                     {stationMetrics.average_consumption.toFixed(2)} kWh
                   </h2>
                 </div>
 
                 <div className={dashboardStyles.kpiCard}>
-                  <span className={dashboardStyles.kpiLabel}>Peak Demand</span>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Peak Demand
+                  </span>
+
                   <h2 className={dashboardStyles.kpiValue}>
                     {stationMetrics.peak_consumption.toFixed(2)} kWh
                   </h2>
@@ -243,21 +282,30 @@ function Metrics() {
               <div className={dashboardStyles.kpiRow}>
 
                 <div className={dashboardStyles.kpiCard}>
-                  <span className={dashboardStyles.kpiLabel}>Min Consumption</span>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Min Consumption
+                  </span>
+
                   <h2 className={dashboardStyles.kpiValue}>
                     {stationMetrics.min_consumption.toFixed(2)} kWh
                   </h2>
                 </div>
 
                 <div className={dashboardStyles.kpiCard}>
-                  <span className={dashboardStyles.kpiLabel}>Std Consumption</span>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Std Consumption
+                  </span>
+
                   <h2 className={dashboardStyles.kpiValue}>
                     {stationMetrics.std_consumption.toFixed(2)}
                   </h2>
                 </div>
 
                 <div className={dashboardStyles.kpiCard}>
-                  <span className={dashboardStyles.kpiLabel}>Avg Daily Energy</span>
+                  <span className={dashboardStyles.kpiLabel}>
+                    Avg Daily Energy
+                  </span>
+
                   <h2 className={dashboardStyles.kpiValue}>
                     {stationMetrics.avg_daily_energy.toFixed(2)} kWh
                   </h2>
@@ -290,6 +338,7 @@ function Metrics() {
                   <span className={dashboardStyles.kpiLabel}>
                     Total Energy
                   </span>
+
                   <h2 className={dashboardStyles.kpiValue}>
                     {systemMetrics.total_energy.toFixed(2)} kWh
                   </h2>
@@ -299,6 +348,7 @@ function Metrics() {
                   <span className={dashboardStyles.kpiLabel}>
                     Avg Load
                   </span>
+
                   <h2 className={dashboardStyles.kpiValue}>
                     {systemMetrics.average_consumption.toFixed(2)} kWh
                   </h2>
@@ -308,6 +358,7 @@ function Metrics() {
                   <span className={dashboardStyles.kpiLabel}>
                     Peak Demand
                   </span>
+
                   <h2 className={dashboardStyles.kpiValue}>
                     {systemMetrics.peak_consumption.toFixed(2)} kWh
                   </h2>
@@ -433,19 +484,45 @@ function Metrics() {
           {mode === "system" && (
             <div className={controlStyles.rangeInputs}>
               <div className={controlStyles.inputGroup}>
+
                 <input
                   className={controlStyles.input}
                   placeholder="Select System"
                   value={systemName}
                   onChange={handleSystemChange}
                 />
-                <div className={controlStyles.inputLabel}>System Name</div>
+
+                <div className={controlStyles.inputLabel}>
+                  System Name
+                </div>
+
               </div>
             </div>
           )}
 
-          <button className={controlStyles.runButton} onClick={handleRunMetrics}>
-            View {mode.charAt(0).toUpperCase() + mode.slice(1)}
+          <button
+            type="button"
+            className={`${controlStyles.damlViewButton} ${
+              loading
+                ? controlStyles.damlViewButtonLoading
+                : ""
+            }`}
+            onClick={handleRunMetrics}
+            disabled={loading}
+          >
+            <Eye
+              className={`${controlStyles.damlViewButtonIcon} ${
+                loading
+                  ? controlStyles.damlViewButtonIconLoading
+                  : ""
+              }`}
+            />
+
+            {
+              loading
+                ? `Loading ${currentModeLabel}...`
+                : `View ${currentModeLabel}`
+            }
           </button>
 
           {executionMessage && (
