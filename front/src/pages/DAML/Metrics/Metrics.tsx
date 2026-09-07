@@ -445,7 +445,7 @@ function Metrics() {
           )}
 
           <button className={controlStyles.runButton} onClick={handleRunMetrics}>
-            Run {mode.charAt(0).toUpperCase() + mode.slice(1)}
+            View {mode.charAt(0).toUpperCase() + mode.slice(1)}
           </button>
 
           {executionMessage && (
