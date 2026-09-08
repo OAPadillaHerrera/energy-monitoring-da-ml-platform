@@ -201,7 +201,7 @@ function Metrics() {
       {mode === "station" && (
         <div className={layoutStyles.sectionHeading}>
           <h2>Station Metrics</h2>
-          <span>Station metrics</span>
+          <span>Station energy consumption over time · Average values</span>
         </div>
       )}
 
@@ -271,7 +271,7 @@ function Metrics() {
 
         <div className={panelStyles.panelHeader}>
           {mode === "basic" && "Energy Consumption by System"}
-          {mode === "station" && "Station Metrics Visualization"}
+          {mode === "station" && "Station Energy Consumption by Hour"}
           {mode === "system" && "System Metrics Visualization"}
           {mode === "energy" && "Energy Metrics Visualization"}
         </div>
