@@ -160,15 +160,21 @@ function Metrics() {
     }
 
     if (mode === "station") {
-      setExecutionMessage("Station Metrics executed successfully.");
+      setExecutionMessage(
+        "Station Metrics executed successfully."
+      );
     }
 
     if (mode === "system" && systemName.trim()) {
-      setExecutionMessage("System Metrics executed successfully.");
+      setExecutionMessage(
+        "System Metrics executed successfully."
+      );
     }
 
     if (mode === "energy") {
-      setExecutionMessage("Energy Metrics executed successfully.");
+      setExecutionMessage(
+        "Energy Metrics executed successfully."
+      );
     }
   };
 
@@ -272,12 +278,6 @@ function Metrics() {
         >
 
           <div className={panelStyles.chartGrid}></div>
-
-          {loading && (
-            <span className={panelStyles.placeholderText}>
-              Loading metrics...
-            </span>
-          )}
 
           {error && (
             <span className={panelStyles.placeholderText}>
