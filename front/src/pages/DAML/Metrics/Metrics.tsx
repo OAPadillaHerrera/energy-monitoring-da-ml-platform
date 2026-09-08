@@ -90,11 +90,6 @@ function Metrics() {
         setLoading(true);
         setError(null);
 
-        if (mode === "basic") {
-          const response = await api.get("/metrics/basic");
-          setBasicMetrics(response.data);
-        }
-
         if (mode === "station") {
           const response = await api.get("/metrics/station");
           setStationMetrics(response.data);
@@ -126,7 +121,42 @@ function Metrics() {
   const handleRunMetrics = async (): Promise<void> => {
 
     if (mode === "basic") {
-      setExecutionMessage("Basic Metrics executed successfully.");
+
+      try {
+        setLoading(true);
+        setError(null);
+        setExecutionMessage("");
+        setBasicMetrics(null);
+
+        const response =
+          await api.get("/metrics/basic");
+
+        setBasicMetrics(response.data);
+
+        setExecutionMessage(
+          "Basic Metrics executed successfully."
+        );
+
+      } catch (error: any) {
+
+        console.error(
+          "Basic Metrics execution failed:",
+          error
+        );
+
+        setBasicMetrics(null);
+
+        setError(
+          error?.response?.data?.message ||
+          error.message ||
+          "Basic Metrics execution failed."
+        );
+
+      } finally {
+        setLoading(false);
+      }
+
+      return;
     }
 
     if (mode === "station") {
@@ -501,8 +531,7 @@ function Metrics() {
                   : tabStyles.damlTabButton
               }
               onClick={() => setMode("system")}
-              >
-  
+            >
               <Cpu
                 className={tabStyles.damlTabIcon}
               />
@@ -585,8 +614,6 @@ function Metrics() {
 }
 
 export default Metrics;
-
-
 
 
 
