@@ -134,13 +134,13 @@ function Metrics() {
         setBasicMetrics(response.data);
 
         setExecutionMessage(
-          "Basic Metrics executed successfully."
+          "Basic Metrics loaded successfully."
         );
 
       } catch (error: any) {
 
         console.error(
-          "Basic Metrics execution failed:",
+          "Basic Metrics loading failed:",
           error
         );
 
@@ -149,7 +149,7 @@ function Metrics() {
         setError(
           error?.response?.data?.message ||
           error.message ||
-          "Basic Metrics execution failed."
+          "Basic Metrics loading failed."
         );
 
       } finally {
@@ -600,7 +600,7 @@ function Metrics() {
 
           {executionMessage && (
             <div className={controlStyles.executionInfo}>
-              <span>Metrics execution status:</span>
+              <span>Status:</span>
               <strong>{executionMessage}</strong>
             </div>
           )}
