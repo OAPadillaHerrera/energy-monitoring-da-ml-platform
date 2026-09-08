@@ -198,6 +198,13 @@ function Metrics() {
         </div>
       )}
 
+      {mode === "station" && (
+        <div className={layoutStyles.sectionHeading}>
+          <h2>Station Metrics</h2>
+          <span>Station metrics</span>
+        </div>
+      )}
+
       {mode === "basic" && basicMetrics && (
         <div className={kpiStyles.kpiRow}>
 
