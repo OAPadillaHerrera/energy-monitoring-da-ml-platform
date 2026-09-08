@@ -305,3 +305,7 @@ export default function SimulationConsumptionChart({
 
 
 
+
+
+
+
