@@ -90,11 +90,6 @@ function Metrics() {
         setLoading(true);
         setError(null);
 
-        if (mode === "station") {
-          const response = await api.get("/metrics/station");
-          setStationMetrics(response.data);
-        }
-
         if (mode === "system" && systemName.trim()) {
           const response = await api.get(
             `/metrics/system?name=${systemName}`
@@ -160,9 +155,42 @@ function Metrics() {
     }
 
     if (mode === "station") {
-      setExecutionMessage(
-        "Station Metrics executed successfully."
-      );
+
+      try {
+        setLoading(true);
+        setError(null);
+        setExecutionMessage("");
+        setStationMetrics(null);
+
+        const response =
+          await api.get("/metrics/station");
+
+        setStationMetrics(response.data);
+
+        setExecutionMessage(
+          "Station Metrics loaded successfully."
+        );
+
+      } catch (error: any) {
+
+        console.error(
+          "Station Metrics loading failed:",
+          error
+        );
+
+        setStationMetrics(null);
+
+        setError(
+          error?.response?.data?.message ||
+          error.message ||
+          "Station Metrics loading failed."
+        );
+
+      } finally {
+        setLoading(false);
+      }
+
+      return;
     }
 
     if (mode === "system" && systemName.trim()) {
