@@ -233,6 +233,13 @@ function Metrics() {
         </div>
       )}
 
+      {mode === "system" && (
+        <div className={layoutStyles.sectionHeading}>
+          <h2>System Metrics</h2>
+          <span>System energy consumption over time · Average values</span>
+        </div>
+      )}
+
       {mode === "basic" && basicMetrics && (
         <div className={kpiStyles.kpiRow}>
 
