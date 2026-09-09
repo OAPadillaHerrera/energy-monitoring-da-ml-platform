@@ -12,6 +12,10 @@ import {
   type ChartOptions
 } from "chart.js";
 
+import {
+  type CSSProperties
+} from "react";
+
 import { Line } from "react-chartjs-2";
 
 ChartJS.register(
@@ -26,88 +30,241 @@ ChartJS.register(
 
 type Props = {
   data: Record<string, number>;
+  systemName: string;
+};
+
+const CHART_FONT = "Cascadia Code";
+
+const PRECISION_SYSTEMS = new Set([
+  "Air Conditioning System - Office Area",
+  "Air Conditioning System - Server Room",
+  "Customer Service Kiosk System - Refrigeration",
+  "Fuel Dispenser System",
+  "Office and General Services System",
+  "Perimeter Lighting System",
+  "Submersible Pump System"
+]);
+
+const chartContainerStyle: CSSProperties = {
+  width: "100%",
+  height: "100%",
+  minWidth: 0,
+  overflow: "hidden",
+  position: "relative"
 };
 
 export default function SystemEnergyByHourChart({
-  data
+  data,
+  systemName
 }: Props) {
+
   const hourly = Array.from(
     { length: 24 },
-    (_, hour) => Number(data[String(hour)] ?? 0)
+    (_, hour) =>
+      Number(data[String(hour)] ?? 0)
   );
 
   const labels = Array.from(
     { length: 24 },
-    (_, i) => `${i}:00`
+    (_, i) =>
+      `${String(i).padStart(2, "0")}:00`
   );
+
+  const decimalPlaces =
+    PRECISION_SYSTEMS.has(systemName)
+      ? 4
+      : 2;
 
   const chartData = {
     labels,
+
     datasets: [
       {
-        label: "Avg Energy by Hour of Day (kWh)",
+        label:
+          "Avg Energy by Hour of Day (kWh)",
+
         data: hourly,
+
         borderColor: "#00c2ff",
-        backgroundColor: "rgba(0, 194, 255, 0.18)",
+
+        backgroundColor:
+          "rgba(0, 194, 255, 0.18)",
+
         borderWidth: 2,
+
         tension: 0.35,
+
         fill: true,
+
         pointStyle: "rect" as const,
+
         pointRadius: 5,
-        pointHoverRadius: 6,
-        pointBackgroundColor: "#00c2ff",
-        pointBorderWidth: 0
+
+        pointHoverRadius: 8,
+
+        pointBackgroundColor: "#A855F7",
+
+        pointHoverBackgroundColor:
+          "rgba(0, 194, 255, 0)",
+
+        pointBorderColor: "#00c2ff",
+
+        pointHoverBorderColor: "#00c2ff",
+
+        pointBorderWidth: 1,
+
+        pointHoverBorderWidth: 2
       }
     ]
   };
 
   const options: ChartOptions<"line"> = {
+
     responsive: true,
+
     maintainAspectRatio: false,
 
     interaction: {
-      mode: "index",
-      intersect: false
+      mode: "nearest",
+      intersect: true
     },
 
     plugins: {
+
       legend: {
-        display: true
+        display: false
       },
 
       tooltip: {
+
         enabled: true,
+
         displayColors: false,
 
+        backgroundColor:
+          "rgba(0,0,0,0.90)",
+
+        padding: 14,
+
+        titleFont: {
+          family: CHART_FONT,
+          size: 16,
+          weight: 400
+        },
+
+        bodyFont: {
+          family: CHART_FONT,
+          size: 15,
+          weight: 400
+        },
+
+        titleColor: "#FFFFFF",
+
+        bodyColor: "#FFFFFF",
+
         callbacks: {
-          label: (context) =>
-            `${Number(context.parsed.y).toFixed(2)} kWh`
+
+          title: (tooltipItems) => {
+            return tooltipItems[0].label;
+          },
+
+          label: (context) => {
+
+            const value =
+              context.parsed.y;
+
+            if (value === null) {
+              return `Consumption: ${Number(0).toFixed(decimalPlaces)} kWh`;
+            }
+
+            return `Consumption: ${value.toFixed(decimalPlaces)} kWh`;
+          }
         }
       }
     },
 
     scales: {
+
       x: {
+
+        title: {
+
+          display: true,
+
+          text: "Hours",
+
+          color: "#FFFFFF",
+
+          font: {
+            family: CHART_FONT,
+            size: 16,
+            weight: 400
+          },
+
+          padding: {
+            top: 12
+          }
+        },
+
         ticks: {
+
           maxRotation: 0,
+
+          minRotation: 0,
+
           autoSkip: true,
-          maxTicksLimit: 12
+
+          maxTicksLimit: 24,
+
+          color:
+            "rgba(255,255,255,0.70)",
+
+          font: {
+            family: CHART_FONT,
+            size: 15,
+            weight: 400
+          }
         },
 
         grid: {
-          color: "rgba(255,255,255,0.04)"
+
+          display: true,
+
+          color:
+            "rgba(255,255,255,0.25)",
+
+          lineWidth: 1
         }
       },
 
       y: {
+
         beginAtZero: true,
 
-        grid: {
-          color: "rgba(255,255,255,0.05)"
+        ticks: {
+
+          color:
+            "rgba(255,255,255,0.70)",
+
+          font: {
+            family: CHART_FONT,
+            size: 15,
+            weight: 400
+          },
+
+          callback(value) {
+            return Number(value).toLocaleString();
+          }
         },
 
-        ticks: {
-          callback: (value) => `${value} kWh`
+        grid: {
+
+          display: true,
+
+          color:
+            "rgba(255,255,255,0.25)",
+
+          lineWidth: 1
         }
       }
     }
@@ -115,11 +272,7 @@ export default function SystemEnergyByHourChart({
 
   return (
     <div
-      style={{
-        width: "100%",
-        height: "260px",
-        position: "relative"
-      }}
+      style={chartContainerStyle}
     >
       <Line
         data={chartData}

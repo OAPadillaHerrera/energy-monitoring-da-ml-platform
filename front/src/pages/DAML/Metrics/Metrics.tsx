@@ -498,6 +498,7 @@ function Metrics() {
               <div style={{ height: "260px", width: "100%" }}>
                 <SystemEnergyByHourChart
                   data={systemMetrics.avg_hourly_profile}
+                  systemName={systemName}
                 />
               </div>
 
