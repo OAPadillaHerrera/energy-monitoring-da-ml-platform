@@ -1,7 +1,6 @@
 
 
 import {
-  type ChangeEvent,
   useEffect,
   useState
 } from "react";
@@ -65,6 +64,8 @@ function Metrics() {
 
   const [mode, setMode] = useState("basic");
   const [systemName, setSystemName] = useState("");
+  const [systemNames, setSystemNames] =
+    useState<string[]>([]);
   const [executionMessage, setExecutionMessage] = useState("");
 
   const [basicMetrics, setBasicMetrics] =
@@ -91,11 +92,30 @@ function Metrics() {
         setError(null);
 
         if (mode === "energy") {
-          const response = await api.get("/metrics/energy");
+          const response =
+            await api.get("/metrics/energy");
+
           setEnergyMetrics(response.data);
         }
 
+        if (mode === "system") {
+          const response =
+            await api.get("/metrics/basic");
+
+          const systems =
+            Object.keys(
+              response.data.consumption_by_system
+            );
+
+          setSystemNames(systems);
+        }
+
       } catch (error: any) {
+
+        console.error(
+          "Metrics data loading failed:",
+          error
+        );
 
       } finally {
         setLoading(false);
@@ -104,7 +124,7 @@ function Metrics() {
 
     void fetchMetrics();
 
-  }, [mode, systemName]);
+  }, [mode]);
 
   const handleRunMetrics = async (): Promise<void> => {
 
@@ -189,7 +209,7 @@ function Metrics() {
     if (mode === "system") {
 
       if (!systemName.trim()) {
-        setError("Please enter a system name.");
+        setError("Please select a system.");
         setExecutionMessage("");
         setSystemMetrics(null);
         return;
@@ -242,12 +262,6 @@ function Metrics() {
     }
   };
 
-  const handleSystemChange = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-    setSystemName(event.target.value);
-  };
-
   const currentModeLabel =
     mode.charAt(0).toUpperCase() + mode.slice(1);
 
@@ -265,14 +279,18 @@ function Metrics() {
       {mode === "station" && (
         <div className={layoutStyles.sectionHeading}>
           <h2>Station Metrics</h2>
-          <span>Station energy consumption over time · Average values</span>
+          <span>
+            Station energy consumption over time · Average values
+          </span>
         </div>
       )}
 
       {mode === "system" && (
         <div className={layoutStyles.sectionHeading}>
           <h2>System Metrics</h2>
-          <span>System energy consumption over time · Average values</span>
+          <span>
+            System energy consumption over time · Average values
+          </span>
         </div>
       )}
 
@@ -636,12 +654,26 @@ function Metrics() {
             <div className={controlStyles.rangeInputs}>
               <div className={controlStyles.inputGroup}>
 
-                <input
-                  className={controlStyles.input}
-                  placeholder="Select System"
+                <select
+                  className={`${controlStyles.input} ${controlStyles.systemSelect}`}
                   value={systemName}
-                  onChange={handleSystemChange}
-                />
+                  onChange={(event) =>
+                    setSystemName(event.target.value)
+                  }
+                >
+                  <option value="">
+                    Select System
+                  </option>
+
+                  {systemNames.map((name) => (
+                    <option
+                      key={name}
+                      value={name}
+                    >
+                      {name}
+                    </option>
+                  ))}
+                </select>
 
                 <div className={controlStyles.inputLabel}>
                   System Name

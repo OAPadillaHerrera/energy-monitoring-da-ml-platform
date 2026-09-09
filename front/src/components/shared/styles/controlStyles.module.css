@@ -622,6 +622,18 @@
 
   }
 
+  .systemSelect {
+    width: 430px;
+    min-width: 430px;
+  }
+
+  .systemSelect option {
+    background-color: #111827;
+    color: #FFFFFF;
+    font-family: "Cascadia Code", monospace;
+    font-size: 14px;
+  }
+
 }
 
 
