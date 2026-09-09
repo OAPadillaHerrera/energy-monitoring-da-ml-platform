@@ -90,13 +90,6 @@ function Metrics() {
         setLoading(true);
         setError(null);
 
-        if (mode === "system" && systemName.trim()) {
-          const response = await api.get(
-            `/metrics/system?name=${systemName}`
-          );
-          setSystemMetrics(response.data);
-        }
-
         if (mode === "energy") {
           const response = await api.get("/metrics/energy");
           setEnergyMetrics(response.data);
@@ -193,10 +186,53 @@ function Metrics() {
       return;
     }
 
-    if (mode === "system" && systemName.trim()) {
-      setExecutionMessage(
-        "System Metrics executed successfully."
-      );
+    if (mode === "system") {
+
+      if (!systemName.trim()) {
+        setError("Please enter a system name.");
+        setExecutionMessage("");
+        setSystemMetrics(null);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+        setExecutionMessage("");
+        setSystemMetrics(null);
+
+        const response = await api.get(
+          `/metrics/system?name=${encodeURIComponent(
+            systemName.trim()
+          )}`
+        );
+
+        setSystemMetrics(response.data);
+
+        setExecutionMessage(
+          "System Metrics loaded successfully."
+        );
+
+      } catch (error: any) {
+
+        console.error(
+          "System Metrics loading failed:",
+          error
+        );
+
+        setSystemMetrics(null);
+
+        setError(
+          error?.response?.data?.message ||
+          error.message ||
+          "System Metrics loading failed."
+        );
+
+      } finally {
+        setLoading(false);
+      }
+
+      return;
     }
 
     if (mode === "energy") {
