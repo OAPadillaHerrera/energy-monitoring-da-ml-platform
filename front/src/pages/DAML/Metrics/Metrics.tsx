@@ -90,13 +90,6 @@ function Metrics() {
         setLoading(true);
         setError(null);
 
-        if (mode === "energy") {
-          const response =
-            await api.get("/metrics/energy");
-
-          setEnergyMetrics(response.data);
-        }
-
         if (mode === "system") {
           const response =
             await api.get("/metrics/basic");
@@ -255,9 +248,42 @@ function Metrics() {
     }
 
     if (mode === "energy") {
-      setExecutionMessage(
-        "Energy Metrics executed successfully."
-      );
+
+      try {
+        setLoading(true);
+        setError(null);
+        setExecutionMessage("");
+        setStationMetrics(null);
+
+        const response =
+          await api.get("/metrics/energy");
+
+        setEnergyMetrics(response.data);
+
+        setExecutionMessage(
+          "Energy Metrics loaded successfully."
+        );
+
+      } catch (error: any) {
+
+        console.error(
+          "Energy Metrics loading failed:",
+          error
+        );
+
+        setEnergyMetrics(null);
+
+        setError(
+          error?.response?.data?.message ||
+          error.message ||
+          "Energy Metrics loading failed."
+        );
+
+      } finally {
+        setLoading(false);
+      }
+
+      return;
     }
   };
 
