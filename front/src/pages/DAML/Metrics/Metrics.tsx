@@ -430,6 +430,7 @@ function Metrics() {
           {mode === "basic" && "Energy Consumption by System"}
           {mode === "station" && "Station Energy Consumption by Hour"}
           {mode === "system" && "System Energy Consumption by Hour"}
+          {mode === "energy" && "Load Factor by System"}
         </div>
 
         <div
