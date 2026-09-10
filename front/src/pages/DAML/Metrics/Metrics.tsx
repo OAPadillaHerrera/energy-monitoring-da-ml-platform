@@ -24,7 +24,6 @@ import api from "../../../services/api";
 import BasicMetricsTable from "../../../components/tables/BasicMetricsTable";
 import StationEnergyByHourChart from "../../../components/charts/StationEnergyByHourChart";
 import SystemEnergyByHourChart from "../../../components/charts/SystemEnergyByHourChart";
-import EnergySystemRankingPieChart from "../../../components/charts/EnergySystemRanlkingPieChart";
 import EnergyLoadFactorTable from "../../../components/tables/EnergyLoadFactorTable";
 
 type BasicMetricsData = {
@@ -371,7 +370,6 @@ function Metrics() {
           {mode === "basic" && "Energy Consumption by System"}
           {mode === "station" && "Station Energy Consumption by Hour"}
           {mode === "system" && "System Energy Consumption by Hour"}
-          {mode === "energy" && "Energy Metrics Visualization"}
         </div>
 
         <div
@@ -558,12 +556,6 @@ function Metrics() {
                 gap: "18px"
               }}
             >
-
-              <div style={{ height: "320px", width: "100%" }}>
-                <EnergySystemRankingPieChart
-                  data={energyMetrics.system_ranking}
-                />
-              </div>
 
               <div className={dashboardStyles.kpiRow}>
 
