@@ -280,6 +280,10 @@
 
 }
 
+.percentageUnit {
+  margin-left: 6px;
+}
+
 .eventWarning {
 
   color: #FB923C !important;
