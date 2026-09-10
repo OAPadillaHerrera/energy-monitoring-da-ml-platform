@@ -364,6 +364,40 @@ function Metrics() {
         </div>
       )}
 
+      {mode === "energy" && energyMetrics && (
+        <div className={kpiStyles.kpiRow}>
+
+          <div className={kpiStyles.kpiCard}>
+
+            <div className={kpiStyles.kpiHeader}>
+
+              <Activity
+                className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconLoadFactor}`}
+              />
+
+              <span className={kpiStyles.kpiLabel}>
+                Load Factor
+              </span>
+
+            </div>
+
+            <h2 className={kpiStyles.kpiValue}>
+              {(energyMetrics.load_factor * 100).toFixed(1)}
+
+              <span className={kpiStyles.kpiUnit}>
+                %
+              </span>
+            </h2>
+
+            <p className={kpiStyles.kpiDescription}>
+              Overall load factor
+            </p>
+
+          </div>
+
+        </div>
+      )}
+
       <section className={panelStyles.chartPanel}>
 
         <div className={panelStyles.panelHeader}>
@@ -547,37 +581,9 @@ function Metrics() {
           )}
 
           {!loading && !error && mode === "energy" && energyMetrics && (
-
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                gap: "18px"
-              }}
-            >
-
-              <div className={dashboardStyles.kpiRow}>
-
-                <div className={dashboardStyles.kpiCard}>
-
-                  <span className={dashboardStyles.kpiLabel}>
-                    Load Factor
-                  </span>
-
-                  <h2 className={dashboardStyles.kpiValue}>
-                    {(energyMetrics.load_factor * 100).toFixed(1)}%
-                  </h2>
-
-                </div>
-
-              </div>
-
-              <EnergyLoadFactorTable
-                data={energyMetrics.load_factor_by_system}
-              />
-
-            </div>
+            <EnergyLoadFactorTable
+              data={energyMetrics.load_factor_by_system}
+            />
           )}
 
         </div>
