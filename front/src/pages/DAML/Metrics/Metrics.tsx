@@ -294,6 +294,15 @@ function Metrics() {
         </div>
       )}
 
+      {mode === "energy" && (
+        <div className={layoutStyles.sectionHeading}>
+          <h2>Energy Metrics</h2>
+          <span>
+            Station and System load factor · Overall values
+          </span>
+        </div>
+      )}
+
       {mode === "basic" && basicMetrics && (
         <div className={kpiStyles.kpiRow}>
 
