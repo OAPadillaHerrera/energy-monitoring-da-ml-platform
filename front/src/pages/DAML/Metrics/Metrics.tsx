@@ -552,7 +552,11 @@ function Metrics() {
                       ? tabStyles.damlTabButtonActive
                       : tabStyles.damlTabButton
                   }
-                  onClick={() => setMode(metricMode.value)}
+                  onClick={() => {
+                    setMode(metricMode.value);
+                    setExecutionMessage("");
+                    setError(null);
+                  }}
                 >
                   <Icon className={tabStyles.damlTabIcon} />
                   {metricMode.label}
@@ -628,6 +632,8 @@ function Metrics() {
 }
 
 export default Metrics;
+
+
 
 
 
