@@ -59,8 +59,30 @@ type EnergyMetricsData = {
   system_ranking: Record<string, number>;
 };
 
-function Metrics() {
+const metricModes = [
+  {
+    value: "basic",
+    label: "Basic",
+    icon: BarChart3
+  },
+  {
+    value: "station",
+    label: "Station",
+    icon: Building2
+  },
+  {
+    value: "system",
+    label: "System",
+    icon: Cpu
+  },
+  {
+    value: "energy",
+    label: "Energy",
+    icon: Zap
+  }
+];
 
+function Metrics() {
   const [mode, setMode] = useState("basic");
   const [systemName, setSystemName] = useState("");
   const [systemNames, setSystemNames] =
@@ -83,9 +105,7 @@ function Metrics() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-
     const fetchMetrics = async (): Promise<void> => {
-
       try {
         setLoading(true);
         setError(null);
@@ -101,27 +121,21 @@ function Metrics() {
 
           setSystemNames(systems);
         }
-
       } catch (error: any) {
-
         console.error(
           "Metrics data loading failed:",
           error
         );
-
       } finally {
         setLoading(false);
       }
     };
 
     void fetchMetrics();
-
   }, [mode]);
 
   const handleRunMetrics = async (): Promise<void> => {
-
     if (mode === "basic") {
-
       try {
         setLoading(true);
         setError(null);
@@ -136,9 +150,7 @@ function Metrics() {
         setExecutionMessage(
           "Basic Metrics loaded successfully."
         );
-
       } catch (error: any) {
-
         console.error(
           "Basic Metrics loading failed:",
           error
@@ -151,7 +163,6 @@ function Metrics() {
           error.message ||
           "Basic Metrics loading failed."
         );
-
       } finally {
         setLoading(false);
       }
@@ -160,7 +171,6 @@ function Metrics() {
     }
 
     if (mode === "station") {
-
       try {
         setLoading(true);
         setError(null);
@@ -175,9 +185,7 @@ function Metrics() {
         setExecutionMessage(
           "Station Metrics loaded successfully."
         );
-
       } catch (error: any) {
-
         console.error(
           "Station Metrics loading failed:",
           error
@@ -190,7 +198,6 @@ function Metrics() {
           error.message ||
           "Station Metrics loading failed."
         );
-
       } finally {
         setLoading(false);
       }
@@ -199,7 +206,6 @@ function Metrics() {
     }
 
     if (mode === "system") {
-
       if (!systemName.trim()) {
         setError("Please select a system.");
         setExecutionMessage("");
@@ -224,9 +230,7 @@ function Metrics() {
         setExecutionMessage(
           "System Metrics loaded successfully."
         );
-
       } catch (error: any) {
-
         console.error(
           "System Metrics loading failed:",
           error
@@ -239,7 +243,6 @@ function Metrics() {
           error.message ||
           "System Metrics loading failed."
         );
-
       } finally {
         setLoading(false);
       }
@@ -248,7 +251,6 @@ function Metrics() {
     }
 
     if (mode === "energy") {
-
       try {
         setLoading(true);
         setError(null);
@@ -263,9 +265,7 @@ function Metrics() {
         setExecutionMessage(
           "Energy Metrics loaded successfully."
         );
-
       } catch (error: any) {
-
         console.error(
           "Energy Metrics loading failed:",
           error
@@ -278,7 +278,6 @@ function Metrics() {
           error.message ||
           "Energy Metrics loading failed."
         );
-
       } finally {
         setLoading(false);
       }
@@ -291,9 +290,7 @@ function Metrics() {
     mode.charAt(0).toUpperCase() + mode.slice(1);
 
   return (
-
     <>
-
       {mode === "basic" && (
         <div className={layoutStyles.sectionHeading}>
           <h2>Basic Metrics</h2>
@@ -330,11 +327,8 @@ function Metrics() {
 
       {mode === "basic" && basicMetrics && (
         <div className={kpiStyles.kpiRow}>
-
           <div className={kpiStyles.kpiCard}>
-
             <div className={kpiStyles.kpiHeader}>
-
               <Zap
                 className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconConsumption}`}
               />
@@ -342,7 +336,6 @@ function Metrics() {
               <span className={kpiStyles.kpiLabel}>
                 Total Consumption
               </span>
-
             </div>
 
             <h2 className={kpiStyles.kpiValue}>
@@ -356,13 +349,10 @@ function Metrics() {
             <p className={kpiStyles.kpiDescription}>
               Total energy consumed
             </p>
-
           </div>
 
           <div className={kpiStyles.kpiCard}>
-
             <div className={kpiStyles.kpiHeader}>
-
               <Activity
                 className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconAverage}`}
               />
@@ -370,7 +360,6 @@ function Metrics() {
               <span className={kpiStyles.kpiLabel}>
                 Average Consumption
               </span>
-
             </div>
 
             <h2 className={kpiStyles.kpiValue}>
@@ -384,19 +373,14 @@ function Metrics() {
             <p className={kpiStyles.kpiDescription}>
               Average energy consumption
             </p>
-
           </div>
-
         </div>
       )}
 
       {mode === "energy" && energyMetrics && (
         <div className={kpiStyles.kpiRow}>
-
           <div className={kpiStyles.kpiCard}>
-
             <div className={kpiStyles.kpiHeader}>
-
               <Activity
                 className={`${kpiStyles.kpiIcon} ${kpiStyles.kpiIconLoadFactor}`}
               />
@@ -404,7 +388,6 @@ function Metrics() {
               <span className={kpiStyles.kpiLabel}>
                 Load Factor
               </span>
-
             </div>
 
             <h2 className={kpiStyles.kpiValue}>
@@ -418,14 +401,11 @@ function Metrics() {
             <p className={kpiStyles.kpiDescription}>
               Overall load factor
             </p>
-
           </div>
-
         </div>
       )}
 
       <section className={panelStyles.chartPanel}>
-
         <div className={panelStyles.panelHeader}>
           {mode === "basic" && "Energy Consumption by System"}
           {mode === "station" && "Station Energy Consumption by Hour"}
@@ -440,7 +420,6 @@ function Metrics() {
             justifyContent: "flex-start"
           }}
         >
-
           <div className={panelStyles.chartGrid}></div>
 
           {error && (
@@ -458,11 +437,9 @@ function Metrics() {
                 gap: "18px"
               }}
             >
-
               <BasicMetricsTable
                 data={basicMetrics.consumption_by_system}
               />
-
             </div>
           )}
 
@@ -475,7 +452,6 @@ function Metrics() {
                 gap: "18px"
               }}
             >
-
               <div style={{ height: "260px", width: "100%" }}>
                 <StationEnergyByHourChart
                   data={stationMetrics.energy_by_hour}
@@ -483,7 +459,6 @@ function Metrics() {
               </div>
 
               <div className={dashboardStyles.kpiRow}>
-
                 <div className={dashboardStyles.kpiCard}>
                   <span className={dashboardStyles.kpiLabel}>
                     Total Energy
@@ -513,11 +488,9 @@ function Metrics() {
                     {stationMetrics.peak_consumption.toFixed(2)} kWh
                   </h2>
                 </div>
-
               </div>
 
               <div className={dashboardStyles.kpiRow}>
-
                 <div className={dashboardStyles.kpiCard}>
                   <span className={dashboardStyles.kpiLabel}>
                     Min Consumption
@@ -547,9 +520,7 @@ function Metrics() {
                     {stationMetrics.avg_daily_energy.toFixed(2)} kWh
                   </h2>
                 </div>
-
               </div>
-
             </div>
           )}
 
@@ -562,7 +533,6 @@ function Metrics() {
                 gap: "18px"
               }}
             >
-
               <div style={{ height: "260px", width: "100%" }}>
                 <SystemEnergyByHourChart
                   data={systemMetrics.avg_hourly_profile}
@@ -571,7 +541,6 @@ function Metrics() {
               </div>
 
               <div className={dashboardStyles.kpiRow}>
-
                 <div className={dashboardStyles.kpiCard}>
                   <span className={dashboardStyles.kpiLabel}>
                     Total Energy
@@ -601,9 +570,7 @@ function Metrics() {
                     {systemMetrics.peak_consumption.toFixed(2)} kWh
                   </h2>
                 </div>
-
               </div>
-
             </div>
           )}
 
@@ -612,83 +579,40 @@ function Metrics() {
               data={energyMetrics.load_factor_by_system}
             />
           )}
-
         </div>
-
       </section>
 
       <section className={panelStyles.controlPanel}>
-
         <div className={panelStyles.panelHeader}>
           Metrics Configuration
         </div>
 
         <div className={controlStyles.controlContent}>
-
           <div className={tabStyles.tabs}>
+            {metricModes.map((metricMode) => {
+              const Icon = metricMode.icon;
 
-            <button
-              className={
-                mode === "basic"
-                  ? tabStyles.damlTabButtonActive
-                  : tabStyles.damlTabButton
-              }
-              onClick={() => setMode("basic")}
-            >
-              <BarChart3
-                className={tabStyles.damlTabIcon}
-              />
-              Basic
-            </button>
-
-            <button
-              className={
-                mode === "station"
-                  ? tabStyles.damlTabButtonActive
-                  : tabStyles.damlTabButton
-              }
-              onClick={() => setMode("station")}
-            >
-              <Building2
-                className={tabStyles.damlTabIcon}
-              />
-              Station
-            </button>
-
-            <button
-              className={
-                mode === "system"
-                  ? tabStyles.damlTabButtonActive
-                  : tabStyles.damlTabButton
-              }
-              onClick={() => setMode("system")}
-            >
-              <Cpu
-                className={tabStyles.damlTabIcon}
-              />
-              System
-            </button>
-
-            <button
-              className={
-                mode === "energy"
-                  ? tabStyles.damlTabButtonActive
-                  : tabStyles.damlTabButton
-              }
-              onClick={() => setMode("energy")}
-            >
-              <Zap
-                className={tabStyles.damlTabIcon}
-              />
-              Energy
-            </button>
-
+              return (
+                <button
+                  key={metricMode.value}
+                  type="button"
+                  className={
+                    mode === metricMode.value
+                      ? tabStyles.damlTabButtonActive
+                      : tabStyles.damlTabButton
+                  }
+                  onClick={() => setMode(metricMode.value)}
+                >
+                  <Icon className={tabStyles.damlTabIcon} />
+                  {metricMode.label}
+                </button>
+              );
+            })}
           </div>
 
           {mode === "system" && (
             <div className={controlStyles.rangeInputs}>
               <div className={controlStyles.inputGroup}>
-
                 <select
                   className={`${controlStyles.input} ${controlStyles.systemSelect}`}
                   value={systemName}
@@ -713,7 +637,6 @@ function Metrics() {
                 <div className={controlStyles.inputLabel}>
                   System Name
                 </div>
-
               </div>
             </div>
           )}
@@ -736,11 +659,9 @@ function Metrics() {
               }`}
             />
 
-            {
-              loading
-                ? `Loading ${currentModeLabel}...`
-                : `View ${currentModeLabel}`
-            }
+            {loading
+              ? `Loading ${currentModeLabel}...`
+              : `View ${currentModeLabel}`}
           </button>
 
           {executionMessage && (
@@ -749,19 +670,13 @@ function Metrics() {
               <strong>{executionMessage}</strong>
             </div>
           )}
-
         </div>
-
       </section>
-
     </>
   );
 }
 
 export default Metrics;
-
-
-
 
 
 
