@@ -82,6 +82,28 @@ const metricModes = [
   }
 ];
 
+const metricModeHeadings = {
+  basic: {
+    title: "Basic Metrics",
+    subtitle: "Station-level metrics · Overall values"
+  },
+  station: {
+    title: "Station Metrics",
+    subtitle:
+      "Station energy consumption over time · Average values"
+  },
+  system: {
+    title: "System Metrics",
+    subtitle:
+      "System energy consumption over time · Average values"
+  },
+  energy: {
+    title: "Energy Metrics",
+    subtitle:
+      "Station and System load factor · Overall values"
+  }
+};
+
 function Metrics() {
   const [mode, setMode] = useState("basic");
   const [systemName, setSystemName] = useState("");
@@ -289,41 +311,17 @@ function Metrics() {
   const currentModeLabel =
     mode.charAt(0).toUpperCase() + mode.slice(1);
 
+  const currentModeHeading =
+    metricModeHeadings[
+      mode as keyof typeof metricModeHeadings
+    ];
+
   return (
     <>
-      {mode === "basic" && (
-        <div className={layoutStyles.sectionHeading}>
-          <h2>Basic Metrics</h2>
-          <span>Station-level metrics</span>
-        </div>
-      )}
-
-      {mode === "station" && (
-        <div className={layoutStyles.sectionHeading}>
-          <h2>Station Metrics</h2>
-          <span>
-            Station energy consumption over time · Average values
-          </span>
-        </div>
-      )}
-
-      {mode === "system" && (
-        <div className={layoutStyles.sectionHeading}>
-          <h2>System Metrics</h2>
-          <span>
-            System energy consumption over time · Average values
-          </span>
-        </div>
-      )}
-
-      {mode === "energy" && (
-        <div className={layoutStyles.sectionHeading}>
-          <h2>Energy Metrics</h2>
-          <span>
-            Station and System load factor · Overall values
-          </span>
-        </div>
-      )}
+      <div className={layoutStyles.sectionHeading}>
+        <h2>{currentModeHeading.title}</h2>
+        <span>{currentModeHeading.subtitle}</span>
+      </div>
 
       {mode === "basic" && basicMetrics && (
         <div className={kpiStyles.kpiRow}>
