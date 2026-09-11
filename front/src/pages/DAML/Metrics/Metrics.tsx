@@ -157,11 +157,19 @@ function Metrics() {
   }, [mode]);
 
   const handleRunMetrics = async (): Promise<void> => {
-    if (mode === "basic") {
-      try {
-        setLoading(true);
-        setError(null);
-        setExecutionMessage("");
+    if (mode === "system" && !systemName.trim()) {
+      setError("Please select a system.");
+      setExecutionMessage("");
+      setSystemMetrics(null);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      setExecutionMessage("");
+
+      if (mode === "basic") {
         setBasicMetrics(null);
 
         const response =
@@ -172,31 +180,11 @@ function Metrics() {
         setExecutionMessage(
           "Basic Metrics loaded successfully."
         );
-      } catch (error: any) {
-        console.error(
-          "Basic Metrics loading failed:",
-          error
-        );
 
-        setBasicMetrics(null);
-
-        setError(
-          error?.response?.data?.message ||
-          error.message ||
-          "Basic Metrics loading failed."
-        );
-      } finally {
-        setLoading(false);
+        return;
       }
 
-      return;
-    }
-
-    if (mode === "station") {
-      try {
-        setLoading(true);
-        setError(null);
-        setExecutionMessage("");
+      if (mode === "station") {
         setStationMetrics(null);
 
         const response =
@@ -207,38 +195,11 @@ function Metrics() {
         setExecutionMessage(
           "Station Metrics loaded successfully."
         );
-      } catch (error: any) {
-        console.error(
-          "Station Metrics loading failed:",
-          error
-        );
 
-        setStationMetrics(null);
-
-        setError(
-          error?.response?.data?.message ||
-          error.message ||
-          "Station Metrics loading failed."
-        );
-      } finally {
-        setLoading(false);
-      }
-
-      return;
-    }
-
-    if (mode === "system") {
-      if (!systemName.trim()) {
-        setError("Please select a system.");
-        setExecutionMessage("");
-        setSystemMetrics(null);
         return;
       }
 
-      try {
-        setLoading(true);
-        setError(null);
-        setExecutionMessage("");
+      if (mode === "system") {
         setSystemMetrics(null);
 
         const response = await api.get(
@@ -252,31 +213,11 @@ function Metrics() {
         setExecutionMessage(
           "System Metrics loaded successfully."
         );
-      } catch (error: any) {
-        console.error(
-          "System Metrics loading failed:",
-          error
-        );
 
-        setSystemMetrics(null);
-
-        setError(
-          error?.response?.data?.message ||
-          error.message ||
-          "System Metrics loading failed."
-        );
-      } finally {
-        setLoading(false);
+        return;
       }
 
-      return;
-    }
-
-    if (mode === "energy") {
-      try {
-        setLoading(true);
-        setError(null);
-        setExecutionMessage("");
+      if (mode === "energy") {
         setStationMetrics(null);
 
         const response =
@@ -287,24 +228,36 @@ function Metrics() {
         setExecutionMessage(
           "Energy Metrics loaded successfully."
         );
-      } catch (error: any) {
-        console.error(
-          "Energy Metrics loading failed:",
-          error
-        );
+      }
+    } catch (error: any) {
+      console.error(
+        `${currentModeLabel} loading failed:`,
+        error
+      );
 
-        setEnergyMetrics(null);
-
-        setError(
-          error?.response?.data?.message ||
-          error.message ||
-          "Energy Metrics loading failed."
-        );
-      } finally {
-        setLoading(false);
+      if (mode === "basic") {
+        setBasicMetrics(null);
       }
 
-      return;
+      if (mode === "station") {
+        setStationMetrics(null);
+      }
+
+      if (mode === "system") {
+        setSystemMetrics(null);
+      }
+
+      if (mode === "energy") {
+        setEnergyMetrics(null);
+      }
+
+      setError(
+        error?.response?.data?.message ||
+        error.message ||
+        `${currentModeLabel} loading failed.`
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
