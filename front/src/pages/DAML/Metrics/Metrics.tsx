@@ -218,7 +218,7 @@ function Metrics() {
       }
 
       if (mode === "energy") {
-        setStationMetrics(null);
+        setEnergyMetrics(null);
 
         const response =
           await api.get("/metrics/energy");
