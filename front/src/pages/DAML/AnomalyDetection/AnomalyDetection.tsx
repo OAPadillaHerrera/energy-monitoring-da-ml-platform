@@ -60,6 +60,8 @@ function AnomalyDetection() {
 
   const [mode, setMode] = useState("zscore");
   const [systemName, setSystemName] = useState("");
+  const [systemNames, setSystemNames] =
+    useState<string[]>([]);
   const [executionMessage, setExecutionMessage] = useState("");
 
   const [zscoreData, setZscoreData] = useState<ZScoreData | null>(null);
@@ -68,6 +70,34 @@ function AnomalyDetection() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+
+    const fetchSystems = async (): Promise<void> => {
+
+      try {
+
+        const response =
+          await api.get("/metrics/basic");
+
+        const systems =
+          Object.keys(
+            response.data.consumption_by_system
+          );
+
+        setSystemNames(systems);
+
+      } catch (err) {
+        console.error(
+          "System names loading failed:",
+          err
+        );
+      }
+    };
+
+    void fetchSystems();
+
+  }, []);
 
   useEffect(() => {
 
@@ -142,7 +172,9 @@ function AnomalyDetection() {
       mode as keyof typeof anomalyModeHeadings
     ];
 
-  const handleSystemChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleSystemChange = (
+    event: ChangeEvent<HTMLSelectElement>
+  ): void => {
     setSystemName(event.target.value);
   };
 
@@ -285,13 +317,22 @@ function AnomalyDetection() {
 
             <div className={controlStyles.inputGroup}>
 
-              <input
-                type="text"
-                className={controlStyles.input}
-                placeholder="Optional System"
+              <select
+                className={`${controlStyles.input} ${controlStyles.systemSelect}`}
                 value={systemName}
                 onChange={handleSystemChange}
-              />
+              >
+                <option value="">
+                  All Systems
+                </option>
+
+                {systemNames.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+
+              </select>
 
               <div className={controlStyles.inputLabel}>
                 System Name
