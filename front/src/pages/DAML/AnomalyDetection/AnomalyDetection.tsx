@@ -6,6 +6,12 @@ import {
   useState
 } from "react";
 
+import {
+  Activity,
+  Search,
+  Tags
+} from "lucide-react";
+
 import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
@@ -245,28 +251,31 @@ function AnomalyDetection() {
 
             <button
               className={mode === "zscore"
-                ? tabStyles.tabButtonActive
-                : tabStyles.tabButton}
+                ? tabStyles.damlTabButtonActive
+                : tabStyles.damlTabButton}
               onClick={() => setMode("zscore")}
             >
+              <Activity className={tabStyles.damlTabIcon} />
               Z-Score
             </button>
 
             <button
               className={mode === "detection"
-                ? tabStyles.tabButtonActive
-                : tabStyles.tabButton}
+                ? tabStyles.damlTabButtonActive
+                : tabStyles.damlTabButton}
               onClick={() => setMode("detection")}
             >
+              <Search className={tabStyles.damlTabIcon} />
               Detection
             </button>
 
             <button
               className={mode === "classification"
-                ? tabStyles.tabButtonActive
-                : tabStyles.tabButton}
+                ? tabStyles.damlTabButtonActive
+                : tabStyles.damlTabButton}
               onClick={() => setMode("classification")}
             >
+              <Tags className={tabStyles.damlTabIcon} />
               Classification
             </button>
 
