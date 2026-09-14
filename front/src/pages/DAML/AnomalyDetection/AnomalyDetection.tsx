@@ -8,6 +8,7 @@ import {
 
 import {
   Activity,
+  Play,
   Search,
   Tags
 } from "lucide-react";
@@ -64,12 +65,23 @@ function AnomalyDetection() {
     useState<string[]>([]);
   const [executionMessage, setExecutionMessage] = useState("");
 
-  const [zscoreData, setZscoreData] = useState<ZScoreData | null>(null);
-  const [detectionData, setDetectionData] = useState<DetectionData | null>(null);
-  const [classificationData, setClassificationData] = useState<ClassificationData | null>(null);
+  const [zscoreData, setZscoreData] =
+    useState<ZScoreData | null>(null);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [detectionData, setDetectionData] =
+    useState<DetectionData | null>(null);
+
+  const [classificationData, setClassificationData] =
+    useState<ClassificationData | null>(null);
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [runningAnalysis, setRunningAnalysis] =
+    useState(false);
+
+  const [error, setError] =
+    useState<string | null>(null);
 
   useEffect(() => {
 
@@ -88,6 +100,7 @@ function AnomalyDetection() {
         setSystemNames(systems);
 
       } catch (err) {
+
         console.error(
           "System names loading failed:",
           err
@@ -100,63 +113,78 @@ function AnomalyDetection() {
   }, []);
 
   const handleRunDetection =
-  async (): Promise<void> => {
-    try {
-      setLoading(true);
-      setError(null);
+    async (): Promise<void> => {
 
-      if (mode === "zscore") {
-        const endpoint = systemName.trim()
-          ? `/anomaly/zscore?name=${encodeURIComponent(systemName)}`
-          : "/anomaly/zscore";
+      try {
 
-        const response = await api.get(endpoint);
+        setLoading(true);
+        setRunningAnalysis(true);
+        setError(null);
 
-        setZscoreData(response.data);
+        if (mode === "zscore") {
+
+          const endpoint = systemName.trim()
+            ? `/anomaly/zscore?name=${encodeURIComponent(systemName)}`
+            : "/anomaly/zscore";
+
+          const response =
+            await api.get(endpoint);
+
+          setZscoreData(response.data);
+        }
+
+        if (mode === "detection") {
+
+          const endpoint = systemName.trim()
+            ? `/anomaly/detection?name=${encodeURIComponent(systemName)}`
+            : "/anomaly/detection";
+
+          const response =
+            await api.get(endpoint);
+
+          setDetectionData(response.data);
+        }
+
+        if (mode === "classification") {
+
+          const endpoint = systemName.trim()
+            ? `/anomaly/classification?name=${encodeURIComponent(systemName)}`
+            : "/anomaly/classification";
+
+          const response =
+            await api.get(endpoint);
+
+          setClassificationData(response.data);
+        }
+
+        setExecutionMessage(
+          systemName.trim()
+            ? `${currentModeLabel} analysis executed successfully for ${systemName}.`
+            : `${currentModeLabel} analysis executed successfully for all systems.`
+        );
+
+      } catch (error: any) {
+
+        console.error(
+          "Anomaly analysis execution failed:",
+          error
+        );
+
+        setError(
+          error?.response?.data?.message ||
+          error.message ||
+          "Anomaly analysis execution failed."
+        );
+
+        setExecutionMessage("");
+
+      } finally {
+
+        setLoading(false);
+        setRunningAnalysis(false);
+
       }
-
-      if (mode === "detection") {
-        const endpoint = systemName.trim()
-          ? `/anomaly/detection?name=${encodeURIComponent(systemName)}`
-          : "/anomaly/detection";
-
-        const response = await api.get(endpoint);
-
-        setDetectionData(response.data);
-      }
-
-      if (mode === "classification") {
-        const endpoint = systemName.trim()
-          ? `/anomaly/classification?name=${encodeURIComponent(systemName)}`
-          : "/anomaly/classification";
-
-        const response = await api.get(endpoint);
-
-        setClassificationData(response.data);
-      }
-
-      setExecutionMessage(
-        systemName.trim()
-          ? `${currentModeLabel} analysis executed successfully for ${systemName}.`
-          : `${currentModeLabel} analysis executed successfully for all systems.`
-      );
-    } catch (error: any) {
-      console.error(
-        "Anomaly analysis execution failed:",
-        error
-      );
-
-      setError(
-        error?.response?.data?.message ||
-        error.message ||
-        "Anomaly analysis execution failed."
-      );
-
-      setExecutionMessage("");
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
   const currentModeLabel =
     mode.charAt(0).toUpperCase() + mode.slice(1);
@@ -185,30 +213,40 @@ function AnomalyDetection() {
     : null;
 
   const classificationEvents: ClassificationEvent[] | null =
-  classificationData
-    ? classificationData.system
-      ? Object.values(
-          classificationData.context_classification || {}
-        ).flat()
-      : classificationData.full_pipeline
-    : null;
+    classificationData
+      ? classificationData.system
+        ? Object.values(
+            classificationData.context_classification || {}
+          ).flat()
+        : classificationData.full_pipeline
+      : null;
 
   return (
 
     <section className={layoutStyles.mainPanel}>
 
       <div className={layoutStyles.sectionHeading}>
+
         <h2>{currentModeHeading?.title}</h2>
-        <span>{currentModeHeading?.subtitle}</span>
+
+        <span>
+          {currentModeHeading?.subtitle}
+        </span>
+
       </div>
 
       <section className={panelStyles.chartPanel}>
 
         <div className={panelStyles.panelHeader}>
 
-          {mode === "zscore" && "Z-Score Analysis Visualization"}
-          {mode === "detection" && "Detection Analysis Visualization"}
-          {mode === "classification" && "Classification Analysis Visualization"}
+          {mode === "zscore" &&
+            "Z-Score Analysis Visualization"}
+
+          {mode === "detection" &&
+            "Detection Analysis Visualization"}
+
+          {mode === "classification" &&
+            "Classification Analysis Visualization"}
 
         </div>
 
@@ -232,17 +270,39 @@ function AnomalyDetection() {
             </span>
           )}
 
-          {!loading && !error && mode === "zscore" && zscoreChartData && (
-            <div style={{ width: "100%", height: "320px" }}>
-              <ZScoreChart data={zscoreChartData} />
-            </div>
-          )}
+          {!loading &&
+            !error &&
+            mode === "zscore" &&
+            zscoreChartData && (
 
-          {!loading && !error && mode === "detection" && detectionChartData && (
-            <div style={{ width: "100%", height: "320px" }}>
-              <DetectionChart data={detectionChartData} />
-            </div>
-          )}
+              <div
+                style={{
+                  width: "100%",
+                  height: "320px"
+                }}
+              >
+                <ZScoreChart
+                  data={zscoreChartData}
+                />
+              </div>
+            )}
+
+          {!loading &&
+            !error &&
+            mode === "detection" &&
+            detectionChartData && (
+
+              <div
+                style={{
+                  width: "100%",
+                  height: "320px"
+                }}
+              >
+                <DetectionChart
+                  data={detectionChartData}
+                />
+              </div>
+            )}
 
           {!loading &&
             !error &&
@@ -257,7 +317,10 @@ function AnomalyDetection() {
 
                 <ClassificationEventsTable
                   data={classificationEvents}
-                  system={systemName.trim() || undefined}
+                  system={
+                    systemName.trim() ||
+                    undefined
+                  }
                 />
 
               </div>
@@ -278,32 +341,44 @@ function AnomalyDetection() {
           <div className={tabStyles.tabs}>
 
             <button
-              className={mode === "zscore"
-                ? tabStyles.damlTabButtonActive
-                : tabStyles.damlTabButton}
+              className={
+                mode === "zscore"
+                  ? tabStyles.damlTabButtonActive
+                  : tabStyles.damlTabButton
+              }
               onClick={() => setMode("zscore")}
             >
-              <Activity className={tabStyles.damlTabIcon} />
+              <Activity
+                className={tabStyles.damlTabIcon}
+              />
               Z-Score
             </button>
 
             <button
-              className={mode === "detection"
-                ? tabStyles.damlTabButtonActive
-                : tabStyles.damlTabButton}
+              className={
+                mode === "detection"
+                  ? tabStyles.damlTabButtonActive
+                  : tabStyles.damlTabButton
+              }
               onClick={() => setMode("detection")}
             >
-              <Search className={tabStyles.damlTabIcon} />
+              <Search
+                className={tabStyles.damlTabIcon}
+              />
               Detection
             </button>
 
             <button
-              className={mode === "classification"
-                ? tabStyles.damlTabButtonActive
-                : tabStyles.damlTabButton}
+              className={
+                mode === "classification"
+                  ? tabStyles.damlTabButtonActive
+                  : tabStyles.damlTabButton
+              }
               onClick={() => setMode("classification")}
             >
-              <Tags className={tabStyles.damlTabIcon} />
+              <Tags
+                className={tabStyles.damlTabIcon}
+              />
               Classification
             </button>
 
@@ -323,7 +398,10 @@ function AnomalyDetection() {
                 </option>
 
                 {systemNames.map((name) => (
-                  <option key={name} value={name}>
+                  <option
+                    key={name}
+                    value={name}
+                  >
                     {name}
                   </option>
                 ))}
@@ -339,16 +417,39 @@ function AnomalyDetection() {
           </div>
 
           <button
-            className={controlStyles.runButton}
+            type="button"
+            className={`${controlStyles.runButton} ${
+              runningAnalysis
+                ? controlStyles.runButtonRunning
+                : ""
+            }`}
             onClick={handleRunDetection}
+            disabled={loading}
           >
-            Run {currentModeLabel}
+            <Play
+              className={`${controlStyles.runButtonIcon} ${
+                runningAnalysis
+                  ? controlStyles.runButtonIconRunning
+                  : ""
+              }`}
+            />
+
+            {
+              runningAnalysis
+                ? `Running ${currentModeLabel}...`
+                : `Run ${currentModeLabel}`
+            }
           </button>
 
           {executionMessage && (
             <div className={controlStyles.executionInfo}>
+
               <span>Status:</span>
-              <strong>{executionMessage}</strong>
+
+              <strong>
+                {executionMessage}
+              </strong>
+
             </div>
           )}
 
@@ -361,7 +462,3 @@ function AnomalyDetection() {
 }
 
 export default AnomalyDetection;
-
-
-
-
