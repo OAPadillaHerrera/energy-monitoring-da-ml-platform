@@ -42,6 +42,14 @@ type ClassificationData = {
   context_classification: Record<string, ClassificationEvent[]>;
 };
 
+const anomalyModeHeadings = {
+  zscore: {
+    title: "Z-Score Analysis",
+    subtitle:
+      "Anomaly detection based on consumption deviation"
+  }
+};
+
 function AnomalyDetection() {
 
   const [mode, setMode] = useState("zscore");
@@ -120,6 +128,14 @@ function AnomalyDetection() {
     );
   };
 
+  const currentModeLabel =
+    mode.charAt(0).toUpperCase() + mode.slice(1);
+
+  const currentModeHeading =
+    anomalyModeHeadings[
+      mode as keyof typeof anomalyModeHeadings
+    ];
+
   const handleSystemChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSystemName(event.target.value);
   };
@@ -146,6 +162,11 @@ function AnomalyDetection() {
   return (
 
     <section className={layoutStyles.mainPanel}>
+
+      <div className={layoutStyles.sectionHeading}>
+        <h2>{currentModeHeading?.title}</h2>
+        <span>{currentModeHeading?.subtitle}</span>
+      </div>
 
       <section className={panelStyles.chartPanel}>
 
@@ -275,7 +296,7 @@ function AnomalyDetection() {
             className={controlStyles.runButton}
             onClick={handleRunDetection}
           >
-            Run {mode.charAt(0).toUpperCase() + mode.slice(1)}
+            Run {currentModeLabel}
           </button>
 
           {executionMessage && (
@@ -294,6 +315,7 @@ function AnomalyDetection() {
 }
 
 export default AnomalyDetection;
+
 
 
 
