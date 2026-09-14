@@ -186,6 +186,12 @@ function AnomalyDetection() {
       }
     };
 
+  const handleModeChange = (newMode: string): void => {
+    setMode(newMode);
+    setExecutionMessage("");
+    setError(null);
+  };
+
   const currentModeLabel =
     mode.charAt(0).toUpperCase() + mode.slice(1);
 
@@ -198,6 +204,8 @@ function AnomalyDetection() {
     event: ChangeEvent<HTMLSelectElement>
   ): void => {
     setSystemName(event.target.value);
+    setExecutionMessage("");
+    setError(null);
   };
 
   const zscoreChartData = zscoreData
@@ -346,7 +354,9 @@ function AnomalyDetection() {
                   ? tabStyles.damlTabButtonActive
                   : tabStyles.damlTabButton
               }
-              onClick={() => setMode("zscore")}
+              onClick={() =>
+                handleModeChange("zscore")
+              }
             >
               <Activity
                 className={tabStyles.damlTabIcon}
@@ -360,7 +370,9 @@ function AnomalyDetection() {
                   ? tabStyles.damlTabButtonActive
                   : tabStyles.damlTabButton
               }
-              onClick={() => setMode("detection")}
+              onClick={() =>
+                handleModeChange("detection")
+              }
             >
               <Search
                 className={tabStyles.damlTabIcon}
@@ -374,7 +386,9 @@ function AnomalyDetection() {
                   ? tabStyles.damlTabButtonActive
                   : tabStyles.damlTabButton
               }
-              onClick={() => setMode("classification")}
+              onClick={() =>
+                handleModeChange("classification")
+              }
             >
               <Tags
                 className={tabStyles.damlTabIcon}
