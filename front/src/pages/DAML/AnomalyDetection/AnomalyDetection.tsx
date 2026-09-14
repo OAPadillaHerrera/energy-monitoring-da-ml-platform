@@ -99,69 +99,63 @@ function AnomalyDetection() {
 
   }, []);
 
-  useEffect(() => {
+  const handleRunDetection =
+  async (): Promise<void> => {
+    try {
+      setLoading(true);
+      setError(null);
 
-    const timeoutId = setTimeout(() => {
+      if (mode === "zscore") {
+        const endpoint = systemName.trim()
+          ? `/anomaly/zscore?name=${encodeURIComponent(systemName)}`
+          : "/anomaly/zscore";
 
-      const fetchAnomaly = async (): Promise<void> => {
+        const response = await api.get(endpoint);
 
-        try {
-          setLoading(true);
-          setError(null);
+        setZscoreData(response.data);
+      }
 
-          if (mode === "zscore") {
+      if (mode === "detection") {
+        const endpoint = systemName.trim()
+          ? `/anomaly/detection?name=${encodeURIComponent(systemName)}`
+          : "/anomaly/detection";
 
-            const endpoint = systemName.trim()
-              ? `/anomaly/zscore?name=${encodeURIComponent(systemName)}`
-              : "/anomaly/zscore";
+        const response = await api.get(endpoint);
 
-            const response = await api.get(endpoint);
-            setZscoreData(response.data);
-          }
+        setDetectionData(response.data);
+      }
 
-          if (mode === "detection") {
+      if (mode === "classification") {
+        const endpoint = systemName.trim()
+          ? `/anomaly/classification?name=${encodeURIComponent(systemName)}`
+          : "/anomaly/classification";
 
-            const endpoint = systemName.trim()
-              ? `/anomaly/detection?name=${encodeURIComponent(systemName)}`
-              : "/anomaly/detection";
+        const response = await api.get(endpoint);
 
-            const response = await api.get(endpoint);
-            setDetectionData(response.data);
-          }
+        setClassificationData(response.data);
+      }
 
-          if (mode === "classification") {
+      setExecutionMessage(
+        systemName.trim()
+          ? `${currentModeLabel} analysis executed successfully for ${systemName}.`
+          : `${currentModeLabel} analysis executed successfully for all systems.`
+      );
+    } catch (error: any) {
+      console.error(
+        "Anomaly analysis execution failed:",
+        error
+      );
 
-            const endpoint = systemName.trim()
-              ? `/anomaly/classification?name=${encodeURIComponent(systemName)}`
-              : "/anomaly/classification";
+      setError(
+        error?.response?.data?.message ||
+        error.message ||
+        "Anomaly analysis execution failed."
+      );
 
-            const response = await api.get(endpoint);
-            setClassificationData(response.data);
-          }
-
-        } catch (err) {
-          console.error(err);
-          setError("System not found.");
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      void fetchAnomaly();
-
-    }, 700);
-
-    return () => clearTimeout(timeoutId);
-
-  }, [mode, systemName]);
-
-  const handleRunDetection = (): void => {
-
-    setExecutionMessage(
-      systemName.trim()
-        ? `${mode.toUpperCase()} Analysis executed for ${systemName}.`
-        : `${mode.toUpperCase()} Analysis executed for all systems.`
-    );
+      setExecutionMessage("");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const currentModeLabel =
@@ -191,11 +185,13 @@ function AnomalyDetection() {
     : null;
 
   const classificationEvents: ClassificationEvent[] | null =
-    classificationData
-      ? systemName.trim()
-        ? Object.values(classificationData.context_classification || {}).flat()
-        : classificationData.full_pipeline
-      : null;
+  classificationData
+    ? classificationData.system
+      ? Object.values(
+          classificationData.context_classification || {}
+        ).flat()
+      : classificationData.full_pipeline
+    : null;
 
   return (
 
