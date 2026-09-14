@@ -158,9 +158,7 @@ function AnomalyDetection() {
         }
 
         setExecutionMessage(
-          systemName.trim()
-            ? `${currentModeLabel} analysis executed successfully for ${systemName}.`
-            : `${currentModeLabel} analysis executed successfully for all systems.`
+          `${currentModeLabel} analysis executed successfully`
         );
 
       } catch (error: any) {
@@ -193,7 +191,9 @@ function AnomalyDetection() {
   };
 
   const currentModeLabel =
-    mode.charAt(0).toUpperCase() + mode.slice(1);
+    mode === "zscore"
+      ? "Z-Score"
+      : mode.charAt(0).toUpperCase() + mode.slice(1);
 
   const currentModeHeading =
     anomalyModeHeadings[
@@ -455,17 +455,20 @@ function AnomalyDetection() {
             }
           </button>
 
-          {executionMessage && (
-            <div className={controlStyles.executionInfo}>
+          {
+            executionMessage && (
+              <div className={controlStyles.executionInfo}>
+                <span>
+                  {executionMessage}
+                </span>
 
-              <span>Status:</span>
-
-              <strong>
-                {executionMessage}
-              </strong>
-
-            </div>
-          )}
+                <strong>
+                  System:{" "}
+                  {systemName.trim() || "All Systems"}
+                </strong>
+              </div>
+            )
+          }
 
         </div>
 
