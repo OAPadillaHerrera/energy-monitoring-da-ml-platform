@@ -286,7 +286,9 @@ function AnomalyDetection() {
               <div
                 style={{
                   width: "100%",
-                  height: "320px"
+                  height: "100%",
+                  minHeight: 0,
+                  flex: 1
                 }}
               >
                 <ZScoreChart
@@ -303,7 +305,9 @@ function AnomalyDetection() {
               <div
                 style={{
                   width: "100%",
-                  height: "320px"
+                  height: "100%",
+                  minHeight: 0,
+                  flex: 1
                 }}
               >
                 <DetectionChart
@@ -317,7 +321,11 @@ function AnomalyDetection() {
             mode === "classification" &&
             classificationEvents && (
 
-              <div style={{ width: "100%" }}>
+              <div
+                style={{
+                  width: "100%"
+                }}
+              >
 
                 <ClassificationRootCauseChart
                   data={classificationEvents}
