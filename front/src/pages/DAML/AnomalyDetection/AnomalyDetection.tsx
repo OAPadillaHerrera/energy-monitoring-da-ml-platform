@@ -248,7 +248,7 @@ function AnomalyDetection() {
         <div className={panelStyles.panelHeader}>
 
           {mode === "zscore" &&
-            "Z-Score Analysis Visualization"}
+            "Z-Score Over Time"}
 
           {mode === "detection" &&
             "Detection Analysis Visualization"}
