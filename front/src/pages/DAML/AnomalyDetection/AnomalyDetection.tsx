@@ -53,7 +53,7 @@ const anomalyModeHeadings = {
   zscore: {
     title: "Z-Score Analysis",
     subtitle:
-      "Anomaly detection based on consumption deviation"
+      "Consumption deviation measured using Z-Score"
   }
 };
 
