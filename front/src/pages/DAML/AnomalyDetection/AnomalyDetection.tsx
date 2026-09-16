@@ -1,5 +1,4 @@
 
-
 import {
   type ChangeEvent,
   useEffect,
@@ -58,7 +57,7 @@ const anomalyModeHeadings = {
   detection: {
     title: "Anomaly Detection",
     subtitle:
-    "Anomalies identified from Z-Score deviation"
+      "Anomalies identified from Z-Score deviation"
   }
 };
 
@@ -225,6 +224,19 @@ function AnomalyDetection() {
         : detectionData.all_systems_detection)
     : null;
 
+  const hasDetectionData =
+    detectionChartData &&
+    (
+      Array.isArray(detectionChartData)
+        ? detectionChartData.length > 0
+        : Object.values(detectionChartData).some(
+            (values) =>
+              typeof values === "object"
+                ? Object.keys(values).length > 0
+                : true
+          )
+    );
+
   const classificationEvents: ClassificationEvent[] | null =
     classificationData
       ? classificationData.system
@@ -305,7 +317,18 @@ function AnomalyDetection() {
           {!loading &&
             !error &&
             mode === "detection" &&
-            detectionChartData && (
+            detectionData &&
+            !hasDetectionData && (
+
+              <span className={panelStyles.placeholderText}>
+                No detection data available
+              </span>
+            )}
+
+          {!loading &&
+            !error &&
+            mode === "detection" &&
+            hasDetectionData && (
 
               <div
                 style={{
