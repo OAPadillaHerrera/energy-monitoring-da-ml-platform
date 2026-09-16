@@ -256,7 +256,7 @@ function AnomalyDetection() {
             "Z-Score Over Time"}
 
           {mode === "detection" &&
-            "Detection Analysis Visualization"}
+            "Detection Score Over Time"}
 
           {mode === "classification" &&
             "Classification Analysis Visualization"}
