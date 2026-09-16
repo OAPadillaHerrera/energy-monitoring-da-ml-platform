@@ -54,6 +54,11 @@ const anomalyModeHeadings = {
     title: "Z-Score Analysis",
     subtitle:
       "Consumption deviation measured using Z-Score"
+  },
+  detection: {
+    title: "Anomaly Detection",
+    subtitle:
+    "Anomalies identified from Z-Score deviation"
   }
 };
 
