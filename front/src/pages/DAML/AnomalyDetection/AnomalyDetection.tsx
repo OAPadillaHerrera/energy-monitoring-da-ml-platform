@@ -290,9 +290,19 @@ function AnomalyDetection() {
         >
 
           {loading && (
-            <span className={panelStyles.placeholderText}>
-              Loading anomaly data...
-            </span>
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              <span className={panelStyles.placeholderText}>
+                Loading anomaly data...
+              </span>
+            </div>
           )}
 
           {error && (

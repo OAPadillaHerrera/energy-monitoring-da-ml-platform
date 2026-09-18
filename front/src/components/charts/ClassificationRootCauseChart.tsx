@@ -16,6 +16,8 @@ import {
 
 import { Bar } from "react-chartjs-2";
 
+import panelStyles from "../shared/styles/panelStyles.module.css";
+
 ChartJS.register(
   BarElement,
   CategoryScale,
@@ -62,8 +64,18 @@ function ClassificationRootCauseChart({
 
   if (!data || data.length === 0) {
     return (
-      <div>
-        No classification data available
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        <span className={panelStyles.placeholderText}>
+          No classification data available
+        </span>
       </div>
     );
   }
