@@ -1,5 +1,7 @@
 
 
+import panelStyles from "../shared/styles/panelStyles.module.css";
+
 type Event = {
   system_name?: string;
   timestamp: string;
@@ -19,7 +21,21 @@ export default function ClassificationEventsTable({
 }: Props) {
 
   if (!data || data.length === 0) {
-    return <div>No events available</div>;
+    return (
+      <div
+         style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        <span className={panelStyles.placeholderText}>
+          No events available
+        </span>
+      </div>
+    );
   }
 
   const sorted = [...data]
@@ -30,7 +46,7 @@ export default function ClassificationEventsTable({
     )
     .slice(0, 20);
 
- const formatDate= (
+  const formatDate = (
     timestamp: string
   ): string => {
 
@@ -58,13 +74,17 @@ export default function ClassificationEventsTable({
     return `${formattedDate} ${formattedTime}`;
   };
 
-  const getTypeColor = (type: string) => {
+  const getTypeColor = (
+    type: string
+  ) => {
+
     switch (type) {
+
       case "spike":
-        return "#ff9f40";
+        return "#F59E0B";
 
       case "drop":
-        return "#ff6384";
+        return "#EF4444";
 
       default:
         return "#ccc";
@@ -72,41 +92,38 @@ export default function ClassificationEventsTable({
   };
 
   return (
-    <div
-      style={{
-        width: "100%",
-        marginTop: "20px"
-      }}
-    >
 
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          fontSize: "14px"
-        }}
-      >
+    <div className={panelStyles.tableContainer}>
+
+      <table className={panelStyles.dataTable}>
 
         <thead>
 
-          <tr
-            style={{
-              textAlign: "left",
-              borderBottom: "1px solid #333"
-            }}
-          >
+          <tr>
 
-            <th>Date</th>
+            <th className={panelStyles.timestampColumn}>
+              Date
+            </th>
 
             {!system && (
-              <th>System</th>
+              <th className={panelStyles.systemColumn}>
+                System
+              </th>
             )}
 
-            <th>Type</th>
+            <th className={panelStyles.eventColumn}>
+              Type
+            </th>
 
-            <th>Root Cause</th>
+            <th className={panelStyles.eventColumn}>
+              Root Cause
+            </th>
 
-            <th>Z-Score</th>
+            <th
+              className={`${panelStyles.eventColumn} ${panelStyles.zScoreHeader}`}
+            >
+              Z-Score
+            </th>
 
           </tr>
 
@@ -114,44 +131,62 @@ export default function ClassificationEventsTable({
 
         <tbody>
 
-          {sorted.map((row, idx) => (
+          {sorted.map(
+            (row, idx) => (
 
-            <tr
-              key={idx}
-              style={{
-                borderBottom: "1px solid #222"
-              }}
-            >
+              <tr key={idx}>
 
-              <td>
-                {formatDate(row.timestamp)}
-              </td>
-
-              {!system && (
-                <td>
-                  {row.system_name ?? "-"}
+                <td
+                  className={
+                    panelStyles.timestampColumn
+                  }
+                >
+                  {formatDate(
+                    row.timestamp
+                  )}
                 </td>
-              )}
 
-              <td
-                style={{
-                  color: getTypeColor(row.anomaly_type)
-                }}
-              >
-                {row.anomaly_type}
-              </td>
+                {!system && (
+                  <td
+                    className={
+                      panelStyles.systemColumn
+                    }
+                  >
+                    {row.system_name ?? "-"}
+                  </td>
+                )}
 
-              <td>
-                {row.root_cause}
-              </td>
+                <td
+                  className={
+                    panelStyles.eventColumn
+                  }
+                  style={{
+                    color: getTypeColor(
+                      row.anomaly_type
+                    )
+                  }}
+                >
+                  {row.anomaly_type}
+                </td>
 
-              <td>
-                {row.z_score.toFixed(2)}
-              </td>
+                <td
+                  className={
+                    panelStyles.eventColumn
+                  }
+                >
+                  {row.root_cause}
+                </td>
 
-            </tr>
+                <td
+                  className={`${panelStyles.eventColumn} ${panelStyles.zScoreValue}`}
+                >
+                  {row.z_score.toFixed(2)}
+                </td>
 
-          ))}
+              </tr>
+
+            )
+          )}
 
         </tbody>
 
