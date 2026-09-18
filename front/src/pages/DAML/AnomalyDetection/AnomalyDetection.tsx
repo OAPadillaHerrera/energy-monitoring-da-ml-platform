@@ -357,28 +357,48 @@ function AnomalyDetection() {
 
               <div
                 style={{
-                  width: "100%"
+                  width: "100%",
+                  height: "100%",
+                  minHeight: 0,
+                  flex: 1
                 }}
               >
-
                 <ClassificationRootCauseChart
                   data={classificationEvents}
                 />
-
-                <ClassificationEventsTable
-                  data={classificationEvents}
-                  system={
-                    systemName.trim() ||
-                    undefined
-                  }
-                />
-
               </div>
             )}
 
         </div>
 
       </section>
+
+      {!loading &&
+        !error &&
+        mode === "classification" &&
+        classificationEvents && (
+
+          <section className={panelStyles.tablePanel}>
+
+            <div className={panelStyles.panelHeader}>
+              Classification Events
+            </div>
+
+            <div className={panelStyles.tableContainer}>
+
+              <ClassificationEventsTable
+                data={classificationEvents}
+                system={
+                  systemName.trim() ||
+                  undefined
+                }
+              />
+
+            </div>
+
+          </section>
+
+        )}
 
       <section className={panelStyles.controlPanel}>
 

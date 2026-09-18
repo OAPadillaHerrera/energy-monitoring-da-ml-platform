@@ -263,3 +263,5 @@ export default function SystemConsumptionChart({
     </div>
   );
 }
+
+
