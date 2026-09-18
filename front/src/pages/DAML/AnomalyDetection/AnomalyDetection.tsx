@@ -1,4 +1,5 @@
 
+
 import {
   type ChangeEvent,
   useEffect,
@@ -58,6 +59,11 @@ const anomalyModeHeadings = {
     title: "Anomaly Detection",
     subtitle:
       "Anomalies identified from Z-Score deviation"
+  },
+  classification: {
+    title: "Anomaly Classification",
+    subtitle:
+      "Anomaly classification by type and root cause"
   }
 };
 
