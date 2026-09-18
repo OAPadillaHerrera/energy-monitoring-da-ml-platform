@@ -277,7 +277,7 @@ function AnomalyDetection() {
             "Detection Score Over Time"}
 
           {mode === "classification" &&
-            "Classification Analysis Visualization"}
+            "Root Cause Frequency"}
 
         </div>
 
