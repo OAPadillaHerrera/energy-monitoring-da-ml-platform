@@ -231,16 +231,15 @@ function AnomalyDetection() {
       }
     };
 
-  /*const handleModeChange = (newMode: string): void => {
-    setMode(newMode);
-    setExecutionMessage("");
-    setError(null);
-  };*/
-
-  const currentModeLabel =
+  /*const currentModeLabel =
     mode === "zscore"
       ? "Z-Score"
-      : mode.charAt(0).toUpperCase() + mode.slice(1);
+      : mode.charAt(0).toUpperCase() + mode.slice(1);*/
+
+    const currentModeLabel =
+      anomalyModes.find(
+        (anomalyMode) => anomalyMode.value === mode
+      )?.label || "";
 
   const currentModeHeading =
     anomalyModeHeadings[
