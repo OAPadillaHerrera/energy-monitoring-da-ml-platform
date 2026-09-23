@@ -49,6 +49,24 @@ type ClassificationData = {
   context_classification: Record<string, ClassificationEvent[]>;
 };
 
+const anomalyModes = [
+  {
+    value: "zscore",
+    label: "Z-Score",
+    icon: Activity
+  },
+  {
+    value: "detection",
+    label: "Detection",
+    icon: Search
+  },
+  {
+    value: "classification",
+    label: "Classification",
+    icon: Tags
+  }
+];
+
 const anomalyModeHeadings = {
   zscore: {
     title: "Z-Score Analysis",
@@ -73,7 +91,8 @@ function AnomalyDetection() {
   const [systemName, setSystemName] = useState("");
   const [systemNames, setSystemNames] =
     useState<string[]>([]);
-  const [executionMessage, setExecutionMessage] = useState("");
+  const [executionMessage, setExecutionMessage] =
+    useState("");
 
   const [zscoreData, setZscoreData] =
     useState<ZScoreData | null>(null);
@@ -219,15 +238,19 @@ function AnomalyDetection() {
   };
 
   const zscoreChartData = zscoreData
-    ? (zscoreData.system
-        ? zscoreData.z_score_by_system
-        : zscoreData.z_score_consumption)
+    ? (
+        zscoreData.system
+          ? zscoreData.z_score_by_system
+          : zscoreData.z_score_consumption
+      )
     : null;
 
   const detectionChartData = detectionData
-    ? (detectionData.system
-        ? detectionData.by_system
-        : detectionData.all_systems_detection)
+    ? (
+        detectionData.system
+          ? detectionData.by_system
+          : detectionData.all_systems_detection
+      )
     : null;
 
   const hasDetectionData =
@@ -243,13 +266,16 @@ function AnomalyDetection() {
           )
     );
 
-  const classificationEvents: ClassificationEvent[] | null =
+  const classificationEvents:
+    ClassificationEvent[] | null =
     classificationData
-      ? classificationData.system
-        ? Object.values(
-            classificationData.context_classification || {}
-          ).flat()
-        : classificationData.full_pipeline
+      ? (
+          classificationData.system
+            ? Object.values(
+                classificationData.context_classification || {}
+              ).flat()
+            : classificationData.full_pipeline
+        )
       : null;
 
   return (
@@ -258,7 +284,9 @@ function AnomalyDetection() {
 
       <div className={layoutStyles.sectionHeading}>
 
-        <h2>{currentModeHeading?.title}</h2>
+        <h2>
+          {currentModeHeading?.title}
+        </h2>
 
         <span>
           {currentModeHeading?.subtitle}
@@ -420,53 +448,40 @@ function AnomalyDetection() {
 
           <div className={tabStyles.tabs}>
 
-            <button
-              className={
-                mode === "zscore"
-                  ? tabStyles.damlTabButtonActive
-                  : tabStyles.damlTabButton
-              }
-              onClick={() =>
-                handleModeChange("zscore")
-              }
-            >
-              <Activity
-                className={tabStyles.damlTabIcon}
-              />
-              Z-Score
-            </button>
+            {anomalyModes.map(
+              (anomalyMode) => {
 
-            <button
-              className={
-                mode === "detection"
-                  ? tabStyles.damlTabButtonActive
-                  : tabStyles.damlTabButton
-              }
-              onClick={() =>
-                handleModeChange("detection")
-              }
-            >
-              <Search
-                className={tabStyles.damlTabIcon}
-              />
-              Detection
-            </button>
+                const Icon =
+                  anomalyMode.icon;
 
-            <button
-              className={
-                mode === "classification"
-                  ? tabStyles.damlTabButtonActive
-                  : tabStyles.damlTabButton
+                return (
+                  <button
+                    key={anomalyMode.value}
+                    type="button"
+                    className={
+                      mode === anomalyMode.value
+                        ? tabStyles.damlTabButtonActive
+                        : tabStyles.damlTabButton
+                    }
+                    onClick={() =>
+                      handleModeChange(
+                        anomalyMode.value
+                      )
+                    }
+                  >
+                    <Icon
+                      className={
+                        tabStyles.damlTabIcon
+                      }
+                    />
+
+                    {anomalyMode.label}
+
+                  </button>
+                );
+
               }
-              onClick={() =>
-                handleModeChange("classification")
-              }
-            >
-              <Tags
-                className={tabStyles.damlTabIcon}
-              />
-              Classification
-            </button>
+            )}
 
           </div>
 
@@ -479,18 +494,21 @@ function AnomalyDetection() {
                 value={systemName}
                 onChange={handleSystemChange}
               >
+
                 <option value="">
                   All Systems
                 </option>
 
-                {systemNames.map((name) => (
-                  <option
-                    key={name}
-                    value={name}
-                  >
-                    {name}
-                  </option>
-                ))}
+                {systemNames.map(
+                  (name) => (
+                    <option
+                      key={name}
+                      value={name}
+                    >
+                      {name}
+                    </option>
+                  )
+                )}
 
               </select>
 
@@ -512,6 +530,7 @@ function AnomalyDetection() {
             onClick={handleRunDetection}
             disabled={loading}
           >
+
             <Play
               className={`${controlStyles.runButtonIcon} ${
                 runningAnalysis
@@ -525,22 +544,23 @@ function AnomalyDetection() {
                 ? `Running ${currentModeLabel}...`
                 : `Run ${currentModeLabel}`
             }
+
           </button>
 
-          {
-            executionMessage && (
-              <div className={controlStyles.executionInfo}>
-                <span>
-                  {executionMessage}
-                </span>
+          {executionMessage && (
+            <div className={controlStyles.executionInfo}>
 
-                <strong>
-                  System:{" "}
-                  {systemName.trim() || "All Systems"}
-                </strong>
-              </div>
-            )
-          }
+              <span>
+                {executionMessage}
+              </span>
+
+              <strong>
+                System:{" "}
+                {systemName.trim() || "All Systems"}
+              </strong>
+
+            </div>
+          )}
 
         </div>
 
