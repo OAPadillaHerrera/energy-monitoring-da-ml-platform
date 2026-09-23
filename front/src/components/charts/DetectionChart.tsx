@@ -30,6 +30,7 @@ ChartJS.register(
 
 type Props = {
   data: Record<string, Record<string, number>>;
+  selectedSystem?: string;
   title?: string;
 };
 
@@ -82,7 +83,8 @@ function formatTimestamp(
 }
 
 function DetectionChart({
-  data
+  data,
+  selectedSystem
 }: Props) {
 
   const hasData =
@@ -137,6 +139,9 @@ function DetectionChart({
             index % SYSTEM_COLORS.length
           ];
 
+        const isSelectedSystem =
+          Boolean(selectedSystem);
+
         const series =
           timestamps.map(
             (timestamp) =>
@@ -148,7 +153,10 @@ function DetectionChart({
 
           data: series,
 
-          borderColor: systemColor,
+          borderColor:
+            isSelectedSystem
+              ? "#00C2FF"
+              : systemColor,
 
           borderWidth: 1,
 
@@ -165,16 +173,22 @@ function DetectionChart({
           pointHoverRadius: 8,
 
           pointBackgroundColor:
-            systemColor,
+            isSelectedSystem
+              ? "#A855F7"
+              : systemColor,
 
           pointHoverBackgroundColor:
             "rgba(0, 0, 0, 0)",
 
           pointBorderColor:
-            systemColor,
+            isSelectedSystem
+              ? "#00C2FF"
+              : systemColor,
 
           pointHoverBorderColor:
-            systemColor,
+            isSelectedSystem
+              ? "#00C2FF"
+              : systemColor,
 
           pointBorderWidth: 1,
 
@@ -331,6 +345,13 @@ function DetectionChart({
               return {
                 borderColor: "#10b981",
                 backgroundColor: "#10b981"
+              };
+            }
+
+            if (selectedSystem) {
+              return {
+                borderColor: "#00C2FF",
+                backgroundColor: "#A855F7"
               };
             }
 
