@@ -87,9 +87,13 @@ const anomalyModeHeadings = {
 
 function AnomalyDetection() {
   const [mode, setMode] = useState("zscore");
-  const [systemName, setSystemName] = useState("");
+
+  const [systemName, setSystemName] =
+    useState("");
+
   const [systemNames, setSystemNames] =
     useState<string[]>([]);
+
   const [executionMessage, setExecutionMessage] =
     useState("");
 
@@ -231,10 +235,10 @@ function AnomalyDetection() {
       }
     };
 
-    const currentModeLabel =
-      anomalyModes.find(
-        (anomalyMode) => anomalyMode.value === mode
-      )?.label || "";
+  const currentModeLabel =
+    anomalyModes.find(
+      (anomalyMode) => anomalyMode.value === mode
+    )?.label || "";
 
   const currentModeHeading =
     anomalyModeHeadings[
@@ -257,28 +261,15 @@ function AnomalyDetection() {
       )
     : null;
 
-      const detectionChartData =
-        detectionData
-          ? detectionData.system
-            ? {
-                [detectionData.system]:
-                  detectionData.by_system
-              }
-            : detectionData.all_systems_detection
-          : null;
-
-  const hasDetectionData =
-    detectionChartData &&
-    (
-      Array.isArray(detectionChartData)
-        ? detectionChartData.length > 0
-        : Object.values(detectionChartData).some(
-            (values) =>
-              typeof values === "object"
-                ? Object.keys(values).length > 0
-                : true
-          )
-    );
+  const detectionChartData =
+    detectionData
+      ? detectionData.system
+        ? {
+            [detectionData.system]:
+              detectionData.by_system
+          }
+        : detectionData.all_systems_detection
+      : null;
 
   const classificationEvents:
     ClassificationEvent[] | null =
@@ -374,18 +365,7 @@ function AnomalyDetection() {
           {!loading &&
             !error &&
             mode === "detection" &&
-            detectionData &&
-            !hasDetectionData && (
-
-              <span className={panelStyles.placeholderText}>
-                No detection data available
-              </span>
-            )}
-
-          {!loading &&
-            !error &&
-            mode === "detection" &&
-            hasDetectionData && (
+            detectionChartData && (
 
               <div
                 style={{
@@ -584,5 +564,7 @@ function AnomalyDetection() {
 }
 
 export default AnomalyDetection;
+
+
 
 
