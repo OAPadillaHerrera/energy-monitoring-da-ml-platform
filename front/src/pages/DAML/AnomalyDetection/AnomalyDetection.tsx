@@ -231,11 +231,6 @@ function AnomalyDetection() {
       }
     };
 
-  /*const currentModeLabel =
-    mode === "zscore"
-      ? "Z-Score"
-      : mode.charAt(0).toUpperCase() + mode.slice(1);*/
-
     const currentModeLabel =
       anomalyModes.find(
         (anomalyMode) => anomalyMode.value === mode
@@ -262,13 +257,15 @@ function AnomalyDetection() {
       )
     : null;
 
-  const detectionChartData = detectionData
-    ? (
-        detectionData.system
-          ? detectionData.by_system
-          : detectionData.all_systems_detection
-      )
-    : null;
+      const detectionChartData =
+        detectionData
+          ? detectionData.system
+            ? {
+                [detectionData.system]:
+                  detectionData.by_system
+              }
+            : detectionData.all_systems_detection
+          : null;
 
   const hasDetectionData =
     detectionChartData &&
