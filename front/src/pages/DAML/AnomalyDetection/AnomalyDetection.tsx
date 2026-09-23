@@ -86,7 +86,6 @@ const anomalyModeHeadings = {
 };
 
 function AnomalyDetection() {
-
   const [mode, setMode] = useState("zscore");
   const [systemName, setSystemName] = useState("");
   const [systemNames, setSystemNames] =
@@ -113,11 +112,8 @@ function AnomalyDetection() {
     useState<string | null>(null);
 
   useEffect(() => {
-
     const fetchSystems = async (): Promise<void> => {
-
       try {
-
         const response =
           await api.get("/metrics/basic");
 
@@ -127,9 +123,7 @@ function AnomalyDetection() {
           );
 
         setSystemNames(systems);
-
       } catch (err) {
-
         console.error(
           "System names loading failed:",
           err
@@ -138,78 +132,102 @@ function AnomalyDetection() {
     };
 
     void fetchSystems();
-
   }, []);
 
   const handleRunDetection =
     async (): Promise<void> => {
-
       try {
-
         setLoading(true);
         setRunningAnalysis(true);
         setError(null);
+        setExecutionMessage("");
 
         if (mode === "zscore") {
+          setZscoreData(null);
 
           const endpoint = systemName.trim()
-            ? `/anomaly/zscore?name=${encodeURIComponent(systemName)}`
+            ? `/anomaly/zscore?name=${encodeURIComponent(
+                systemName.trim()
+              )}`
             : "/anomaly/zscore";
 
           const response =
             await api.get(endpoint);
 
           setZscoreData(response.data);
+
+          setExecutionMessage(
+            "Z-Score analysis executed successfully"
+          );
+
+          return;
         }
 
         if (mode === "detection") {
+          setDetectionData(null);
 
           const endpoint = systemName.trim()
-            ? `/anomaly/detection?name=${encodeURIComponent(systemName)}`
+            ? `/anomaly/detection?name=${encodeURIComponent(
+                systemName.trim()
+              )}`
             : "/anomaly/detection";
 
           const response =
             await api.get(endpoint);
 
           setDetectionData(response.data);
+
+          setExecutionMessage(
+            "Detection analysis executed successfully"
+          );
+
+          return;
         }
 
         if (mode === "classification") {
+          setClassificationData(null);
 
           const endpoint = systemName.trim()
-            ? `/anomaly/classification?name=${encodeURIComponent(systemName)}`
+            ? `/anomaly/classification?name=${encodeURIComponent(
+                systemName.trim()
+              )}`
             : "/anomaly/classification";
 
           const response =
             await api.get(endpoint);
 
           setClassificationData(response.data);
+
+          setExecutionMessage(
+            "Classification analysis executed successfully"
+          );
         }
-
-        setExecutionMessage(
-          `${currentModeLabel} analysis executed successfully`
-        );
-
       } catch (error: any) {
-
         console.error(
           "Anomaly analysis execution failed:",
           error
         );
+
+        if (mode === "zscore") {
+          setZscoreData(null);
+        }
+
+        if (mode === "detection") {
+          setDetectionData(null);
+        }
+
+        if (mode === "classification") {
+          setClassificationData(null);
+        }
 
         setError(
           error?.response?.data?.message ||
           error.message ||
           "Anomaly analysis execution failed."
         );
-
-        setExecutionMessage("");
-
       } finally {
-
         setLoading(false);
         setRunningAnalysis(false);
-
       }
     };
 
@@ -279,7 +297,6 @@ function AnomalyDetection() {
       : null;
 
   return (
-
     <section className={layoutStyles.mainPanel}>
 
       <div className={layoutStyles.sectionHeading}>
@@ -571,3 +588,5 @@ function AnomalyDetection() {
 }
 
 export default AnomalyDetection;
+
+
