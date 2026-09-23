@@ -231,11 +231,11 @@ function AnomalyDetection() {
       }
     };
 
-  const handleModeChange = (newMode: string): void => {
+  /*const handleModeChange = (newMode: string): void => {
     setMode(newMode);
     setExecutionMessage("");
     setError(null);
-  };
+  };*/
 
   const currentModeLabel =
     mode === "zscore"
@@ -480,11 +480,11 @@ function AnomalyDetection() {
                         ? tabStyles.damlTabButtonActive
                         : tabStyles.damlTabButton
                     }
-                    onClick={() =>
-                      handleModeChange(
-                        anomalyMode.value
-                      )
-                    }
+                    onClick={() => {
+                      setMode(anomalyMode.value);
+                      setExecutionMessage("");
+                      setError(null);
+                    }}
                   >
                     <Icon
                       className={
