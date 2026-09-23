@@ -284,8 +284,7 @@ function AnomalyDetection() {
       : null;
 
   return (
-    <section className={layoutStyles.mainPanel}>
-
+    <>
       <div className={layoutStyles.sectionHeading}>
 
         <h2>
@@ -558,8 +557,7 @@ function AnomalyDetection() {
         </div>
 
       </section>
-
-    </section>
+    </>
   );
 }
 
