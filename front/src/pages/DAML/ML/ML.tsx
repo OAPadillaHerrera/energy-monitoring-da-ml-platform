@@ -206,22 +206,38 @@ function ML() {
           {!loading &&
             !error &&
             stableEvents.length > 0 && (
-              <div style={{ width: "100%" }}>
+              <div
+                style={{
+                  width: "100%"
+                }}
+              >
                 <RootCausePredictionChart
                   data={stableEvents}
-                />
-
-                <RootCausePredictionTable
-                  data={stableEvents}
-                  system={
-                    systemName.trim() ||
-                    undefined
-                  }
                 />
               </div>
             )}
         </div>
       </section>
+
+      {!loading &&
+        !error &&
+        stableEvents.length > 0 && (
+          <section className={panelStyles.tablePanel}>
+            <div className={panelStyles.panelHeader}>
+              Root Cause Events
+            </div>
+
+            <div className={panelStyles.tableContainer}>
+              <RootCausePredictionTable
+                data={stableEvents}
+                system={
+                  systemName.trim() ||
+                  undefined
+                }
+              />
+            </div>
+          </section>
+        )}
 
       <section className={panelStyles.controlPanel}>
         <div className={panelStyles.panelHeader}>
@@ -317,3 +333,5 @@ function ML() {
 }
 
 export default ML;
+
+
