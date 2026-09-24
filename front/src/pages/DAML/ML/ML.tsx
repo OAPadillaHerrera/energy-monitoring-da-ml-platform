@@ -167,7 +167,7 @@ function ML() {
 
       <section className={panelStyles.chartPanel}>
         <div className={panelStyles.panelHeader}>
-          Root Cause Pipeline Visualization
+          Root Cause Predictions
         </div>
 
         <div
