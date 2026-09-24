@@ -377,7 +377,7 @@ function AnomalyDetection() {
                 <DetectionChart
                   data={detectionChartData}
                   selectedSystem={
-                    systemName.trim() || undefined
+                    detectionData?.system
                   }
                 />
               </div>
