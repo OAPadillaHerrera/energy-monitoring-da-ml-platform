@@ -108,118 +108,121 @@ function ML() {
     setSystemName(event.target.value);
   };
 
-  return (
-    <section className={layoutStyles.mainPanel}>
+return (
+  <>
+    <div className={layoutStyles.sectionHeading}>
+      <h2>Root Cause Pipeline</h2>
+      <span>Root cause predictions · Risk and event analysis</span>
+    </div>
 
-      <section className={panelStyles.chartPanel}>
+    <section className={panelStyles.chartPanel}>
 
-        <div className={panelStyles.panelHeader}>
-          Root Cause Pipeline Visualization
-        </div>
+      <div className={panelStyles.panelHeader}>
+        Root Cause Pipeline Visualization
+      </div>
 
-        <div
-          className={panelStyles.chartPlaceholder}
-          style={{
-            alignItems: "stretch",
-            justifyContent: "flex-start"
-          }}
-        >
+      <div
+        className={panelStyles.chartPlaceholder}
+        style={{
+          alignItems: "stretch",
+          justifyContent: "flex-start"
+        }}
+      >
 
-          {loading && (
-            <span className={panelStyles.placeholderText}>
-              Loading ML data...
-            </span>
-          )}
+        {loading && (
+          <span className={panelStyles.placeholderText}>
+            Loading ML data...
+          </span>
+        )}
 
-          {error && (
-            <span className={panelStyles.placeholderText}>
-              {error}
-            </span>
-          )}
+        {error && (
+          <span className={panelStyles.placeholderText}>
+            {error}
+          </span>
+        )}
 
-          {!loading &&
-            !error &&
-            stableEvents.length === 0 && (
+        {!loading &&
+          !error &&
+          stableEvents.length === 0 && (
 
-            <span
-              className={panelStyles.placeholderText}
-            >
-              No root cause events detected.
-            </span>
-
-          )}
-
-          {!loading && !error && stableEvents.length > 0 && (
-            <div style={{ width: "100%" }}>
-
-              <RootCausePredictionChart
-                data={stableEvents}
-              />
-
-              <RootCausePredictionTable
-                data={stableEvents}
-                system={systemName.trim() || undefined}
-              />
-
-            </div>
-          )}
-
-        </div>
-      </section>
-
-      <section className={panelStyles.controlPanel}>
-
-        <div className={panelStyles.panelHeader}>
-          ML Configuration
-        </div>
-
-        <div className={controlStyles.controlContent}>
-
-          <div className={tabStyles.tabs}>
-            <span className={chipStyles.chipPrimary}>
-              Root Cause Pipeline
-            </span>
-          </div>
-
-          <div className={controlStyles.rangeInputs}>
-
-            <div className={controlStyles.inputGroup}>
-
-              <input
-                type="text"
-                className={controlStyles.input}
-                placeholder="Select System"
-                value={systemName}
-                onChange={handleSystemChange}
-              />
-
-              <div className={controlStyles.inputLabel}>
-                System Name
-              </div>
-
-            </div>
-
-          </div>
-
-          <button
-            className={controlStyles.runButton}
-            onClick={handleRunPipeline}
+          <span
+            className={panelStyles.placeholderText}
           >
-            Run Root Cause Pipeline
-          </button>
+            No root cause events detected.
+          </span>
 
-          {executionMessage && (
-            <div className={controlStyles.executionInfo}>
-              <span>ML execution status:</span>
-              <strong>{executionMessage}</strong>
+        )}
+
+        {!loading && !error && stableEvents.length > 0 && (
+          <div style={{ width: "100%" }}>
+
+            <RootCausePredictionChart
+              data={stableEvents}
+            />
+
+            <RootCausePredictionTable
+              data={stableEvents}
+              system={systemName.trim() || undefined}
+            />
+
+          </div>
+        )}
+
+      </div>
+    </section>
+
+    <section className={panelStyles.controlPanel}>
+
+      <div className={panelStyles.panelHeader}>
+        ML Configuration
+      </div>
+
+      <div className={controlStyles.controlContent}>
+
+        <div className={tabStyles.tabs}>
+          <span className={chipStyles.chipPrimary}>
+            Root Cause Pipeline
+          </span>
+        </div>
+
+        <div className={controlStyles.rangeInputs}>
+
+          <div className={controlStyles.inputGroup}>
+
+            <input
+              type="text"
+              className={controlStyles.input}
+              placeholder="Select System"
+              value={systemName}
+              onChange={handleSystemChange}
+            />
+
+            <div className={controlStyles.inputLabel}>
+              System Name
             </div>
-          )}
+
+          </div>
 
         </div>
-      </section>
 
+        <button
+          className={controlStyles.runButton}
+          onClick={handleRunPipeline}
+        >
+          Run Root Cause Pipeline
+        </button>
+
+        {executionMessage && (
+          <div className={controlStyles.executionInfo}>
+            <span>ML execution status:</span>
+            <strong>{executionMessage}</strong>
+          </div>
+        )}
+
+      </div>
     </section>
-  );
+  </>
+);
 }
 
 export default ML;
