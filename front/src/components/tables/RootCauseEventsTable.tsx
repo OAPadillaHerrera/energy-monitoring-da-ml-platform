@@ -1,5 +1,7 @@
 
 
+import panelStyles from "../shared/styles/panelStyles.module.css";
+
 type PredictionEvent = {
   timestamp: string;
   system_name?: string;
@@ -26,7 +28,21 @@ export default function RootCausePredictionTable({
 }: Props) {
 
   if (!data || data.length === 0) {
-    return <div>No predictions available</div>;
+    return (
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        <span className={panelStyles.placeholderText}>
+          No events available
+        </span>
+      </div>
+    );
   }
 
   const sorted = [...data]
@@ -37,7 +53,7 @@ export default function RootCausePredictionTable({
     )
     .slice(0, 20);
 
-  const formatTimestamp = (
+  const formatDate = (
     timestamp: string
   ): string => {
 
@@ -72,19 +88,19 @@ export default function RootCausePredictionTable({
     switch (risk) {
 
       case "LOW":
-        return "#22c55e";
+        return "#22C55E";
 
       case "MEDIUM":
-        return "#eab308";
+        return "#EAB308";
 
       case "HIGH":
-        return "#f97316";
+        return "#F97316";
 
       case "CRITICAL":
-        return "#ef4444";
+        return "#EF4444";
 
       default:
-        return "#ccc";
+        return "#CCC";
     }
   };
 
@@ -100,106 +116,113 @@ export default function RootCausePredictionTable({
     }
 
     return alerts
-      .map(alert => alert.level)
+      .map(
+        (alert) => alert.level
+      )
       .join(", ");
   };
 
   return (
-
-    <div
-      style={{
-        width: "100%",
-        marginTop: "20px"
-      }}
-    >
-
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          fontSize: "14px"
-        }}
-      >
-
+    <div className={panelStyles.tableContainer}>
+      <table className={panelStyles.dataTable}>
         <thead>
-
-          <tr
-            style={{
-              textAlign: "left",
-              borderBottom: "1px solid #333"
-            }}
-          >
-
-            <th>Date</th>
+          <tr>
+            <th className={panelStyles.timestampColumn}>
+              Date
+            </th>
 
             {!system && (
-              <th>System</th>
+              <th className={panelStyles.systemColumn}>
+                System
+              </th>
             )}
 
-            <th>Prediction</th>
+            <th className={panelStyles.eventColumn}>
+              Prediction
+            </th>
 
-            <th>Risk</th>
+            <th className={panelStyles.eventColumn}>
+              Risk
+            </th>
 
-            <th>Action</th>
+            <th className={panelStyles.eventColumn}>
+              Action
+            </th>
 
-            <th>Alert</th>
-
+            <th className={panelStyles.eventColumn}>
+              Alert
+            </th>
           </tr>
-
         </thead>
 
         <tbody>
-
-          {sorted.map((row, idx) => (
-
-            <tr
-              key={idx}
-              style={{
-                borderBottom: "1px solid #222"
-              }}
-            >
-
-              <td>
-                {formatTimestamp(row.timestamp)}
-              </td>
-
-              {!system && (
-                <td>
-                  {row.system_name ?? "-"}
+          {sorted.map(
+            (row, idx) => (
+              <tr key={idx}>
+                <td
+                  className={
+                    panelStyles.timestampColumn
+                  }
+                >
+                  {formatDate(
+                    row.timestamp
+                  )}
                 </td>
-              )}
 
-              <td>
-                {row.prediction}
-              </td>
+                {!system && (
+                  <td
+                    className={
+                      panelStyles.systemColumn
+                    }
+                  >
+                    {row.system_name ?? "-"}
+                  </td>
+                )}
 
-              <td
-                style={{
-                  color: getRiskColor(
-                    row.risk_level
-                  ),
-                  fontWeight: 600
-                }}
-              >
-                {row.risk_level}
-              </td>
+                <td
+                  className={
+                    panelStyles.eventColumn
+                  }
+                >
+                  {row.prediction}
+                </td>
 
-              <td>
-                {row.action}
-              </td>
+                <td
+                  className={
+                    panelStyles.eventColumn
+                  }
+                  style={{
+                    color: getRiskColor(
+                      row.risk_level
+                    ),
+                    fontWeight: 600
+                  }}
+                >
+                  {row.risk_level}
+                </td>
 
-              <td>
-                {getAlertLabel(row.alerts)}
-              </td>
+                <td
+                  className={
+                    panelStyles.eventColumn
+                  }
+                >
+                  {row.action}
+                </td>
 
-            </tr>
-
-          ))}
-
+                <td
+                  className={
+                    panelStyles.eventColumn
+                  }
+                >
+                  {getAlertLabel(
+                    row.alerts
+                  )}
+                </td>
+              </tr>
+            )
+          )}
         </tbody>
-
       </table>
-
     </div>
   );
 }
