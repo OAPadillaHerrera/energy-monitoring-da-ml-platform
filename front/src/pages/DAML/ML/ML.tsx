@@ -47,13 +47,6 @@ type RootCauseData = {
   >;
 };
 
-type MetricsBasicData = {
-  consumption_by_system: Record<
-    string,
-    number
-  >;
-};
-
 type MetricsBasicResponse = {
   consumption_by_system: Record<
     string,
