@@ -54,7 +54,7 @@ function ML() {
     useState("");
 
   const [stableEvents, setStableEvents] =
-    useState<PredictionEvent[]>([]);
+    useState<PredictionEvent[] | null>(null);
 
   const [loading, setLoading] =
     useState(false);
@@ -94,6 +94,8 @@ function ML() {
     setSystemName(event.target.value);
     setExecutionMessage("");
     setError(null);
+
+    setStableEvents(null);
   };
 
   const handleRunPipeline =
@@ -103,6 +105,7 @@ function ML() {
         setRunningAnalysis(true);
         setError(null);
         setExecutionMessage("");
+
         setStableEvents([]);
 
         const endpoint = systemName.trim()
@@ -160,6 +163,7 @@ function ML() {
     <>
       <div className={layoutStyles.sectionHeading}>
         <h2>Root Cause Pipeline</h2>
+
         <span>
           Root cause predictions · Risk and event analysis
         </span>
@@ -172,17 +176,28 @@ function ML() {
 
         <div
           className={panelStyles.chartPlaceholder}
+
           style={{
             alignItems: "stretch",
             justifyContent: "flex-start"
           }}
         >
           {loading && (
-            <span
-              className={panelStyles.placeholderText}
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
             >
-              Loading ML data...
-            </span>
+              <span
+                className={panelStyles.placeholderText}
+              >
+                Loading ML data...
+              </span>
+            </div>
           )}
 
           {error && (
@@ -195,20 +210,35 @@ function ML() {
 
           {!loading &&
             !error &&
+            stableEvents !== null &&
             stableEvents.length === 0 && (
-              <span
-                className={panelStyles.placeholderText}
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
               >
-                No root cause events detected.
-              </span>
+                <span
+                  className={panelStyles.placeholderText}
+                >
+                  No root cause data available
+                </span>
+              </div>
             )}
 
           {!loading &&
             !error &&
+            stableEvents &&
             stableEvents.length > 0 && (
               <div
                 style={{
-                  width: "100%"
+                  width: "100%",
+                  height: "100%",
+                  minHeight: 0,
+                  flex: 1
                 }}
               >
                 <RootCausePredictionChart
@@ -221,6 +251,7 @@ function ML() {
 
       {!loading &&
         !error &&
+        stableEvents &&
         stableEvents.length > 0 && (
           <section className={panelStyles.tablePanel}>
             <div className={panelStyles.panelHeader}>
@@ -253,6 +284,7 @@ function ML() {
                 className={chipStyles.chipIcon}
                 style={{ color: "#A78BFA" }}
               />
+
               Root Cause Pipeline
             </span>
           </div>
