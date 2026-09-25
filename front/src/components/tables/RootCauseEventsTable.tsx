@@ -26,8 +26,7 @@ export default function RootCausePredictionTable({
   data,
   system
 }: Props) {
-
-  if (!data || data.length === 0) {
+  if (data.length === 0) {
     return (
       <div
         style={{
@@ -56,7 +55,6 @@ export default function RootCausePredictionTable({
   const formatDate = (
     timestamp: string
   ): string => {
-
     const date = new Date(timestamp);
 
     const formattedDate =
@@ -84,9 +82,7 @@ export default function RootCausePredictionTable({
   const getRiskColor = (
     risk: string
   ): string => {
-
     switch (risk) {
-
       case "LOW":
         return "#22C55E";
 
@@ -110,7 +106,6 @@ export default function RootCausePredictionTable({
       message: string;
     }[]
   ): string => {
-
     if (!alerts || alerts.length === 0) {
       return "-";
     }
