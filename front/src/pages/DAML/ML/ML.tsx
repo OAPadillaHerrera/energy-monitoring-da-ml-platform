@@ -94,7 +94,6 @@ function ML() {
     setSystemName(event.target.value);
     setExecutionMessage("");
     setError(null);
-
     setStableEvents(null);
   };
 
@@ -105,7 +104,6 @@ function ML() {
         setRunningAnalysis(true);
         setError(null);
         setExecutionMessage("");
-
         setStableEvents([]);
 
         const endpoint = systemName.trim()
@@ -159,10 +157,20 @@ function ML() {
       }
     };
 
+  const hasEvents =
+    stableEvents !== null &&
+    stableEvents.length > 0;
+
+  const hasNoEvents =
+    stableEvents !== null &&
+    stableEvents.length === 0;
+
   return (
     <>
       <div className={layoutStyles.sectionHeading}>
-        <h2>Root Cause Pipeline</h2>
+        <h2>
+          Root Cause Pipeline
+        </h2>
 
         <span>
           Root cause predictions · Risk and event analysis
@@ -176,7 +184,6 @@ function ML() {
 
         <div
           className={panelStyles.chartPlaceholder}
-
           style={{
             alignItems: "stretch",
             justifyContent: "flex-start"
@@ -201,17 +208,26 @@ function ML() {
           )}
 
           {error && (
-            <span
-              className={panelStyles.placeholderText}
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
             >
-              {error}
-            </span>
+              <span
+                className={panelStyles.placeholderText}
+              >
+                {error}
+              </span>
+            </div>
           )}
 
           {!loading &&
             !error &&
-            stableEvents !== null &&
-            stableEvents.length === 0 && (
+            hasNoEvents && (
               <div
                 style={{
                   width: "100%",
@@ -231,8 +247,7 @@ function ML() {
 
           {!loading &&
             !error &&
-            stableEvents &&
-            stableEvents.length > 0 && (
+            hasEvents && (
               <div
                 style={{
                   width: "100%",
@@ -251,8 +266,7 @@ function ML() {
 
       {!loading &&
         !error &&
-        stableEvents &&
-        stableEvents.length > 0 && (
+        hasEvents && (
           <section className={panelStyles.tablePanel}>
             <div className={panelStyles.panelHeader}>
               Root Cause Events
