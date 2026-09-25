@@ -7,6 +7,10 @@ import {
 } from "react";
 
 import {
+  isAxiosError
+} from "axios";
+
+import {
   BrainCircuit,
   Play
 } from "lucide-react";
@@ -43,6 +47,20 @@ type RootCauseData = {
   >;
 };
 
+type MetricsBasicData = {
+  consumption_by_system: Record<
+    string,
+    number
+  >;
+};
+
+type MetricsBasicResponse = {
+  consumption_by_system: Record<
+    string,
+    number
+  >;
+};
+
 function ML() {
   const [systemName, setSystemName] =
     useState("");
@@ -65,11 +83,16 @@ function ML() {
   const [error, setError] =
     useState<string | null>(null);
 
+  const selectedSystem =
+    systemName.trim();
+
   useEffect(() => {
     const fetchSystems = async (): Promise<void> => {
       try {
         const response =
-          await api.get("/metrics/basic");
+          await api.get<MetricsBasicResponse>(
+            "/metrics/basic"
+          );
 
         const systems =
           Object.keys(
@@ -77,7 +100,7 @@ function ML() {
           );
 
         setSystemNames(systems);
-      } catch (error) {
+      } catch (error: unknown) {
         console.error(
           "System names loading failed:",
           error
@@ -106,28 +129,29 @@ function ML() {
         setExecutionMessage("");
         setStableEvents([]);
 
-        const endpoint = systemName.trim()
+        const endpoint = selectedSystem
           ? `/ml/root-cause?name=${encodeURIComponent(
-              systemName.trim()
+              selectedSystem
             )}`
           : "/ml/root-cause";
 
         const response =
-          await api.get(endpoint);
+          await api.get<RootCauseData>(
+            endpoint
+          );
 
-        const data: RootCauseData =
+        const data =
           response.data;
 
-        const events: PredictionEvent[] =
-          (
-            systemName.trim()
-              ? data.by_system ?? []
-              : Object.values(
-                  data.all_systems_prediction ?? {}
-                )
-                  .flat()
-                  .filter(Boolean)
-          ).filter(
+        const sourceEvents =
+          selectedSystem
+            ? data.by_system ?? []
+            : Object.values(
+                data.all_systems_prediction ?? {}
+              ).flat();
+
+        const events =
+          sourceEvents.filter(
             (event) =>
               event.prediction &&
               event.prediction !== "normal"
@@ -138,7 +162,7 @@ function ML() {
         setExecutionMessage(
           "Root Cause Pipeline executed successfully"
         );
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error(
           "Root Cause Pipeline execution failed:",
           error
@@ -146,11 +170,22 @@ function ML() {
 
         setStableEvents([]);
 
-        setError(
-          error?.response?.data?.message ||
-          error.message ||
-          "Root Cause Pipeline execution failed."
-        );
+        if (isAxiosError(error)) {
+          setError(
+            error.response?.data?.message ||
+            error.message ||
+            "Root Cause Pipeline execution failed."
+          );
+        } else if (error instanceof Error) {
+          setError(
+            error.message ||
+            "Root Cause Pipeline execution failed."
+          );
+        } else {
+          setError(
+            "Root Cause Pipeline execution failed."
+          );
+        }
       } finally {
         setLoading(false);
         setRunningAnalysis(false);
@@ -276,7 +311,7 @@ function ML() {
               <RootCausePredictionTable
                 data={stableEvents}
                 system={
-                  systemName.trim() ||
+                  selectedSystem ||
                   undefined
                 }
               />
@@ -367,7 +402,7 @@ function ML() {
 
               <strong>
                 System:{" "}
-                {systemName.trim() ||
+                {selectedSystem ||
                   "All Systems"}
               </strong>
             </div>
@@ -379,5 +414,4 @@ function ML() {
 }
 
 export default ML;
-
 
