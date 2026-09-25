@@ -26,12 +26,12 @@ ChartJS.register(
   Legend
 );
 
-type Event = {
+type PredictionEvent = {
   prediction: string;
 };
 
 type Props = {
-  data: Event[];
+  data: PredictionEvent[];
 };
 
 const BAR_COLORS = [
@@ -61,8 +61,7 @@ const chartContainerStyle: CSSProperties = {
 function RootCausePredictionChart({
   data
 }: Props) {
-
-  if (!data || data.length === 0) {
+  if (data.length === 0) {
     return (
       <div
         style={{
@@ -86,7 +85,6 @@ function RootCausePredictionChart({
 
   data.forEach(
     (item) => {
-
       const key =
         item.prediction ?? "unknown";
 
@@ -110,11 +108,9 @@ function RootCausePredictionChart({
     );
 
   const chartData = {
-
     labels,
 
     datasets: [
-
       {
         label: "Root Cause Prediction Frequency",
 
@@ -147,7 +143,6 @@ function RootCausePredictionChart({
 
   const options:
     ChartOptions<"bar"> = {
-
     responsive: true,
 
     maintainAspectRatio: false,
@@ -158,13 +153,11 @@ function RootCausePredictionChart({
     },
 
     plugins: {
-
       legend: {
         display: false
       },
 
       tooltip: {
-
         enabled: true,
 
         displayColors: true,
@@ -191,11 +184,9 @@ function RootCausePredictionChart({
         bodyColor: "#FFFFFF",
 
         callbacks: {
-
           title: (
             tooltipItems
           ) => {
-
             return (
               tooltipItems[0]
                 .label ?? ""
@@ -205,7 +196,6 @@ function RootCausePredictionChart({
           label: (
             context
           ) => {
-
             const value =
               context.parsed.y;
 
@@ -222,11 +212,8 @@ function RootCausePredictionChart({
     },
 
     scales: {
-
       x: {
-
         title: {
-
           display: true,
 
           text: "Root Cause",
@@ -245,7 +232,6 @@ function RootCausePredictionChart({
         },
 
         ticks: {
-
           maxRotation: 45,
 
           minRotation: 0,
@@ -263,7 +249,6 @@ function RootCausePredictionChart({
         },
 
         grid: {
-
           display: true,
 
           color:
@@ -274,11 +259,9 @@ function RootCausePredictionChart({
       },
 
       y: {
-
         beginAtZero: true,
 
         ticks: {
-
           color:
             "rgba(255,255,255,0.70)",
 
@@ -296,7 +279,6 @@ function RootCausePredictionChart({
         },
 
         grid: {
-
           display: true,
 
           color:
