@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 
 import { isAxiosError } from "axios";
-
 import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
@@ -51,7 +50,18 @@ type ClassificationData = {
   context_classification: Record<string, ClassificationEvent[]>;
 };
 
-const anomalyModes = [
+type AnomalyMode =
+  | "zscore"
+  | "detection"
+  | "classification";
+
+type AnomalyModeOption = {
+  value: AnomalyMode;
+  label: string;
+  icon: typeof Activity;
+};
+
+const anomalyModes: AnomalyModeOption[] = [
   {
     value: "zscore",
     label: "Z-Score",
@@ -88,7 +98,8 @@ const anomalyModeHeadings = {
 };
 
 function AnomalyDetection() {
-  const [mode, setMode] = useState("zscore");
+  const [mode, setMode] =
+    useState<AnomalyMode>("zscore");
 
   const [systemName, setSystemName] =
     useState("");
@@ -254,9 +265,7 @@ function AnomalyDetection() {
     )?.label || "";
 
   const currentModeHeading =
-    anomalyModeHeadings[
-      mode as keyof typeof anomalyModeHeadings
-    ];
+    anomalyModeHeadings[mode];
 
   const handleSystemChange = (
     event: ChangeEvent<HTMLSelectElement>
@@ -578,3 +587,5 @@ function AnomalyDetection() {
 }
 
 export default AnomalyDetection;
+
+

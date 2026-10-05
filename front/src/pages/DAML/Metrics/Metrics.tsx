@@ -61,7 +61,19 @@ type EnergyMetricsData = {
   system_ranking: Record<string, number>;
 };
 
-const metricModes = [
+type MetricMode =
+  | "basic"
+  | "station"
+  | "system"
+  | "energy";
+
+type MetricModeOption = {
+  value: MetricMode;
+  label: string;
+  icon: typeof BarChart3;
+};
+
+const metricModes: MetricModeOption[] = [
   { value: "basic", label: "Basic", icon: BarChart3 },
   { value: "station", label: "Station", icon: Building2 },
   { value: "system", label: "System", icon: Cpu },
@@ -91,7 +103,8 @@ const metricModeHeadings = {
 };
 
 function Metrics() {
-  const [mode, setMode] = useState("basic");
+  const [mode, setMode] =
+    useState<MetricMode>("basic");
   const [systemName, setSystemName] = useState("");
   const [systemNames, setSystemNames] =
     useState<string[]>([]);
@@ -110,7 +123,8 @@ function Metrics() {
     useState<EnergyMetricsData | null>(null);
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] =
+    useState<string | null>(null);
 
   useEffect(() => {
     const fetchMetrics = async (): Promise<void> => {
@@ -259,14 +273,12 @@ function Metrics() {
   };
 
   const currentModeLabel =
-  metricModes.find(
-    (metricMode) => metricMode.value === mode
-  )?.label || "";
+    metricModes.find(
+      (metricMode) => metricMode.value === mode
+    )?.label || "";
 
   const currentModeHeading =
-    metricModeHeadings[
-      mode as keyof typeof metricModeHeadings
-    ];
+    metricModeHeadings[mode];
 
   return (
     <>
@@ -346,8 +358,10 @@ function Metrics() {
       <section className={panelStyles.chartPanel}>
         <div className={panelStyles.panelHeader}>
           {mode === "basic" && "Energy Consumption by System"}
-          {mode === "station" && "Station Energy Consumption by Hour"}
-          {mode === "system" && "System Energy Consumption by Hour"}
+          {mode === "station" &&
+            "Station Energy Consumption by Hour"}
+          {mode === "system" &&
+            "System Energy Consumption by Hour"}
           {mode === "energy" && "Load Factor by System"}
         </div>
 
@@ -366,61 +380,89 @@ function Metrics() {
             </span>
           )}
 
-          {!loading && !error && mode === "basic" && basicMetrics && (
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                gap: "18px"
-              }}
-            >
-              <BasicMetricsTable
-                data={basicMetrics.consumption_by_system}
+          {!loading &&
+            !error &&
+            mode === "basic" &&
+            basicMetrics && (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "18px"
+                }}
+              >
+                <BasicMetricsTable
+                  data={
+                    basicMetrics.consumption_by_system
+                  }
+                />
+              </div>
+            )}
+
+          {!loading &&
+            !error &&
+            mode === "station" &&
+            stationMetrics && (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "18px"
+                }}
+              >
+                <div
+                  style={{
+                    height: "260px",
+                    width: "100%"
+                  }}
+                >
+                  <StationEnergyByHourChart
+                    data={stationMetrics.energy_by_hour}
+                  />
+                </div>
+              </div>
+            )}
+
+          {!loading &&
+            !error &&
+            mode === "system" &&
+            systemMetrics && (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "18px"
+                }}
+              >
+                <div
+                  style={{
+                    height: "260px",
+                    width: "100%"
+                  }}
+                >
+                  <SystemEnergyByHourChart
+                    data={
+                      systemMetrics.avg_hourly_profile
+                    }
+                    systemName={systemName}
+                  />
+                </div>
+              </div>
+            )}
+
+          {!loading &&
+            !error &&
+            mode === "energy" &&
+            energyMetrics && (
+              <EnergyLoadFactorTable
+                data={
+                  energyMetrics.load_factor_by_system
+                }
               />
-            </div>
-          )}
-
-          {!loading && !error && mode === "station" && stationMetrics && (
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                gap: "18px"
-              }}
-            >
-              <div style={{ height: "260px", width: "100%" }}>
-                <StationEnergyByHourChart
-                  data={stationMetrics.energy_by_hour}
-                />
-              </div>
-            </div>
-          )}
-
-          {!loading && !error && mode === "system" && systemMetrics && (
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                gap: "18px"
-              }}
-            >
-              <div style={{ height: "260px", width: "100%" }}>
-                <SystemEnergyByHourChart
-                  data={systemMetrics.avg_hourly_profile}
-                  systemName={systemName}
-                />
-              </div>
-            </div>
-          )}
-
-          {!loading && !error && mode === "energy" && energyMetrics && (
-            <EnergyLoadFactorTable
-              data={energyMetrics.load_factor_by_system}
-            />
-          )}
+            )}
         </div>
       </section>
 
@@ -449,7 +491,11 @@ function Metrics() {
                     setError(null);
                   }}
                 >
-                  <Icon className={tabStyles.damlTabIcon} />
+                  <Icon
+                    className={
+                      tabStyles.damlTabIcon
+                    }
+                  />
                   {metricMode.label}
                 </button>
               );
@@ -457,8 +503,12 @@ function Metrics() {
           </div>
 
           {mode === "system" && (
-            <div className={controlStyles.rangeInputs}>
-              <div className={controlStyles.inputGroup}>
+            <div
+              className={controlStyles.rangeInputs}
+            >
+              <div
+                className={controlStyles.inputGroup}
+              >
                 <select
                   className={`${controlStyles.input} ${controlStyles.systemSelect}`}
                   value={systemName}
@@ -470,12 +520,17 @@ function Metrics() {
                     Select System
                   </option>
                   {systemNames.map((name) => (
-                    <option key={name} value={name}>
+                    <option
+                      key={name}
+                      value={name}
+                    >
                       {name}
                     </option>
                   ))}
                 </select>
-                <div className={controlStyles.inputLabel}>
+                <div
+                  className={controlStyles.inputLabel}
+                >
                   System Name
                 </div>
               </div>
@@ -505,7 +560,11 @@ function Metrics() {
           </button>
 
           {executionMessage && (
-            <div className={controlStyles.executionInfo}>
+            <div
+              className={
+                controlStyles.executionInfo
+              }
+            >
               <span>Status:</span>
               <strong>{executionMessage}</strong>
             </div>
@@ -517,6 +576,10 @@ function Metrics() {
 }
 
 export default Metrics;
+
+
+
+
 
 
 
