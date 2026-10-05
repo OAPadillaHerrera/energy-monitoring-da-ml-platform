@@ -259,7 +259,9 @@ function Metrics() {
   };
 
   const currentModeLabel =
-    mode.charAt(0).toUpperCase() + mode.slice(1);
+  metricModes.find(
+    (metricMode) => metricMode.value === mode
+  )?.label || "";
 
   const currentModeHeading =
     metricModeHeadings[
