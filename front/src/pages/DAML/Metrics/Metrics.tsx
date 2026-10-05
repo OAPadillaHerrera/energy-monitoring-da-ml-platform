@@ -15,6 +15,8 @@ import {
   Zap
 } from "lucide-react";
 
+import { isAxiosError } from "axios";
+
 import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
@@ -127,9 +129,9 @@ function Metrics() {
 
           setSystemNames(systems);
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error(
-          "Metrics data loading failed:",
+          "Failed to load system names:",
           error
         );
       } finally {
@@ -213,9 +215,9 @@ function Metrics() {
           "Energy Metrics loaded successfully."
         );
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(
-        `${currentModeLabel} loading failed:`,
+        "Failed to load metrics:",
         error
       );
 
@@ -235,11 +237,22 @@ function Metrics() {
         setEnergyMetrics(null);
       }
 
-      setError(
-        error?.response?.data?.message ||
-        error.message ||
-        `${currentModeLabel} loading failed.`
-      );
+      if (isAxiosError(error)) {
+        setError(
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to load metrics."
+        );
+      } else if (error instanceof Error) {
+        setError(
+          error.message ||
+          "Failed to load metrics."
+        );
+      } else {
+        setError(
+          "Failed to load metrics."
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -502,6 +515,9 @@ function Metrics() {
 }
 
 export default Metrics;
+
+
+
 
 
 

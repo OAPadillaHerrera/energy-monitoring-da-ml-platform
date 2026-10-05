@@ -13,6 +13,8 @@ import {
   Tags
 } from "lucide-react";
 
+import { isAxiosError } from "axios";
+
 import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
@@ -127,10 +129,10 @@ function AnomalyDetection() {
           );
 
         setSystemNames(systems);
-      } catch (err) {
+      } catch (error: unknown) {
         console.error(
-          "System names loading failed:",
-          err
+          "Failed to load system names:",
+          error
         );
       }
     };
@@ -206,9 +208,9 @@ function AnomalyDetection() {
             "Classification analysis executed successfully"
           );
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error(
-          "Anomaly analysis execution failed:",
+          "Failed to execute Anomaly analysis:",
           error
         );
 
@@ -224,11 +226,22 @@ function AnomalyDetection() {
           setClassificationData(null);
         }
 
-        setError(
-          error?.response?.data?.message ||
-          error.message ||
-          "Anomaly analysis execution failed."
-        );
+        if (isAxiosError(error)) {
+          setError(
+            error.response?.data?.message ||
+            error.message ||
+            "Failed to execute Anomaly analysis."
+          );
+        } else if (error instanceof Error) {
+          setError(
+            error.message ||
+            "Failed to execute Anomaly analysis."
+          );
+        } else {
+          setError(
+            "Failed to execute Anomaly analysis."
+          );
+        }
       } finally {
         setLoading(false);
         setRunningAnalysis(false);
@@ -565,7 +578,3 @@ function AnomalyDetection() {
 }
 
 export default AnomalyDetection;
-
-
-
-

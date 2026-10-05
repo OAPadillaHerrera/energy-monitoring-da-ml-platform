@@ -95,7 +95,7 @@ function ML() {
         setSystemNames(systems);
       } catch (error: unknown) {
         console.error(
-          "System names loading failed:",
+          "Failed to load system names:",
           error
         );
       }
@@ -157,7 +157,7 @@ function ML() {
         );
       } catch (error: unknown) {
         console.error(
-          "Root Cause Pipeline execution failed:",
+          "Failed to execute Root Cause Pipeline:",
           error
         );
 
@@ -167,16 +167,16 @@ function ML() {
           setError(
             error.response?.data?.message ||
             error.message ||
-            "Root Cause Pipeline execution failed."
+            "Failed to execute Root Cause Pipeline."
           );
         } else if (error instanceof Error) {
           setError(
             error.message ||
-            "Root Cause Pipeline execution failed."
+            "Failed to execute Root Cause Pipeline."
           );
         } else {
           setError(
-            "Root Cause Pipeline execution failed."
+            "Failed to execute Root Cause Pipeline."
           );
         }
       } finally {
