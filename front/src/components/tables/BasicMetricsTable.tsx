@@ -21,18 +21,18 @@ export default function BasicMetricsTable({
 
     <div className={panelStyles.tableContainer}>
 
-      <table className={panelStyles.dataTable}>
+      <table className={panelStyles.compactDataTable}>
 
         <thead>
 
           <tr>
 
-            <th className={panelStyles.systemColumn}>
+            <th className={panelStyles.compactSystemColumn}>
               System
             </th>
 
             <th
-              className={`${panelStyles.eventColumn} ${panelStyles.basicConsumptionHeader}`}
+              className={`${panelStyles.compactValueColumn} ${panelStyles.basicConsumptionHeader}`}
             >
               Consumption (kWh)
             </th>
@@ -45,16 +45,16 @@ export default function BasicMetricsTable({
 
           {
             sortedSystems.map(
-              ([system, value], index) => (
+              ([system, value]) => (
 
-                <tr key={index}>
+                <tr key={system}>
 
-                  <td className={panelStyles.systemColumn}>
+                  <td className={panelStyles.compactSystemColumn}>
                     {system}
                   </td>
 
                   <td
-                    className={`${panelStyles.eventColumn} ${panelStyles.basicConsumptionValue}`}
+                    className={`${panelStyles.compactValueColumn} ${panelStyles.basicConsumptionValue}`}
                   >
                     {value.toFixed(2)}
                   </td>
@@ -72,3 +72,5 @@ export default function BasicMetricsTable({
     </div>
   );
 }
+
+

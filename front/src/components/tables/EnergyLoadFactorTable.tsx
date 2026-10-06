@@ -21,18 +21,18 @@ export default function EnergyLoadFactorTable({
 
     <div className={panelStyles.tableContainer}>
 
-      <table className={panelStyles.dataTable}>
+      <table className={panelStyles.compactDataTable}>
 
         <thead>
 
           <tr>
 
-            <th className={panelStyles.systemColumn}>
+            <th className={panelStyles.compactSystemColumn}>
               System
             </th>
 
             <th
-              className={`${panelStyles.eventColumn} ${panelStyles.basicConsumptionHeader}`}
+              className={`${panelStyles.compactValueColumn} ${panelStyles.basicConsumptionHeader}`}
             >
               Load Factor
             </th>
@@ -48,12 +48,12 @@ export default function EnergyLoadFactorTable({
 
               <tr key={system}>
 
-                <td className={panelStyles.systemColumn}>
+                <td className={panelStyles.compactSystemColumn}>
                   {system}
                 </td>
 
                 <td
-                  className={`${panelStyles.eventColumn} ${panelStyles.basicConsumptionValue}`}
+                  className={`${panelStyles.compactValueColumn} ${panelStyles.basicConsumptionValue}`}
                 >
                   <span>
                     {(value * 100).toFixed(2)}
