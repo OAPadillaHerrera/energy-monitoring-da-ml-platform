@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 
 import { isAxiosError } from "axios";
-
 import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
@@ -158,7 +157,9 @@ function Metrics() {
 
   const handleRunMetrics = async (): Promise<void> => {
     if (mode === "system" && !systemName.trim()) {
-      setError("Please select a system.");
+      setError(
+        "Please select a system to continue"
+      );
       setExecutionMessage("");
       setSystemMetrics(null);
       return;
@@ -178,7 +179,7 @@ function Metrics() {
         setBasicMetrics(response.data);
 
         setExecutionMessage(
-          "Basic Metrics loaded successfully."
+          "Basic Metrics loaded successfully"
         );
 
         return;
@@ -193,7 +194,7 @@ function Metrics() {
         setStationMetrics(response.data);
 
         setExecutionMessage(
-          "Station Metrics loaded successfully."
+          "Station Metrics loaded successfully"
         );
 
         return;
@@ -211,7 +212,7 @@ function Metrics() {
         setSystemMetrics(response.data);
 
         setExecutionMessage(
-          "System Metrics loaded successfully."
+          "System Metrics loaded successfully"
         );
 
         return;
@@ -226,7 +227,7 @@ function Metrics() {
         setEnergyMetrics(response.data);
 
         setExecutionMessage(
-          "Energy Metrics loaded successfully."
+          "Energy Metrics loaded successfully"
         );
       }
     } catch (error: unknown) {
@@ -260,11 +261,11 @@ function Metrics() {
       } else if (error instanceof Error) {
         setError(
           error.message ||
-          "Failed to load metrics."
+          "Failed to load metrics"
         );
       } else {
         setError(
-          "Failed to load metrics."
+          "Failed to load metrics"
         );
       }
     } finally {
@@ -375,9 +376,11 @@ function Metrics() {
           <div className={panelStyles.chartGrid}></div>
 
           {error && (
-            <span className={panelStyles.placeholderText}>
-              Error: {error}
-            </span>
+            <div className={panelStyles.errorMessage}>
+              <span className={panelStyles.placeholderText}>
+                {error}
+              </span>
+            </div>
           )}
 
           {!loading &&

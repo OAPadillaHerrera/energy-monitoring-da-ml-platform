@@ -237,13 +237,7 @@ function ML() {
 
           {error && (
             <div
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}
+              className={panelStyles.errorMessage}
             >
               <span
                 className={panelStyles.placeholderText}

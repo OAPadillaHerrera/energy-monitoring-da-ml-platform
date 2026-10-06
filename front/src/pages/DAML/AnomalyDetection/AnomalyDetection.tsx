@@ -241,16 +241,16 @@ function AnomalyDetection() {
           setError(
             error.response?.data?.message ||
             error.message ||
-            "Failed to execute Anomaly analysis."
+            "Failed to execute Anomaly analysis"
           );
         } else if (error instanceof Error) {
           setError(
             error.message ||
-            "Failed to execute Anomaly analysis."
+            "Failed to execute Anomaly analysis"
           );
         } else {
           setError(
-            "Failed to execute Anomaly analysis."
+            "Failed to execute Anomaly analysis"
           );
         }
       } finally {
@@ -359,9 +359,11 @@ function AnomalyDetection() {
           )}
 
           {error && (
-            <span className={panelStyles.placeholderText}>
-              {error}
-            </span>
+            <div className={panelStyles.errorMessage}>
+              <span className={panelStyles.placeholderText}>
+                {error}
+              </span>
+            </div>
           )}
 
           {!loading &&
