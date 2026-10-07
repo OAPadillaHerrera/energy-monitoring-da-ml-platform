@@ -60,10 +60,7 @@ export type ClassificationEvent = {
 export type ClassificationData = {
   system?: string;
   full_pipeline: ClassificationEvent[];
-  context_classification: Record<
-    string,
-    ClassificationEvent[]
-  >;
+  context_classification: ClassificationEvent[];
 };
 
 export type Alert = {
@@ -88,3 +85,4 @@ export type RootCauseData = {
     PredictionEvent[]
   >;
 };
+

@@ -281,13 +281,9 @@ function AnomalyDetection() {
   const classificationEvents:
     ClassificationEvent[] | null =
     classificationData
-      ? (
-          classificationData.system
-            ? Object.values(
-                classificationData.context_classification || {}
-              ).flat()
-            : classificationData.full_pipeline
-        )
+      ? classificationData.system
+        ? classificationData.context_classification
+        : classificationData.full_pipeline
       : null;
 
   return (
