@@ -21,8 +21,8 @@ import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
 import chipStyles from "../../../components/shared/styles/chipStyles.module.css";
 import controlStyles from "../../../components/shared/styles/controlStyles.module.css";
 import api from "../../../services/api";
-import RootCausePredictionChart from "../../../components/charts/RootCauseDistributionChart";
-import RootCausePredictionTable from "../../../components/tables/RootCauseEventsTable";
+import RootCauseDistributionChart from "../../../components/charts/RootCauseDistributionChart";
+import RootCauseEventsTable from "../../../components/tables/RootCauseEventsTable";
 
 type Alert = {
   level: string;
@@ -54,7 +54,7 @@ type MetricsBasicResponse = {
   >;
 };
 
-function ML() {
+export default function ML() {
   const [systemName, setSystemName] =
     useState("");
 
@@ -278,7 +278,7 @@ function ML() {
                   flex: 1
                 }}
               >
-                <RootCausePredictionChart
+                <RootCauseDistributionChart
                   data={stableEvents}
                 />
               </div>
@@ -295,7 +295,7 @@ function ML() {
             </div>
 
             <div className={panelStyles.tableContainer}>
-              <RootCausePredictionTable
+              <RootCauseEventsTable
                 data={stableEvents}
                 system={
                   selectedSystem ||
@@ -400,5 +400,6 @@ function ML() {
   );
 }
 
-export default ML;
+
+
 

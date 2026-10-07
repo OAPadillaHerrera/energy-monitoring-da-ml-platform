@@ -20,17 +20,9 @@ export default function ClassificationEventsTable({
   system
 }: Props) {
 
-  if (!data || data.length === 0) {
+  if (data.length === 0) {
     return (
-      <div
-         style={{
-          position: "absolute",
-          inset: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center"
-        }}
-      >
+      <div className={panelStyles.tableEmptyMessage}>
         <span className={panelStyles.placeholderText}>
           No events available
         </span>

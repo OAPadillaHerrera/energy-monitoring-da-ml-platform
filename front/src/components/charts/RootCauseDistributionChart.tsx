@@ -58,7 +58,7 @@ const chartContainerStyle: CSSProperties = {
   position: "relative"
 };
 
-function RootCausePredictionChart({
+function RootCauseDistributionChart({
   data
 }: Props) {
   if (data.length === 0) {
@@ -302,4 +302,5 @@ function RootCausePredictionChart({
   );
 }
 
-export default RootCausePredictionChart;
+export default RootCauseDistributionChart;
+

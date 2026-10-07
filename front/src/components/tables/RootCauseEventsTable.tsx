@@ -22,21 +22,14 @@ type Props = {
   system?: string;
 };
 
-export default function RootCausePredictionTable({
+export default function RootCauseEventsTable({
   data,
   system
 }: Props) {
+
   if (data.length === 0) {
     return (
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center"
-        }}
-      >
+      <div className={panelStyles.tableEmptyMessage}>
         <span className={panelStyles.placeholderText}>
           No events available
         </span>
@@ -55,6 +48,7 @@ export default function RootCausePredictionTable({
   const formatDate = (
     timestamp: string
   ): string => {
+
     const date = new Date(timestamp);
 
     const formattedDate =
@@ -82,7 +76,9 @@ export default function RootCausePredictionTable({
   const getRiskColor = (
     risk: string
   ): string => {
+
     switch (risk) {
+
       case "LOW":
         return "#22C55E";
 
@@ -106,6 +102,7 @@ export default function RootCausePredictionTable({
       message: string;
     }[]
   ): string => {
+
     if (!alerts || alerts.length === 0) {
       return "-";
     }
@@ -118,10 +115,15 @@ export default function RootCausePredictionTable({
   };
 
   return (
+
     <div className={panelStyles.tableContainer}>
+
       <table className={panelStyles.dataTable}>
+
         <thead>
+
           <tr>
+
             <th className={panelStyles.timestampColumn}>
               Date
             </th>
@@ -147,13 +149,18 @@ export default function RootCausePredictionTable({
             <th className={panelStyles.eventColumn}>
               Alert
             </th>
+
           </tr>
+
         </thead>
 
         <tbody>
+
           {sorted.map(
             (row, idx) => (
+
               <tr key={idx}>
+
                 <td
                   className={
                     panelStyles.timestampColumn
@@ -213,11 +220,16 @@ export default function RootCausePredictionTable({
                     row.alerts
                   )}
                 </td>
+
               </tr>
+
             )
           )}
+
         </tbody>
+
       </table>
+
     </div>
   );
 }

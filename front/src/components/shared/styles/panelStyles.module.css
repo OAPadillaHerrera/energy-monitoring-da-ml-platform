@@ -1,298 +1,4 @@
 
-/*
-.chartPanel,
-.controlPanel,
-.tablePanel {
-  border-radius: 16px;
-  border: 1px solid rgba(0, 194, 255, 0.10);
-  background: rgba(4, 16, 30, 0.76);
-  overflow: hidden;
-}
-
-.chartPanel,
-.tablePanel {
-  display: flex;
-  flex-direction: column;
-  min-height: 360px;
-  height: 55vh;
-  max-height: 620px;
-}
-
-.panelHeader {
-  display: flex;
-  height: 48px;
-  padding: 0 20px;
-  align-items: center;
-  flex-shrink: 0;
-  border-bottom: 1px solid rgba(0, 194, 255, 0.10);
-  color: #F8FAFC;
-  font-family: "Cascadia Code", monospace;
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: 1px;
-  line-height: 1.2;
-}
-
-.chartPlaceholder {
-  position: relative;
-  display: flex;
-  flex: 1;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 14px;
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-.chartGrid {
-  position: absolute;
-  inset: 0;
-
-  background:
-    linear-gradient(
-      rgba(0, 194, 255, 0.04) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(0, 194, 255, 0.04) 1px,
-      transparent 1px
-    );
-
-  background-size: 56px 56px;
-}
-
-.placeholderText {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  color: rgba(125, 211, 252, 0.58);
-  font-family: "Cascadia Code", monospace;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
-.tableEmptyMessage {
-  width: 100%;
-  padding: 14px;
-  box-sizing: border-box;
-  color: rgba(125, 211, 252, 0.58);
-  font-family: "Cascadia Code", monospace;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
-.tableContainer {
-  position: relative;
-  width: 100%;
-  flex: 1;
-  min-height: 0;
-  overflow-x: auto;
-  overflow-y: auto;
-  scrollbar-width: thin;
-
-  scrollbar-color:
-    rgba(0, 194, 255, 0.35)
-    transparent;
-}
-
-.dataTable {
-  width: 100%;
-  min-width: 960px;
-  border-collapse: collapse;
-  table-layout: fixed;
-  font-family: "Cascadia Code", monospace;
-}
-
-.compactDataTable {
-  min-width: 0;
-}
-
-.dataTable thead {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-
-  background:
-    rgba(4, 16, 30, 0.98);
-}
-
-.dataTable th,
-.dataTable td {
-  font-weight: 400;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.dataTable th {
-  height: 42px;
-  padding: 0 12px;
-  border-bottom:
-    1px solid rgba(0, 194, 255, 0.10);
-
-  color: #FFFFFF;
-  font-size: 16px;
-  letter-spacing: 1px;
-  line-height: 1;
-  text-align: left;
-}
-
-.dataTable td {
-  height: 34px;
-  padding: 0 12px;
-
-  border-bottom:
-    1px solid rgba(0, 194, 255, 0.08);
-
-  color:
-    rgba(255, 255, 255, 0.70);
-
-  font-size: 15px;
-  letter-spacing: 0;
-  line-height: 1;
-  text-align: left;
-}
-
-.dataTable tbody tr {
-  height: 34px;
-}
-
-.dataTable tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.dataTable tbody tr:hover {
-  background:
-    rgba(0, 194, 255, 0.035);
-}
-
-.timestampColumn {
-  width: 180px;
-  min-width: 180px;
-}
-
-.systemColumn {
-  width: 520px;
-  min-width: 520px;
-}
-
-.eventColumn {
-  width: 260px;
-  min-width: 260px;
-}
-
-.compactSystemColumn {
-  width: 60%;
-  min-width: 0;
-}
-
-.compactValueColumn {
-  width: 40%;
-  min-width: 0;
-  text-align: right;
-}
-
-.dataTable th.basicConsumptionHeader {
-  text-align: right;
-}
-
-.dataTable td.basicConsumptionValue {
-  text-align: right;
-  padding-right: 18px;
-}
-
-.dataTable th.zScoreHeader {
-  text-align: right;
-}
-
-.dataTable td.zScoreValue {
-  text-align: right;
-  padding-right: 18px;
-}
-
-.percentageUnit {
-  margin-left: 6px;
-}
-
-.eventWarning {
-  color: #FB923C !important;
-  font-weight: 400;
-}
-
-.tableContainer::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.tableContainer::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.tableContainer::-webkit-scrollbar-thumb {
-  background:
-    rgba(0, 194, 255, 0.28);
-
-  border-radius: 8px;
-}
-
-.tableContainer::-webkit-scrollbar-thumb:hover {
-  background:
-    rgba(0, 194, 255, 0.45);
-}
-
-@media (max-width: 1000px) {
-  .chartPanel,
-
-  .tablePanel {
-    min-height: 320px;
-    height: 50vh;
-  }
-}
-
-@media (max-height: 820px) {
-  .panelHeader {
-    height: 44px;
-    padding: 0 18px;
-    font-size: 16px;
-    letter-spacing: 1px;
-    line-height: 1.2;
-  }
-
-  .chartPanel,
-  .tablePanel {
-    min-height: 220px;
-    height: 38vh;
-  }
-
-  .chartPlaceholder {
-    padding: 8px;
-  }
-
-  .placeholderText {
-    font-size: 14px;
-  }
-
-  .dataTable th {
-    height: 36px;
-    padding: 0 10px;
-    font-size: 15px;
-  }
-
-  .dataTable td {
-    height: 30px;
-    padding: 0 10px;
-    font-size: 14px;
-  }
-
-  .dataTable tbody tr {
-    height: 30px;
-  }
-}*/
-
-
 
 .chartPanel,
 .controlPanel,
@@ -347,6 +53,7 @@
       rgba(0, 194, 255, 0.04) 1px,
       transparent 1px
     ),
+
     linear-gradient(
       90deg,
       rgba(0, 194, 255, 0.04) 1px,
@@ -354,6 +61,7 @@
     );
 
   background-size: 56px 56px;
+
 }
 
 .placeholderText {
@@ -376,14 +84,11 @@
 }
 
 .tableEmptyMessage {
-  width: 100%;
-  padding: 14px;
-  box-sizing: border-box;
-  color: rgba(125, 211, 252, 0.58);
-  font-family: "Cascadia Code", monospace;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 2px;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tableContainer {
@@ -394,7 +99,6 @@
   overflow-x: auto;
   overflow-y: auto;
   scrollbar-width: thin;
-
   scrollbar-color:
     rgba(0, 194, 255, 0.35)
     transparent;
@@ -498,11 +202,11 @@
   text-align: right;
 }
 
-.dataTable th.basicConsumptionHeader {
+.dataTable th.numericHeader {
   text-align: right;
 }
 
-.dataTable td.basicConsumptionValue {
+.dataTable td.numericValue {
   text-align: right;
   padding-right: 18px;
 }
@@ -548,11 +252,12 @@
 
 @media (max-width: 1000px) {
   .chartPanel,
-
   .tablePanel {
     min-height: 320px;
     height: 50vh;
+
   }
+
 }
 
 @media (max-height: 820px) {
@@ -593,8 +298,11 @@
   .dataTable tbody tr {
     height: 30px;
   }
-
 }
+
+
+
+
 
 
 
