@@ -23,36 +23,11 @@ import controlStyles from "../../../components/shared/styles/controlStyles.modul
 import api from "../../../services/api";
 import RootCauseDistributionChart from "../../../components/charts/RootCauseDistributionChart";
 import RootCauseEventsTable from "../../../components/tables/RootCauseEventsTable";
-
-type Alert = {
-  level: string;
-  message: string;
-};
-
-type PredictionEvent = {
-  timestamp: string;
-  system_name?: string;
-  prediction: string;
-  risk_level: string;
-  action: string;
-  alerts: Alert[];
-};
-
-type RootCauseData = {
-  system?: string;
-  by_system: PredictionEvent[];
-  all_systems_prediction: Record<
-    string,
-    PredictionEvent[]
-  >;
-};
-
-type MetricsBasicResponse = {
-  consumption_by_system: Record<
-    string,
-    number
-  >;
-};
+import {
+  type MetricsBasicResponse,
+  type PredictionEvent,
+  type RootCauseData
+} from "../types";
 
 export default function ML() {
   const [systemName, setSystemName] =
@@ -167,16 +142,16 @@ export default function ML() {
           setError(
             error.response?.data?.message ||
             error.message ||
-            "Failed to execute Root Cause Pipeline."
+            "Failed to execute Root Cause Pipeline"
           );
         } else if (error instanceof Error) {
           setError(
             error.message ||
-            "Failed to execute Root Cause Pipeline."
+            "Failed to execute Root Cause Pipeline"
           );
         } else {
           setError(
-            "Failed to execute Root Cause Pipeline."
+            "Failed to execute Root Cause Pipeline"
           );
         }
       } finally {

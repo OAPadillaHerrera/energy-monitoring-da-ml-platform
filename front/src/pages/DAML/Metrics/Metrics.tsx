@@ -26,39 +26,12 @@ import BasicMetricsTable from "../../../components/tables/BasicMetricsTable";
 import StationEnergyByHourChart from "../../../components/charts/StationEnergyByHourChart";
 import SystemEnergyByHourChart from "../../../components/charts/SystemEnergyByHourChart";
 import EnergyLoadFactorTable from "../../../components/tables/EnergyLoadFactorTable";
-
-type BasicMetricsData = {
-  total_consumption: number;
-  average_consumption: number;
-  consumption_by_system: Record<string, number>;
-};
-
-type StationMetricsData = {
-  total_energy: number;
-  average_consumption: number;
-  peak_consumption: number;
-  min_consumption: number;
-  std_consumption: number;
-  avg_daily_energy: number;
-  energy_by_hour: Record<string, number>;
-  daily_energy: Record<string, number>;
-};
-
-type SystemMetricsData = {
-  total_energy: number;
-  average_consumption: number;
-  peak_consumption: number;
-  min_consumption: number;
-  std_consumption: number;
-  avg_daily_energy: number;
-  avg_hourly_profile: Record<string, number>;
-};
-
-type EnergyMetricsData = {
-  load_factor: number;
-  load_factor_by_system: Record<string, number>;
-  system_ranking: Record<string, number>;
-};
+import {
+  type BasicMetricsData,
+  type EnergyMetricsData,
+  type StationMetricsData,
+  type SystemMetricsData
+} from "../types";
 
 type MetricMode =
   | "basic"
@@ -104,10 +77,15 @@ const metricModeHeadings = {
 function Metrics() {
   const [mode, setMode] =
     useState<MetricMode>("basic");
-  const [systemName, setSystemName] = useState("");
+
+  const [systemName, setSystemName] =
+    useState("");
+
   const [systemNames, setSystemNames] =
     useState<string[]>([]);
-  const [executionMessage, setExecutionMessage] = useState("");
+
+  const [executionMessage, setExecutionMessage] =
+    useState("");
 
   const [basicMetrics, setBasicMetrics] =
     useState<BasicMetricsData | null>(null);
@@ -121,7 +99,9 @@ function Metrics() {
   const [energyMetrics, setEnergyMetrics] =
     useState<EnergyMetricsData | null>(null);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] =
+    useState(false);
+
   const [error, setError] =
     useState<string | null>(null);
 
@@ -133,7 +113,9 @@ function Metrics() {
 
         if (mode === "system") {
           const response =
-            await api.get("/metrics/basic");
+            await api.get<BasicMetricsData>(
+              "/metrics/basic"
+            );
 
           const systems =
             Object.keys(
@@ -155,123 +137,134 @@ function Metrics() {
     void fetchMetrics();
   }, [mode]);
 
-  const handleRunMetrics = async (): Promise<void> => {
-    if (mode === "system" && !systemName.trim()) {
-      setError(
-        "Please select a system to continue"
-      );
-      setExecutionMessage("");
-      setSystemMetrics(null);
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError(null);
-      setExecutionMessage("");
-
-      if (mode === "basic") {
-        setBasicMetrics(null);
-
-        const response =
-          await api.get("/metrics/basic");
-
-        setBasicMetrics(response.data);
-
-        setExecutionMessage(
-          "Basic Metrics loaded successfully"
+  const handleRunMetrics =
+    async (): Promise<void> => {
+      if (
+        mode === "system" &&
+        !systemName.trim()
+      ) {
+        setError(
+          "Please select a system to continue"
         );
-
-        return;
-      }
-
-      if (mode === "station") {
-        setStationMetrics(null);
-
-        const response =
-          await api.get("/metrics/station");
-
-        setStationMetrics(response.data);
-
-        setExecutionMessage(
-          "Station Metrics loaded successfully"
-        );
-
-        return;
-      }
-
-      if (mode === "system") {
+        setExecutionMessage("");
         setSystemMetrics(null);
-
-        const response = await api.get(
-          `/metrics/system?name=${encodeURIComponent(
-            systemName.trim()
-          )}`
-        );
-
-        setSystemMetrics(response.data);
-
-        setExecutionMessage(
-          "System Metrics loaded successfully"
-        );
-
         return;
       }
 
-      if (mode === "energy") {
-        setEnergyMetrics(null);
+      try {
+        setLoading(true);
+        setError(null);
+        setExecutionMessage("");
 
-        const response =
-          await api.get("/metrics/energy");
+        if (mode === "basic") {
+          setBasicMetrics(null);
 
-        setEnergyMetrics(response.data);
+          const response =
+            await api.get<BasicMetricsData>(
+              "/metrics/basic"
+            );
 
-        setExecutionMessage(
-          "Energy Metrics loaded successfully"
+          setBasicMetrics(response.data);
+
+          setExecutionMessage(
+            "Basic Metrics loaded successfully"
+          );
+
+          return;
+        }
+
+        if (mode === "station") {
+          setStationMetrics(null);
+
+          const response =
+            await api.get<StationMetricsData>(
+              "/metrics/station"
+            );
+
+          setStationMetrics(response.data);
+
+          setExecutionMessage(
+            "Station Metrics loaded successfully"
+          );
+
+          return;
+        }
+
+        if (mode === "system") {
+          setSystemMetrics(null);
+
+          const response =
+            await api.get<SystemMetricsData>(
+              `/metrics/system?name=${encodeURIComponent(
+                systemName.trim()
+              )}`
+            );
+
+          setSystemMetrics(response.data);
+
+          setExecutionMessage(
+            "System Metrics loaded successfully"
+          );
+
+          return;
+        }
+
+        if (mode === "energy") {
+          setEnergyMetrics(null);
+
+          const response =
+            await api.get<EnergyMetricsData>(
+              "/metrics/energy"
+            );
+
+          setEnergyMetrics(response.data);
+
+          setExecutionMessage(
+            "Energy Metrics loaded successfully"
+          );
+        }
+      } catch (error: unknown) {
+        console.error(
+          "Failed to load metrics:",
+          error
         );
-      }
-    } catch (error: unknown) {
-      console.error(
-        "Failed to load metrics:",
-        error
-      );
 
-      if (mode === "basic") {
-        setBasicMetrics(null);
-      }
+        if (mode === "basic") {
+          setBasicMetrics(null);
+        }
 
-      if (mode === "station") {
-        setStationMetrics(null);
-      }
+        if (mode === "station") {
+          setStationMetrics(null);
+        }
 
-      if (mode === "system") {
-        setSystemMetrics(null);
-      }
+        if (mode === "system") {
+          setSystemMetrics(null);
+        }
 
-      if (mode === "energy") {
-        setEnergyMetrics(null);
-      }
+        if (mode === "energy") {
+          setEnergyMetrics(null);
+        }
 
-      if (isAxiosError(error)) {
-        setError(
-          error.response?.data?.message ||
-          error.message ||
-          "Failed to load metrics."
-        );
-      } else if (error instanceof Error) {
-        setError(
-          error.message ||
-          "Failed to load metrics"
-        );
-      } else {
-        setError(
-          "Failed to load metrics"
-        );
+        if (isAxiosError(error)) {
+          setError(
+            error.response?.data?.message ||
+            error.message ||
+            "Failed to load metrics"
+          );
+        } else if (error instanceof Error) {
+          setError(
+            error.message ||
+            "Failed to load metrics"
+          );
+        } else {
+          setError(
+            "Failed to load metrics"
+          );
+        }
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
   const currentModeLabel =
     metricModes.find(
@@ -299,12 +292,14 @@ function Metrics() {
                 Total Consumption
               </span>
             </div>
+
             <h2 className={kpiStyles.kpiValue}>
               {basicMetrics.total_consumption.toFixed(2)}
               <span className={kpiStyles.kpiUnit}>
                 kWh
               </span>
             </h2>
+
             <p className={kpiStyles.kpiDescription}>
               Total energy consumed
             </p>
@@ -319,12 +314,14 @@ function Metrics() {
                 Average Consumption
               </span>
             </div>
+
             <h2 className={kpiStyles.kpiValue}>
               {basicMetrics.average_consumption.toFixed(2)}
               <span className={kpiStyles.kpiUnit}>
                 kWh
               </span>
             </h2>
+
             <p className={kpiStyles.kpiDescription}>
               Average energy consumption
             </p>
@@ -343,12 +340,14 @@ function Metrics() {
                 Load Factor
               </span>
             </div>
+
             <h2 className={kpiStyles.kpiValue}>
               {(energyMetrics.load_factor * 100).toFixed(2)}
               <span className={kpiStyles.kpiUnit}>
                 %
               </span>
             </h2>
+
             <p className={kpiStyles.kpiDescription}>
               Average / peak demand
             </p>
@@ -358,12 +357,17 @@ function Metrics() {
 
       <section className={panelStyles.chartPanel}>
         <div className={panelStyles.panelHeader}>
-          {mode === "basic" && "Energy Consumption by System"}
+          {mode === "basic" &&
+            "Energy Consumption by System"}
+
           {mode === "station" &&
             "Station Energy Consumption by Hour"}
+
           {mode === "system" &&
             "System Energy Consumption by Hour"}
-          {mode === "energy" && "Load Factor by System"}
+
+          {mode === "energy" &&
+            "Load Factor by System"}
         </div>
 
         <div
@@ -499,6 +503,7 @@ function Metrics() {
                       tabStyles.damlTabIcon
                     }
                   />
+
                   {metricMode.label}
                 </button>
               );
@@ -522,6 +527,7 @@ function Metrics() {
                   <option value="">
                     Select System
                   </option>
+
                   {systemNames.map((name) => (
                     <option
                       key={name}
@@ -531,6 +537,7 @@ function Metrics() {
                     </option>
                   ))}
                 </select>
+
                 <div
                   className={controlStyles.inputLabel}
                 >
@@ -557,6 +564,7 @@ function Metrics() {
                   : ""
               }`}
             />
+
             {loading
               ? `Loading ${currentModeLabel}...`
               : `View ${currentModeLabel}`}

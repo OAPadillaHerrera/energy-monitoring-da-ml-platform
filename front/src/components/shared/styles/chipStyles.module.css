@@ -1,13 +1,9 @@
 
 
 .chipPrimary {
-
   height: 38px;
-
   padding: 0 16px;
-
   border-radius: 8px;
-
   border: 1px solid rgba(0, 194, 255, 0.28);
 
   background: linear-gradient(
@@ -17,64 +13,38 @@
   );
 
   color: #FFFFFF;
-
   font-size: 14px;
-
   font-weight: 700;
-
   letter-spacing: 1px;
-
   display: inline-flex;
-
   align-items: center;
-
   justify-content: center;
-
   gap: 10px;
-
   width: fit-content;
-
   white-space: nowrap;
 
   box-shadow:
     0 0 14px rgba(0,194,255,.35);
-
 }
 
 .chipIcon {
-
   width: 16px;
-
   height: 16px;
-
   color: #FACC15;
-
   flex-shrink: 0;
-
 }
 
 @media (max-height: 820px) {
-
   .chipPrimary {
-
     height: 32px;
-
     padding: 0 14px;
-
     font-size: 14px;
-
     gap: 8px;
-
   }
 
   .chipIcon {
-
     width: 16px;
-
     height: 16px;
-
     color: #FACC15;
-
   }
-
 }

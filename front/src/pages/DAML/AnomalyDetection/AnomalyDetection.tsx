@@ -23,32 +23,13 @@ import ZScoreChart from "../../../components/charts/ZScoreChart";
 import DetectionChart from "../../../components/charts/DetectionChart";
 import ClassificationRootCauseChart from "../../../components/charts/ClassificationRootCauseChart";
 import ClassificationEventsTable from "../../../components/tables/ClassificationEventsTable";
-
-type ZScoreData = {
-  system?: string;
-  z_score_consumption: Record<string, number>;
-  z_score_by_system: Record<string, number>;
-};
-
-type DetectionData = {
-  system?: string;
-  all_systems_detection: Record<string, Record<string, number>>;
-  by_system: Record<string, number>;
-};
-
-type ClassificationEvent = {
-  system_name?: string;
-  timestamp: string;
-  anomaly_type: string;
-  root_cause: string;
-  z_score: number;
-};
-
-type ClassificationData = {
-  system?: string;
-  full_pipeline: ClassificationEvent[];
-  context_classification: Record<string, ClassificationEvent[]>;
-};
+import {
+  type BasicMetricsData,
+  type ClassificationData,
+  type ClassificationEvent,
+  type DetectionData,
+  type ZScoreData
+} from "../types";
 
 type AnomalyMode =
   | "zscore"
@@ -132,7 +113,9 @@ function AnomalyDetection() {
     const fetchSystems = async (): Promise<void> => {
       try {
         const response =
-          await api.get("/metrics/basic");
+          await api.get<BasicMetricsData>(
+            "/metrics/basic"
+          );
 
         const systems =
           Object.keys(
@@ -169,7 +152,7 @@ function AnomalyDetection() {
             : "/anomaly/zscore";
 
           const response =
-            await api.get(endpoint);
+            await api.get<ZScoreData>(endpoint);
 
           setZscoreData(response.data);
 
@@ -190,7 +173,7 @@ function AnomalyDetection() {
             : "/anomaly/detection";
 
           const response =
-            await api.get(endpoint);
+            await api.get<DetectionData>(endpoint);
 
           setDetectionData(response.data);
 
@@ -211,7 +194,9 @@ function AnomalyDetection() {
             : "/anomaly/classification";
 
           const response =
-            await api.get(endpoint);
+            await api.get<ClassificationData>(
+              endpoint
+            );
 
           setClassificationData(response.data);
 
