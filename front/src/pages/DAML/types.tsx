@@ -4,6 +4,7 @@ export type BasicMetricsData = {
   total_consumption: number;
   average_consumption: number;
   consumption_by_system: Record<string, number>;
+  consumption_by_hour: Record<string, number>;
 };
 
 export type StationMetricsData = {
@@ -18,12 +19,15 @@ export type StationMetricsData = {
 };
 
 export type SystemMetricsData = {
+  system: string;
   total_energy: number;
   average_consumption: number;
   peak_consumption: number;
   min_consumption: number;
   std_consumption: number;
   avg_daily_energy: number;
+  energy_by_hour: Record<string, number>;
+  daily_energy: Record<string, number>;
   avg_hourly_profile: Record<string, number>;
 };
 
@@ -31,10 +35,6 @@ export type EnergyMetricsData = {
   load_factor: number;
   load_factor_by_system: Record<string, number>;
   system_ranking: Record<string, number>;
-};
-
-export type MetricsBasicResponse = {
-  consumption_by_system: Record<string, number>;
 };
 
 export type ZScoreData = {

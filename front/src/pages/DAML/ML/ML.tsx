@@ -24,7 +24,7 @@ import api from "../../../services/api";
 import RootCauseDistributionChart from "../../../components/charts/RootCauseDistributionChart";
 import RootCauseEventsTable from "../../../components/tables/RootCauseEventsTable";
 import {
-  type MetricsBasicResponse,
+  type BasicMetricsData,
   type PredictionEvent,
   type RootCauseData
 } from "../types";
@@ -58,7 +58,7 @@ export default function ML() {
     const fetchSystems = async (): Promise<void> => {
       try {
         const response =
-          await api.get<MetricsBasicResponse>(
+          await api.get<BasicMetricsData>(
             "/metrics/basic"
           );
 
