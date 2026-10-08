@@ -31,7 +31,6 @@ ChartJS.register(
 type Props = {
   data: Record<string, Record<string, number>>;
   selectedSystem?: string;
-  title?: string;
 };
 
 const CHART_FONT = "Cascadia Code";

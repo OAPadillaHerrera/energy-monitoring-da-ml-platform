@@ -75,7 +75,7 @@ function RootCauseDistributionChart({
         <span
           className={panelStyles.placeholderText}
         >
-          No root cause prediction data available
+          No root cause distribution data available
         </span>
       </div>
     );
@@ -112,7 +112,7 @@ function RootCauseDistributionChart({
 
     datasets: [
       {
-        label: "Root Cause Prediction Frequency",
+        label: "Root Cause Distribution Frequency",
 
         data: values,
 
