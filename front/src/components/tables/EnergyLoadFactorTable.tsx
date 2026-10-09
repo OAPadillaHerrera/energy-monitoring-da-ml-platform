@@ -21,7 +21,9 @@ export default function EnergyLoadFactorTable({
 
     <div className={panelStyles.tableContainer}>
 
-      <table className={panelStyles.compactDataTable}>
+      <table
+        className={`${panelStyles.dataTable} ${panelStyles.compactDataTable}`}
+      >
 
         <thead>
 
@@ -64,7 +66,6 @@ export default function EnergyLoadFactorTable({
                 </td>
 
               </tr>
-
             )
           )}
 

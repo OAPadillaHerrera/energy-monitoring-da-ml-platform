@@ -21,7 +21,9 @@ export default function BasicMetricsTable({
 
     <div className={panelStyles.tableContainer}>
 
-      <table className={panelStyles.compactDataTable}>
+      <table
+        className={`${panelStyles.dataTable} ${panelStyles.compactDataTable}`}
+      >
 
         <thead>
 

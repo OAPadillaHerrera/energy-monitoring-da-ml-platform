@@ -69,8 +69,7 @@ const metricModeHeadings = {
   },
   energy: {
     title: "Energy Metrics",
-    subtitle:
-      "Station and System load factor · Overall values"
+    subtitle: "Station and System load factor · Overall values"
   }
 };
 
@@ -377,8 +376,6 @@ function Metrics() {
             justifyContent: "flex-start"
           }}
         >
-          <div className={panelStyles.chartGrid}></div>
-
           {error && (
             <div className={panelStyles.errorMessage}>
               <span className={panelStyles.placeholderText}>

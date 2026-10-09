@@ -53,7 +53,6 @@
       rgba(0, 194, 255, 0.04) 1px,
       transparent 1px
     ),
-
     linear-gradient(
       90deg,
       rgba(0, 194, 255, 0.04) 1px,
@@ -61,7 +60,6 @@
     );
 
   background-size: 56px 56px;
-
 }
 
 .placeholderText {
@@ -131,6 +129,12 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-right: 1px solid rgba(0, 194, 255, 0.08);
+}
+
+.dataTable th:last-child,
+.dataTable td:last-child {
+  border-right: none;
 }
 
 .dataTable th {
@@ -255,9 +259,7 @@
   .tablePanel {
     min-height: 320px;
     height: 50vh;
-
   }
-
 }
 
 @media (max-height: 820px) {
