@@ -19,16 +19,16 @@ import ReportDailyTable from "../../../components/tables/ReportDailyTable";
 import ReportVoltageChart from "../../../components/charts/ReportVoltageChart";
 import ReportVoltageTable from "../../../components/tables/ReportVoltageTable";
 
-import { 
-  exportDailyCSV, 
-  exportEventCSV, 
-  exportHourlyCSV, 
-  exportVoltageCSV 
+import {
+  exportDailyCSV,
+  exportEventCSV,
+  exportHourlyCSV,
+  exportVoltageCSV
 } from "../../../services/reports/simulationExportCSV";
-import { 
-  exportDailyPDF, 
-  exportEventPDF, 
-  exportHourlyPDF, 
+import {
+  exportDailyPDF,
+  exportEventPDF,
+  exportHourlyPDF,
   exportVoltagePDF
 } from "../../../services/reports/simulationExportPDF";
 
@@ -46,7 +46,6 @@ type VoltageRecord = {
 };
 
 function Simulation() {
-
   const [mode, setMode] = useState("hourly");
 
   const [viewMode, setViewMode] =
@@ -62,13 +61,13 @@ function Simulation() {
     useState<Record<string, number> | null>(null);
 
   const [eventData, setEventData] =
-  useState<SystemEventRecord[]>([]);
+    useState<SystemEventRecord[]>([]);
 
   const [dailyData, setDailyData] =
     useState<Record<string, number> | null>(null);
 
   const [voltageData, setVoltageData] =
-  useState<VoltageRecord[] | null>(null);
+    useState<VoltageRecord[] | null>(null);
 
   const [loading, setLoading] =
     useState(false);
@@ -77,7 +76,6 @@ function Simulation() {
     useState<string | null>(null);
 
   useEffect(() => {
-
     if (
       mode !== "hourly" &&
       mode !== "events" &&
@@ -88,80 +86,58 @@ function Simulation() {
     }
 
     const timeoutId = setTimeout(() => {
-
       const fetchReportData =
         async (): Promise<void> => {
-
           try {
-
             setLoading(true);
             setError(null);
 
             let endpoint = "";
 
             if (mode === "hourly") {
-
-              endpoint =
-                systemName.trim()
-
-                  ? `/metrics/system?name=${encodeURIComponent(systemName)}`
-
-                  : "/metrics/station/hourly";
+              endpoint = systemName.trim()
+                ? `/metrics/system?name=${encodeURIComponent(systemName)}`
+                : "/metrics/station/hourly";
             }
 
             if (mode === "events") {
-
               endpoint = "/simulation/system-events";
             }
 
             if (mode === "daily") {
-
-              endpoint =
-                systemName.trim()
-
-                  ? `/metrics/system?name=${encodeURIComponent(systemName)}&interval=daily`
-
-                  : "/metrics/station/daily";
+              endpoint = systemName.trim()
+                ? `/metrics/system?name=${encodeURIComponent(systemName)}&interval=daily`
+                : "/metrics/station/daily";
             }
 
             if (mode === "voltage") {
-
-              endpoint = 
-              "/simulation/voltage";
+              endpoint = "/simulation/voltage";
             }
 
-            const response =
-                  await api.get(endpoint);
+            const response = await api.get(endpoint);
 
-                console.log("VOLTAGE RESPONSE:", response.data); 
+            console.log("VOLTAGE RESPONSE:", response.data);
 
-                if (mode === "hourly") {
+            if (mode === "hourly") {
+              setHourlyData(
+                response.data.energy_by_hour ?? null
+              );
+            }
 
-                  setHourlyData(
-                    response.data.energy_by_hour ?? null
-                  );
-                }
+            if (mode === "events") {
+              setEventData(response.data ?? []);
+            }
 
-                if (mode === "events") {
+            if (mode === "daily") {
+              setDailyData(
+                response.data.daily_energy ?? null
+              );
+            }
 
-                  setEventData(response.data ?? []);
-                }
-
-                if (mode === "daily") {
-
-                  setDailyData(
-                    response.data.daily_energy ?? null
-                  );
-                }
-
-          if (mode === "voltage") {
-            setVoltageData(
-              response.data ?? []
-            );
-          }
-
+            if (mode === "voltage") {
+              setVoltageData(response.data ?? []);
+            }
           } catch (err) {
-
             console.error(err);
 
             setHourlyData(null);
@@ -176,26 +152,19 @@ function Simulation() {
                   ? "System not found."
                   : "Unable to load hourly report data."
             );
-
           } finally {
-
             setLoading(false);
           }
         };
 
       void fetchReportData();
-
     }, 700);
 
-    return () =>
-      clearTimeout(timeoutId);
-
+    return () => clearTimeout(timeoutId);
   }, [mode, systemName]);
 
   useEffect(() => {
-
     if (mode === "events") {
-
       setViewMode("table");
     }
 
@@ -204,238 +173,155 @@ function Simulation() {
       mode === "daily" ||
       mode === "voltage"
     ) {
-
       setViewMode("chart");
     }
-
   }, [mode]);
 
   const handleSystemChange = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
+    setSystemName(event.target.value);
+  };
 
-    setSystemName(
-      event.target.value
+  const handleGenerateReport = (): void => {
+    if (mode === "hourly") {
+      setExecutionMessage(
+        systemName.trim()
+          ? `Hourly Data report generated for ${systemName}.`
+          : "Hourly Data report generated for all systems."
+      );
+    }
+
+    if (mode === "events") {
+      setExecutionMessage(
+        systemName.trim()
+          ? `Event Records report generated for ${systemName}.`
+          : "Event Records report generated for all systems."
+      );
+    }
+
+    if (mode === "daily") {
+      setExecutionMessage(
+        systemName.trim()
+          ? `Daily Totals report generated for ${systemName}.`
+          : "Daily Totals report generated for all systems."
+      );
+    }
+
+    if (mode === "voltage") {
+      setExecutionMessage(
+        "Voltage report generated successfully."
+      );
+    }
+  };
+
+  const handleExportCSV = (): void => {
+    if (mode === "hourly" && hourlyData) {
+      exportHourlyCSV(hourlyData);
+
+      setExecutionMessage(
+        "Hourly Data CSV exported successfully."
+      );
+
+      return;
+    }
+
+    if (mode === "events" && eventData.length > 0) {
+      exportEventCSV(eventData);
+
+      setExecutionMessage(
+        "Event Records CSV exported successfully."
+      );
+
+      return;
+    }
+
+    if (mode === "daily" && dailyData) {
+      exportDailyCSV(dailyData);
+
+      setExecutionMessage(
+        "Daily Totals CSV exported successfully."
+      );
+
+      return;
+    }
+
+    if (mode === "voltage" && voltageData) {
+      exportVoltageCSV(voltageData);
+
+      setExecutionMessage(
+        "Voltage Records CSV exported successfully."
+      );
+
+      return;
+    }
+
+    setExecutionMessage(
+      "CSV export not implemented for this report yet."
     );
   };
 
-  const handleGenerateReport =
-    (): void => {
-
-      if (mode === "hourly") {
-
-        setExecutionMessage(
-
-          systemName.trim()
-
-            ? `Hourly Data report generated for ${systemName}.`
-
-            : "Hourly Data report generated for all systems."
-        );
-      }
-
-      if (mode === "events") {
-
-        setExecutionMessage(
-
-          systemName.trim()
-
-            ? `Event Records report generated for ${systemName}.`
-
-            : "Event Records report generated for all systems."
-        );
-      }
-
-      if (mode === "daily") {
-
-        setExecutionMessage(
-
-          systemName.trim()
-
-            ? `Daily Totals report generated for ${systemName}.`
-
-            : "Daily Totals report generated for all systems."
-        );
-      }
-
-      if (mode === "voltage") {
-        setExecutionMessage(
-          "Voltage report generated successfully."
-        );
-      }
-    };
-
-  const handleExportCSV =
-    (): void => {
-
-      if (
-        mode === "hourly" &&
-        hourlyData
-      ) {
-
-        exportHourlyCSV(
-          hourlyData
-        );
-
-        setExecutionMessage(
-          "Hourly Data CSV exported successfully."
-        );
-
-        return;
-      }
-
-      if (
-        mode === "events" &&
-        eventData.length > 0
-      ) {
-
-        exportEventCSV(
-          eventData
-        );
-
-        setExecutionMessage(
-
-          "Event Records CSV exported successfully."
-
-        );
-
-        return;
-      }
-
-      if (
-        mode === "daily" &&
-        dailyData
-      ) {
-
-        exportDailyCSV(
-          dailyData
-        );
-
-        setExecutionMessage(
-          "Daily Totals CSV exported successfully."
-        );
-
-        return;
-      }
-
-      if (
-        mode === "voltage" &&
-        voltageData 
-      ) {
-
-        exportVoltageCSV(
-          voltageData
-        );
-
-        setExecutionMessage(
-          "Voltage Records CSV exported successfully."
-        );
-
-        return;
-      }
+  const handleExportPDF = (): void => {
+    if (mode === "hourly" && hourlyData) {
+      exportHourlyPDF(hourlyData);
 
       setExecutionMessage(
+        "Hourly Data PDF exported successfully."
+      );
 
-        "CSV export not implemented for this report yet."
-      )
+      return;
     }
 
-  const handleExportPDF = 
-    (): void => {
-
-      if (
-        mode === "hourly" &&
-        hourlyData
-      ) {
-
-        exportHourlyPDF(
-          hourlyData
-        );
-
-        setExecutionMessage(
-          "Hourly Data PDF exported successfully."
-        );
-
-        return;
-      }
-
-      if (
-        mode === "events" &&
-        eventData.length > 0
-      ) {
-
-        exportEventPDF(
-          eventData
-        );
-
-        setExecutionMessage(
-          "Event Records PDF exported successfully."
-        );
-
-        return;
-      }
-
-      if (
-        mode === "daily" &&
-        dailyData
-      ) {
-
-        exportDailyPDF(
-          dailyData
-        );
-
-        setExecutionMessage(
-          "Daily Totals PDF exported successfully."
-        );
-
-        return;
-      }
-
-      if (
-        mode === "voltage" &&
-        voltageData
-      ) {
-
-        exportVoltagePDF(
-          voltageData
-        );
-
-        setExecutionMessage(
-          "Voltage Records PDF exported successfully."
-        );
-
-        return;
-      }
+    if (mode === "events" && eventData.length > 0) {
+      exportEventPDF(eventData);
 
       setExecutionMessage(
-        "PDF export not implemented for this report yet."
+        "Event Records PDF exported successfully."
       );
-      
-    };
+
+      return;
+    }
+
+    if (mode === "daily" && dailyData) {
+      exportDailyPDF(dailyData);
+
+      setExecutionMessage(
+        "Daily Totals PDF exported successfully."
+      );
+
+      return;
+    }
+
+    if (mode === "voltage" && voltageData) {
+      exportVoltagePDF(voltageData);
+
+      setExecutionMessage(
+        "Voltage Records PDF exported successfully."
+      );
+
+      return;
+    }
+
+    setExecutionMessage(
+      "PDF export not implemented for this report yet."
+    );
+  };
 
   return (
+    <>
+      <div className={layoutStyles.sectionHeading}>
+        <h2>Simulation</h2>
+        <span>Reports and Exports</span>
+      </div>
 
-    <section
-      className={
-        layoutStyles.mainPanel
-      }
-    >
-
-      <div
-        className={
-          tabStyles.tabs
-        }
-      >
-
+      <div className={tabStyles.tabs}>
         <button
           className={
             mode === "hourly"
               ? tabStyles.tabButtonActive
               : tabStyles.tabButton
           }
-          onClick={() =>
-            setMode("hourly")
-          }
+          onClick={() => setMode("hourly")}
         >
           Hourly Data
         </button>
@@ -446,9 +332,7 @@ function Simulation() {
               ? tabStyles.tabButtonActive
               : tabStyles.tabButton
           }
-          onClick={() =>
-            setMode("events")
-          }
+          onClick={() => setMode("events")}
         >
           Event Records
         </button>
@@ -459,9 +343,7 @@ function Simulation() {
               ? tabStyles.tabButtonActive
               : tabStyles.tabButton
           }
-          onClick={() =>
-            setMode("daily")
-          }
+          onClick={() => setMode("daily")}
         >
           Daily Totals
         </button>
@@ -472,27 +354,14 @@ function Simulation() {
               ? tabStyles.tabButtonActive
               : tabStyles.tabButton
           }
-          onClick={() =>
-            setMode("voltage")
-          }
+          onClick={() => setMode("voltage")}
         >
           Voltage Records
         </button>
-
       </div>
 
-      <section
-        className={
-          panelStyles.chartPanel
-        }
-      >
-
-        <div
-          className={
-            panelStyles.panelHeader
-          }
-        >
-
+      <section className={panelStyles.chartPanel}>
+        <div className={panelStyles.panelHeader}>
           {mode === "hourly" &&
             "Hourly Energy Consumption Report"}
 
@@ -504,42 +373,25 @@ function Simulation() {
 
           {mode === "voltage" &&
             "Voltage Records Report"}
-
         </div>
 
         <div
-          className={
-            panelStyles.chartPlaceholder
-          }
+          className={panelStyles.chartPlaceholder}
           style={{
             alignItems: "stretch",
-            justifyContent:
-              "flex-start"
+            justifyContent: "flex-start"
           }}
         >
-
           {loading && (
-
-            <span
-              className={
-                panelStyles.placeholderText
-              }
-            >
+            <span className={panelStyles.placeholderText}>
               Loading report data...
             </span>
-
           )}
 
           {error && (
-
-            <span
-              className={
-                panelStyles.placeholderText
-              }
-            >
+            <span className={panelStyles.placeholderText}>
               {error}
             </span>
-
           )}
 
           {!loading &&
@@ -547,109 +399,75 @@ function Simulation() {
             mode === "hourly" &&
             hourlyData &&
             viewMode === "chart" && (
-
-            <div
-              style={{
-                width: "100%",
-                height: "100%"
-              }}
-            >
-
-              <ReportHourlyChart
-                data={hourlyData}
-              />
-
-            </div>
-
-          )}
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%"
+                }}
+              >
+                <ReportHourlyChart data={hourlyData} />
+              </div>
+            )}
 
           {!loading &&
             !error &&
             mode === "hourly" &&
             hourlyData &&
             viewMode === "table" && (
-
-            <ReportHourlyTable
-              data={hourlyData}
-            />
-
-          )}
+              <ReportHourlyTable data={hourlyData} />
+            )}
 
           {!loading &&
             !error &&
             mode === "events" && (
-
-            <ReportEventsTable
-              events={eventData}
-            />
-
-          )}
+              <ReportEventsTable events={eventData} />
+            )}
 
           {!loading &&
             !error &&
             mode === "daily" &&
             dailyData &&
             viewMode === "chart" && (
-
-            <div
-              style={{
-                width: "100%",
-                height: "100%"
-              }}
-            >
-
-              <ReportDailyChart
-                data={dailyData}
-              />
-
-            </div>
-
-          )}
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%"
+                }}
+              >
+                <ReportDailyChart data={dailyData} />
+              </div>
+            )}
 
           {!loading &&
             !error &&
             mode === "daily" &&
             dailyData &&
             viewMode === "table" && (
-
-            <ReportDailyTable
-              data={dailyData}
-            />
-
-          )}
+              <ReportDailyTable data={dailyData} />
+            )}
 
           {!loading &&
             !error &&
             mode === "voltage" &&
             voltageData &&
             viewMode === "chart" && (
-
-            <div
-              style={{
-                width: "100%",
-                height: "100%"
-              }}
-            >
-
-              <ReportVoltageChart
-                data={voltageData}
-              />
-
-            </div>
-
-          )}
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%"
+                }}
+              >
+                <ReportVoltageChart data={voltageData} />
+              </div>
+            )}
 
           {!loading &&
             !error &&
             mode === "voltage" &&
             voltageData &&
             viewMode === "table" && (
-
-            <ReportVoltageTable
-              data={voltageData}
-            />
-
-          )}
+              <ReportVoltageTable data={voltageData} />
+            )}
 
           {!loading &&
             !error &&
@@ -657,56 +475,30 @@ function Simulation() {
             mode !== "events" &&
             mode !== "daily" &&
             mode !== "voltage" && (
-
-            <span
-              className={
-                panelStyles.placeholderText
-              }
-            >
-              Waiting for report generation...
-            </span>
-
-          )}
-
+              <span className={panelStyles.placeholderText}>
+                Waiting for report generation...
+              </span>
+            )}
         </div>
-
       </section>
 
-      <section
-        className={
-          controlStyles.controlContent
-        }
-      >
-
-        <div
-          className={
-            panelStyles.panelHeader
-          }
-        >
+      <section className={controlStyles.controlContent}>
+        <div className={panelStyles.panelHeader}>
           Report Configuration
         </div>
 
-        <div
-          className={
-            tabStyles.tabs
-          }
-        >
-
+        <div className={tabStyles.tabs}>
           {mode !== "events" && (
-
             <button
               className={
                 viewMode === "chart"
                   ? tabStyles.tabButtonActive
                   : tabStyles.tabButton
               }
-              onClick={() =>
-                setViewMode("chart")
-              }
+              onClick={() => setViewMode("chart")}
             >
               Chart View
             </button>
-
           )}
 
           <button
@@ -715,120 +507,63 @@ function Simulation() {
                 ? tabStyles.tabButtonActive
                 : tabStyles.tabButton
             }
-            onClick={() =>
-              setViewMode("table")
-            }
+            onClick={() => setViewMode("table")}
           >
             Table View
           </button>
-
         </div>
 
-          {mode !== "voltage" &&
-            mode !== "events" && (
+        {mode !== "voltage" &&
+          mode !== "events" && (
+            <div className={controlStyles.rangeInputs}>
+              <div className={controlStyles.inputGroup}>
+                <input
+                  type="text"
+                  className={controlStyles.input}
+                  placeholder="Optional System"
+                  value={systemName}
+                  onChange={handleSystemChange}
+                />
 
-              <div
-                className={
-                  controlStyles.rangeInputs
-                }
-              >
-
-                <div
-                  className={
-                    controlStyles.inputGroup
-                  }
-                >
-
-                  <input
-                    type="text"
-                    className={
-                      controlStyles.input
-                    }
-                    placeholder="Optional System"
-                    value={systemName}
-                    onChange={
-                      handleSystemChange
-                    }
-                  />
-
-                  <div
-                    className={
-                      controlStyles.inputLabel
-                    }
-                  >
-                    System Name
-                  </div>
-
+                <div className={controlStyles.inputLabel}>
+                  System Name
                 </div>
-
               </div>
-
-            )}
+            </div>
+          )}
 
         <button
-          className={
-            controlStyles.runButton
-          }
-          onClick={
-            handleGenerateReport
-          }
+          className={controlStyles.runButton}
+          onClick={handleGenerateReport}
         >
           Generate Report
         </button>
 
-        <div
-          className={
-            tabStyles.tabs
-          }
-        >
-
+        <div className={tabStyles.tabs}>
           <button
-            className={
-              controlStyles.runButton
-            }
-            onClick={
-              handleExportCSV
-            }
+            className={controlStyles.runButton}
+            onClick={handleExportCSV}
           >
             Export CSV
           </button>
 
           <button
-            className={
-              controlStyles.runButton
-            }
-            onClick={
-              handleExportPDF
-            }
+            className={controlStyles.runButton}
+            onClick={handleExportPDF}
           >
             Export PDF
           </button>
-
         </div>
 
         {executionMessage && (
+          <div className={controlStyles.executionInfo}>
+            <span>Report execution status:</span>
 
-          <div
-            className={
-              controlStyles.executionInfo
-            }
-          >
-
-            <span>
-              Report execution status:
-            </span>
-
-            <strong>
-              {executionMessage}
-            </strong>
-
+            <strong>{executionMessage}</strong>
           </div>
-
         )}
-
       </section>
-
-    </section>
+    </>
   );
 }
 
