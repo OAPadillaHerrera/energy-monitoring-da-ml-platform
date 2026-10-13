@@ -6,6 +6,12 @@ import {
   type ChangeEvent
 } from "react";
 
+import {
+  Activity,
+  Gauge,
+  Zap
+} from "lucide-react";
+
 import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
 import panelStyles from "../../../components/shared/styles/panelStyles.module.css";
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
@@ -187,24 +193,24 @@ function Simulation() {
     if (mode === "hourly") {
       setExecutionMessage(
         systemName.trim()
-          ? `Hourly Data report generated for ${systemName}.`
-          : "Hourly Data report generated for all systems."
+          ? `Hourly Consumption report generated for ${systemName}.`
+          : "Hourly Consumption report generated for all systems."
       );
     }
 
     if (mode === "events") {
       setExecutionMessage(
         systemName.trim()
-          ? `Event Records report generated for ${systemName}.`
-          : "Event Records report generated for all systems."
+          ? `System Events report generated for ${systemName}.`
+          : "System Events report generated for all systems."
       );
     }
 
     if (mode === "daily") {
       setExecutionMessage(
         systemName.trim()
-          ? `Daily Totals report generated for ${systemName}.`
-          : "Daily Totals report generated for all systems."
+          ? `Daily Consumption report generated for ${systemName}.`
+          : "Daily Consumption report generated for all systems."
       );
     }
 
@@ -220,7 +226,7 @@ function Simulation() {
       exportHourlyCSV(hourlyData);
 
       setExecutionMessage(
-        "Hourly Data CSV exported successfully."
+        "Hourly Consumption CSV exported successfully."
       );
 
       return;
@@ -230,7 +236,7 @@ function Simulation() {
       exportEventCSV(eventData);
 
       setExecutionMessage(
-        "Event Records CSV exported successfully."
+        "System Events CSV exported successfully."
       );
 
       return;
@@ -240,7 +246,7 @@ function Simulation() {
       exportDailyCSV(dailyData);
 
       setExecutionMessage(
-        "Daily Totals CSV exported successfully."
+        "Daily Consumption CSV exported successfully."
       );
 
       return;
@@ -250,7 +256,7 @@ function Simulation() {
       exportVoltageCSV(voltageData);
 
       setExecutionMessage(
-        "Voltage Records CSV exported successfully."
+        "Voltage CSV exported successfully."
       );
 
       return;
@@ -266,7 +272,7 @@ function Simulation() {
       exportHourlyPDF(hourlyData);
 
       setExecutionMessage(
-        "Hourly Data PDF exported successfully."
+        "Hourly Consumption PDF exported successfully."
       );
 
       return;
@@ -276,7 +282,7 @@ function Simulation() {
       exportEventPDF(eventData);
 
       setExecutionMessage(
-        "Event Records PDF exported successfully."
+        "System Events PDF exported successfully."
       );
 
       return;
@@ -286,7 +292,7 @@ function Simulation() {
       exportDailyPDF(dailyData);
 
       setExecutionMessage(
-        "Daily Totals PDF exported successfully."
+        "Daily Consumption PDF exported successfully."
       );
 
       return;
@@ -296,7 +302,7 @@ function Simulation() {
       exportVoltagePDF(voltageData);
 
       setExecutionMessage(
-        "Voltage Records PDF exported successfully."
+        "Voltage PDF exported successfully."
       );
 
       return;
@@ -318,45 +324,49 @@ function Simulation() {
         <button
           className={
             mode === "hourly"
-              ? tabStyles.tabButtonActive
-              : tabStyles.tabButton
+              ? tabStyles.reportsTabButtonActive
+              : tabStyles.reportsTabButton
           }
           onClick={() => setMode("hourly")}
         >
-          Hourly Data
+          <Zap className={tabStyles.reportsTabIcon} />
+          Hourly Consumption
         </button>
 
         <button
           className={
             mode === "events"
-              ? tabStyles.tabButtonActive
-              : tabStyles.tabButton
+              ? tabStyles.reportsTabButtonActive
+              : tabStyles.reportsTabButton
           }
           onClick={() => setMode("events")}
         >
-          Event Records
+          <Activity className={tabStyles.reportsTabIcon} />
+          System Events
         </button>
 
         <button
           className={
             mode === "daily"
-              ? tabStyles.tabButtonActive
-              : tabStyles.tabButton
+              ? tabStyles.reportsTabButtonActive
+              : tabStyles.reportsTabButton
           }
           onClick={() => setMode("daily")}
         >
-          Daily Totals
+          <Zap className={tabStyles.reportsTabIcon} />
+          Daily Consumption
         </button>
 
         <button
           className={
             mode === "voltage"
-              ? tabStyles.tabButtonActive
-              : tabStyles.tabButton
+              ? tabStyles.reportsTabButtonActive
+              : tabStyles.reportsTabButton
           }
           onClick={() => setMode("voltage")}
         >
-          Voltage Records
+          <Gauge className={tabStyles.reportsTabIcon} />
+          Voltage
         </button>
       </div>
 
@@ -366,13 +376,13 @@ function Simulation() {
             "Hourly Energy Consumption Report"}
 
           {mode === "events" &&
-            "Event Records Report"}
+            "System Events Report"}
 
           {mode === "daily" &&
-            "Daily Energy Totals Report"}
+            "Daily Energy Consumption Report"}
 
           {mode === "voltage" &&
-            "Voltage Records Report"}
+            "Voltage Report"}
         </div>
 
         <div
