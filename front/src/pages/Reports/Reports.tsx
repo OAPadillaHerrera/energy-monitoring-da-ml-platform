@@ -9,8 +9,8 @@ import {
 } from "react-router-dom";
 
 import {
-  Activity,
-  BarChart3
+  FlaskConical,
+  BrainCircuit
 } from "lucide-react";
 
 function Reports() {
@@ -28,7 +28,7 @@ function Reports() {
               : tabStyles.reportsTabButton
           }
         >
-          <Activity className={tabStyles.reportsTabIcon} />
+          <FlaskConical className={tabStyles.reportsTabIcon} />
           Simulation
         </NavLink>
 
@@ -40,7 +40,7 @@ function Reports() {
               : tabStyles.reportsTabButton
           }
         >
-          <BarChart3 className={tabStyles.reportsTabIcon} />
+          <BrainCircuit className={tabStyles.reportsTabIcon} />
           DA/ML
         </NavLink>
 
