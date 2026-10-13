@@ -8,10 +8,13 @@ import {
   NavLink
 } from "react-router-dom";
 
+import {
+  Activity,
+  BarChart3
+} from "lucide-react";
+
 function Reports() {
-
   return (
-
     <section className={layoutStyles.mainPanel}>
 
       <nav className={tabStyles.tabs}>
@@ -19,25 +22,25 @@ function Reports() {
         <NavLink
           to="/reports"
           end
-
           className={({ isActive }) =>
             isActive
-              ? tabStyles.tabButtonActive
-              : tabStyles.tabButton
+              ? tabStyles.reportsTabButtonActive
+              : tabStyles.reportsTabButton
           }
         >
+          <Activity className={tabStyles.reportsTabIcon} />
           Simulation
         </NavLink>
 
         <NavLink
           to="daml"
-
           className={({ isActive }) =>
             isActive
-              ? tabStyles.tabButtonActive
-              : tabStyles.tabButton
+              ? tabStyles.reportsTabButtonActive
+              : tabStyles.reportsTabButton
           }
         >
+          <BarChart3 className={tabStyles.reportsTabIcon} />
           DA/ML
         </NavLink>
 

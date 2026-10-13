@@ -1,653 +1,412 @@
 
 
 .tabs {
-
   display: flex;
-
   gap: 12px;
-
   flex-wrap: wrap;
-
   flex-shrink: 0;
-
 }
 
 .tabButton,
-
 .tabButtonActive,
-
 .simulationTabButton,
-
 .simulationTabButtonActive,
-
 .simulationModeButton,
-
 .simulationModeButtonActive,
-
 .damlTabButton,
-
-.damlTabButtonActive {
-
+.damlTabButtonActive,
+.reportsTabButton,
+.reportsTabButtonActive {
   display: inline-flex;
-
   align-items: center;
-
   justify-content: center;
-
   flex-shrink: 0;
-
   text-decoration: none;
-
   font-family: inherit;
-
   font-weight: 700;
-
   line-height: 1;
-
   white-space: nowrap;
-
   cursor: pointer;
-
   transition:
-
     transform .20s ease,
-
     border-color .20s ease,
-
     background .20s ease,
-
     box-shadow .20s ease,
-
     color .20s ease,
-
     opacity .20s ease,
-
     filter .20s ease;
-
 }
 
 .tabButton,
-
 .tabButtonActive {
-
   height: 40px;
-
   padding: 0 18px;
-
   border-radius: 8px;
-
   border: 1px solid rgba(0,194,255,.12);
-
   background: rgba(8,28,52,.85);
-
   gap: 10px;
-
   color: rgba(255,255,255,.78);
-
   font-size: 16px;
-
   letter-spacing: .8px;
-
 }
 
 .tabIcon {
-
   width: 18px;
-
   height: 18px;
-
   flex-shrink: 0;
-
-  transition:
-
-    transform .20s ease;
-
+  transition: transform .20s ease;
 }
 
 .tabButton:hover {
-
   transform: translateY(-2px);
-
   border-color: rgba(0,194,255,.35);
-
   background: rgba(10,34,64,.95);
-
   color: #FFFFFF;
-
   box-shadow:
-
     inset 0 0 18px rgba(0,0,0,.35),
-
     0 0 14px rgba(0,194,255,.18);
-
 }
 
 .tabButton:hover .tabIcon {
-
   transform: scale(1.15);
-
 }
 
 .tabButtonActive {
-
   transform: translateY(-2px);
-
   border: 1px solid rgba(0,194,255,.40);
-
-  background:
-
-    linear-gradient(
-
-      90deg,
-
-      #008CFF,
-
-      #00C2FF
-
-    );
-
+  background: linear-gradient(90deg, #008CFF, #00C2FF);
   color: #FFFFFF;
-
-  box-shadow:
-
-    0 0 18px rgba(0,194,255,.35);
-
+  box-shadow: 0 0 18px rgba(0,194,255,.35);
 }
 
 .tabButtonActive .tabIcon {
-
   transform: scale(1.12);
-
 }
 
 .tabButtonActive:hover {
-
   filter: brightness(.92);
-
-  box-shadow:
-
-    0 0 24px rgba(0,194,255,.45);
-
+  box-shadow: 0 0 24px rgba(0,194,255,.45);
 }
 
 .tabButtonActive:hover .tabIcon {
-
   transform: scale(1.18);
-
 }
 
 .simulationTabButton,
-
 .simulationTabButtonActive {
-
   height: 38px;
-
   padding: 0 16px;
-
   border-radius: 8px;
-
   border: 1px solid rgba(0,194,255,.12);
-
   background: rgba(8,28,52,.85);
-
   gap: 10px;
-
   color: rgba(255,255,255,.78);
-
   font-size: 14px;
-
   letter-spacing: 1px;
-
 }
 
 .simulationTabIcon {
-
   width: 16px;
-
   height: 16px;
-
   color: #FB923C;
-
   flex-shrink: 0;
-
-  transition:
-
-    transform .20s ease;
-
+  transition: transform .20s ease;
 }
 
 .simulationTabButton:hover {
-
   transform: translateY(-2px);
-
   border-color: rgba(251,146,60,.45);
-
   background: rgba(10,34,64,.95);
-
   color: #FFFFFF;
-
   box-shadow:
-
     inset 0 0 18px rgba(0,0,0,.35),
-
     0 0 14px rgba(251,146,60,.18);
-
 }
 
 .simulationTabButton:hover .simulationTabIcon {
-
   transform: scale(1.15);
-
 }
 
 .simulationTabButtonActive {
-
   transform: translateY(-2px);
-
   border: 1px solid rgba(251,146,60,.55);
-
-  background:
-
-    linear-gradient(
-
-      90deg,
-
-      #008CFF,
-
-      #00C2FF
-
-    );
-
+  background: linear-gradient(90deg, #008CFF, #00C2FF);
   color: #FFFFFF;
-
-  box-shadow:
-
-    0 0 18px rgba(0,194,255,.35);
-
+  box-shadow: 0 0 18px rgba(0,194,255,.35);
 }
 
 .simulationTabButtonActive .simulationTabIcon {
-
   transform: scale(1.12);
-
 }
 
 .simulationTabButtonActive:hover {
-
   filter: brightness(.92);
-
-  box-shadow:
-
-    0 0 24px rgba(0,194,255,.45);
-
+  box-shadow: 0 0 24px rgba(0,194,255,.45);
 }
 
 .simulationTabButtonActive:hover .simulationTabIcon {
-
   transform: scale(1.18);
-
 }
 
 .damlTabButton,
-
 .damlTabButtonActive {
-
   height: 38px;
-
   padding: 0 16px;
-
   border-radius: 8px;
-
   border: 1px solid rgba(167,139,250,.12);
-
   background: rgba(8,28,52,.85);
-
   gap: 10px;
-
   color: rgba(255,255,255,.78);
-
   font-size: 14px;
-
   letter-spacing: 1px;
-
 }
 
 .damlTabIcon {
-
   width: 16px;
-
   height: 16px;
-
   color: #A78BFA;
-
   flex-shrink: 0;
-
-  transition:
-
-    transform .20s ease;
-
+  transition: transform .20s ease;
 }
 
 .damlTabButton:hover {
-
   transform: translateY(-2px);
-
   border-color: rgba(167,139,250,.45);
-
   background: rgba(10,34,64,.95);
-
   color: #FFFFFF;
-
   box-shadow:
-
     inset 0 0 18px rgba(0,0,0,.35),
-
     0 0 14px rgba(167,139,250,.18);
-
 }
 
 .damlTabButton:hover .damlTabIcon {
-
   transform: scale(1.15);
-
 }
 
 .damlTabButtonActive {
-
   transform: translateY(-2px);
-
   border: 1px solid rgba(167,139,250,.55);
-
-  background:
-
-    linear-gradient(
-
-      90deg,
-
-      #008CFF,
-
-      #00C2FF
-
-    );
-
+  background: linear-gradient(90deg, #008CFF, #00C2FF);
   color: #FFFFFF;
-
-  box-shadow:
-
-    0 0 18px rgba(0,194,255,.35);
-
+  box-shadow: 0 0 18px rgba(0,194,255,.35);
 }
 
 .damlTabButtonActive .damlTabIcon {
-
   transform: scale(1.12);
-
 }
 
 .damlTabButtonActive:hover {
-
   filter: brightness(.92);
-
-  box-shadow:
-
-    0 0 24px rgba(0,194,255,.45);
-
+  box-shadow: 0 0 24px rgba(0,194,255,.45);
 }
 
 .damlTabButtonActive:hover .damlTabIcon {
-
   transform: scale(1.18);
+}
 
+.reportsTabButton,
+.reportsTabButtonActive {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,194,255,.12);
+  background: rgba(8,28,52,.85);
+  gap: 10px;
+  color: rgba(255,255,255,.78);
+  font-size: 16px;
+  letter-spacing: .8px;
+}
+
+.reportsTabIcon {
+  width: 18px;
+  height: 18px;
+  color: #22C55E;
+  flex-shrink: 0;
+  transition: transform .20s ease;
+}
+
+.reportsTabButton:hover {
+  transform: translateY(-2px);
+  border-color: rgba(34,197,94,.45);
+  background: rgba(10,34,64,.95);
+  color: #FFFFFF;
+  box-shadow:
+    inset 0 0 18px rgba(0,0,0,.35),
+    0 0 14px rgba(34,197,94,.18);
+}
+
+.reportsTabButton:hover .reportsTabIcon {
+  transform: scale(1.15);
+}
+
+.reportsTabButtonActive {
+  transform: translateY(-2px);
+  border: 1px solid rgba(0,194,255,.40);
+  background: linear-gradient(90deg, #008CFF, #00C2FF);
+  color: #FFFFFF;
+  box-shadow: 0 0 18px rgba(0,194,255,.35);
+}
+
+.reportsTabButtonActive .reportsTabIcon {
+  transform: scale(1.12);
+}
+
+.reportsTabButtonActive:hover {
+  filter: brightness(.92);
+  box-shadow: 0 0 24px rgba(0,194,255,.45);
+}
+
+.reportsTabButtonActive:hover .reportsTabIcon {
+  transform: scale(1.18);
 }
 
 .simulationModeButton,
-
 .simulationModeButtonActive {
-
   height: 34px;
-
   padding: 0 14px;
-
   border-radius: 8px;
-
   border: 1px solid rgba(0,194,255,.12);
-
   background: rgba(8,28,52,.85);
-
   gap: 8px;
-
   color: rgba(255,255,255,.78);
-
   font-size: 13px;
-
   letter-spacing: .8px;
-
 }
 
 .simulationModeIcon {
-
   width: 15px;
-
   height: 15px;
-
   color: #FB923C;
-
   flex-shrink: 0;
-
-  transition:
-
-    transform .20s ease;
-
+  transition: transform .20s ease;
 }
 
 .simulationModeButton:hover {
-
   transform: translateY(-2px);
-
   border-color: rgba(251,146,60,.45);
-
   background: rgba(10,34,64,.95);
-
   color: #FFFFFF;
-
   box-shadow:
-
     inset 0 0 18px rgba(0,0,0,.35),
-
     0 0 14px rgba(251,146,60,.18);
-
 }
 
 .simulationModeButton:hover .simulationModeIcon {
-
   transform: scale(1.15);
-
 }
 
 .simulationModeButtonActive {
-
   transform: translateY(-2px);
-
   border: 1px solid rgba(251,146,60,.55);
-
-  background:
-
-    linear-gradient(
-
-      90deg,
-
-      #008CFF,
-
-      #00C2FF
-
-    );
-
+  background: linear-gradient(90deg, #008CFF, #00C2FF);
   color: #FFFFFF;
-
-  box-shadow:
-
-    0 0 18px rgba(0,194,255,.35);
-
+  box-shadow: 0 0 18px rgba(0,194,255,.35);
 }
 
 .simulationModeButtonActive .simulationModeIcon {
-
   transform: scale(1.12);
-
 }
 
 .simulationModeButtonActive:hover {
-
   filter: brightness(.92);
-
-  box-shadow:
-
-    0 0 24px rgba(0,194,255,.45);
-
+  box-shadow: 0 0 24px rgba(0,194,255,.45);
 }
 
 .simulationModeButtonActive:hover .simulationModeIcon {
-
   transform: scale(1.18);
-
 }
 
 @media (max-width: 1200px) {
-
   .tabs {
-
     gap: 10px;
-
   }
 
   .tabButton,
-
-  .tabButtonActive {
-
+  .tabButtonActive,
+  .reportsTabButton,
+  .reportsTabButtonActive {
     height: 38px;
-
     padding: 0 16px;
-
     font-size: 15px;
-
   }
-
 }
 
 @media (max-width: 992px) {
-
   .tabs {
-
     gap: 8px;
-
   }
 
   .tabButton,
-
-  .tabButtonActive {
-
+  .tabButtonActive,
+  .reportsTabButton,
+  .reportsTabButtonActive {
     height: 36px;
-
     padding: 0 14px;
-
     font-size: 14px;
-
   }
 
   .simulationModeButton,
-
   .simulationModeButtonActive {
-
     height: 32px;
-
     padding: 0 13px;
-
     font-size: 12px;
-
     gap: 7px;
-
   }
 
   .simulationModeIcon {
-
     width: 14px;
-
     height: 14px;
-
   }
-
 }
 
 @media (max-height: 820px) {
-
   .tabs {
-
     gap: 8px;
-
   }
 
   .tabButton,
-
   .tabButtonActive {
-
     height: 34px;
-
     padding: 0 14px;
-
     font-size: 14px;
-
   }
 
   .simulationTabButton,
-
   .simulationTabButtonActive,
-
   .damlTabButton,
-
   .damlTabButtonActive {
-
     height: 32px;
-
     padding: 0 14px;
-
     font-size: 14px;
-
     gap: 8px;
+  }
 
+  .reportsTabButton,
+  .reportsTabButtonActive {
+    height: 34px;
+    padding: 0 14px;
+    font-size: 14px;
   }
 
   .simulationTabIcon,
-
-  .damlTabIcon {
-
+  .damlTabIcon,
+  .reportsTabIcon {
     width: 16px;
-
     height: 16px;
-
   }
 
   .simulationModeButton,
-
   .simulationModeButtonActive {
-
     height: 30px;
-
     padding: 0 12px;
-
     font-size: 12px;
-
     gap: 7px;
-
   }
 
   .simulationModeIcon {
-
     width: 14px;
-
     height: 14px;
-
   }
-
 }
 
 
