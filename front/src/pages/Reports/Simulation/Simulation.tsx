@@ -408,7 +408,7 @@ function Simulation() {
       <section className={panelStyles.chartPanel}>
         <div className={panelStyles.panelHeader}>
           {mode === "hourly" &&
-            "Hourly Energy Consumption Report"}
+            "Hourly Energy Consumption"}
 
           {mode === "events" &&
             "System Events Report"}
