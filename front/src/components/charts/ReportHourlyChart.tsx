@@ -8,8 +8,13 @@ import {
   LineElement,
   Tooltip,
   Legend,
-  Filler
+  Filler,
+  type ChartOptions
 } from "chart.js";
+
+import {
+  type CSSProperties
+} from "react";
 
 import { Line } from "react-chartjs-2";
 
@@ -25,6 +30,16 @@ ChartJS.register(
 
 type Props = {
   data: Record<string, number>;
+};
+
+const CHART_FONT = "Cascadia Code";
+
+const chartContainerStyle: CSSProperties = {
+  width: "100%",
+  height: "100%",
+  minWidth: 0,
+  overflow: "hidden",
+  position: "relative"
 };
 
 export default function ReportHourlyChart({
@@ -53,126 +68,138 @@ export default function ReportHourlyChart({
   );
 
   const chartData = {
-
     labels,
-
     datasets: [
       {
         label: "Hourly Consumption (kWh)",
-
         data: values,
-
         borderColor: "#00c2ff",
-
-        backgroundColor:
-          "rgba(0, 194, 255, 0.18)",
-
+        backgroundColor: "rgba(0, 194, 255, 0.18)",
         borderWidth: 2,
-
         tension: 0.35,
-
         fill: true,
-
-        pointStyle: "rect",
-
-        pointRadius: 4,
-
-        pointHoverRadius: 7,
-
-        pointBackgroundColor: "#00c2ff",
-
-        pointBorderWidth: 0,
-
-        pointHoverBackgroundColor:
-          "transparent",
-
-        pointHoverBorderColor:
-          "#00c2ff",
-
+        pointStyle: "rect" as const,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        pointBackgroundColor: "#00FF88",
+        pointHoverBackgroundColor: "rgba(0, 194, 255, 0)",
+        pointBorderColor: "#00c2ff",
+        pointHoverBorderColor: "#00c2ff",
+        pointBorderWidth: 1,
         pointHoverBorderWidth: 2
       }
     ]
   };
 
-  const options = {
-
+  const options: ChartOptions<"line"> = {
     responsive: true,
-
     maintainAspectRatio: false,
-
     interaction: {
-      mode: "index" as const,
-      intersect: false
+      mode: "nearest",
+      intersect: true
     },
-
     plugins: {
-
       legend: {
-        display: true
+        display: false
       },
-
       tooltip: {
-
         enabled: true,
-
         displayColors: false,
-
+        backgroundColor: "rgba(0,0,0,0.90)",
+        padding: 14,
+        titleFont: {
+          family: CHART_FONT,
+          size: 16,
+          weight: 400
+        },
+        bodyFont: {
+          family: CHART_FONT,
+          size: 15,
+          weight: 400
+        },
+        titleColor: "#FFFFFF",
+        bodyColor: "#FFFFFF",
         callbacks: {
+          title: (tooltipItems) => {
+            return tooltipItems[0].label;
+          },
+          label: (context) => {
+            const value = context.parsed.y;
 
-          label: (context: any) => {
+            if (value === null) {
+              return "Consumption: 0.00 kWh";
+            }
 
-            return `${context.parsed.y.toFixed(2)} kWh`;
+            return `Consumption: ${value.toFixed(2)} kWh`;
           }
         }
       }
     },
-
     scales: {
-
       x: {
-
-        ticks: {
-
-          maxRotation: 0,
-
-          autoSkip: true,
-
-          maxTicksLimit: 12
+        title: {
+          display: true,
+          text: "Date",
+          color: "#FFFFFF",
+          font: {
+            family: CHART_FONT,
+            size: 16,
+            weight: 400
+          },
+          padding: {
+            top: 12
+          }
         },
-
+        ticks: {
+          maxRotation: 0,
+          minRotation: 0,
+          autoSkip: true,
+          maxTicksLimit: 12,
+          color: "rgba(255,255,255,0.70)",
+          font: {
+            family: CHART_FONT,
+            size: 15,
+            weight: 400
+          }
+        },
         grid: {
-          color:
-            "rgba(255,255,255,0.04)"
+          display: true,
+          color: "rgba(255,255,255,0.25)",
+          lineWidth: 1
         }
       },
-
       y: {
-
         beginAtZero: true,
-
+        ticks: {
+          color: "rgba(255,255,255,0.70)",
+          font: {
+            family: CHART_FONT,
+            size: 15,
+            weight: 400
+          },
+          callback(value) {
+            return Number(value).toLocaleString();
+          }
+        },
         grid: {
-          color:
-            "rgba(255,255,255,0.05)"
+          display: true,
+          color: "rgba(255,255,255,0.25)",
+          lineWidth: 1
         }
       }
     }
   };
 
   return (
-
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        position: "relative"
-      }}
-    >
-
+    <div style={chartContainerStyle}>
       <Line
         data={chartData}
         options={options}
       />
-
     </div>
   );
 }
+
+
+
+
