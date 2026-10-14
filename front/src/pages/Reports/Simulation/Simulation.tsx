@@ -24,7 +24,7 @@ import controlStyles from "../../../components/shared/styles/controlStyles.modul
 import api from "../../../services/api";
 import ReportHourlyChart from "../../../components/charts/ReportHourlyChart";
 import ReportHourlyTable from "../../../components/tables/ReportHourlyTable";
-import ReportEventsTable from "../../../components/tables/ReportEventsTable";
+import SimulationSystemEventsTable from "../../../components/tables/SimulationSystemEventsTable";
 import ReportDailyChart from "../../../components/charts/ReportDailyChart";
 import ReportDailyTable from "../../../components/tables/ReportDailyTable";
 import ReportVoltageChart from "../../../components/charts/ReportVoltageChart";
@@ -465,7 +465,10 @@ function Simulation() {
           {!loading &&
             !error &&
             mode === "events" && (
-              <ReportEventsTable events={eventData} />
+              <SimulationSystemEventsTable
+                events={eventData}
+                dateLabel="Date"
+              />
             )}
 
           {!loading &&
@@ -660,3 +663,6 @@ function Simulation() {
 }
 
 export default Simulation;
+
+
+

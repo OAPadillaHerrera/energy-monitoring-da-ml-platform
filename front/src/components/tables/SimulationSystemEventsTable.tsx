@@ -10,6 +10,7 @@ type SystemEventRecord = {
 
 type Props = {
   events: SystemEventRecord[];
+  dateLabel?: string;
 };
 
 const systemLabels: Record<string, string> = {
@@ -58,7 +59,8 @@ const formatTimestamp = (
 };
 
 export default function SimulationSystemEventsTable({
-  events
+  events,
+  dateLabel = "Timestamp"
 }: Props) {
 
   return (
@@ -72,7 +74,7 @@ export default function SimulationSystemEventsTable({
           <tr>
 
             <th className={panelStyles.timestampColumn}>
-              Timestamp
+              {dateLabel}
             </th>
 
             <th className={panelStyles.systemColumn}>
@@ -142,6 +144,8 @@ export default function SimulationSystemEventsTable({
     </div>
   );
 }
+
+
 
 
 
