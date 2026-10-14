@@ -1,5 +1,7 @@
 
 
+import panelStyles from "../shared/styles/panelStyles.module.css";
+
 type Props = {
   data: Record<string, number>;
 };
@@ -21,15 +23,6 @@ export default function ReportHourlyTable({
         new Date(b.timestamp).getTime()
     )
     .slice(-72);
-
-  if (rows.length === 0) {
-
-    return (
-      <div>
-        No hourly data available.
-      </div>
-    );
-  }
 
   const formatTimestamp = (
     timestamp: string
@@ -59,41 +52,31 @@ export default function ReportHourlyTable({
     return `${formattedDate} ${formattedTime}`;
   };
 
-  return (
+  if (rows.length === 0) {
+    return (
+      <div className={panelStyles.placeholderText}>
+        No hourly data available.
+      </div>
+    );
+  }
 
-    <div
-      style={{
-        width: "100%",
-        marginTop: "20px",
-        overflowX: "auto"
-      }}
-    >
+  return (
+    <div className={panelStyles.tableContainer}>
 
       <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          fontSize: "14px"
-        }}
+        className={`${panelStyles.dataTable} ${panelStyles.compactDataTable}`}
       >
 
         <thead>
 
-          <tr
-            style={{
-              textAlign: "left",
-              borderBottom: "1px solid #333"
-            }}
-          >
+          <tr>
 
-            <th>
+            <th className={panelStyles.compactSystemColumn}>
               Date
             </th>
 
             <th
-              style={{
-                textAlign: "right"
-              }}
+              className={`${panelStyles.compactValueColumn} ${panelStyles.basicConsumptionHeader} ${panelStyles.numericHeader}`}
             >
               Consumption (kWh)
             </th>
@@ -106,23 +89,14 @@ export default function ReportHourlyTable({
 
           {rows.map((row) => (
 
-            <tr
-              key={row.timestamp}
-              style={{
-                borderBottom: "1px solid #222"
-              }}
-            >
+            <tr key={row.timestamp}>
 
-              <td>
-                {formatTimestamp(
-                  row.timestamp
-                )}
+              <td className={panelStyles.compactSystemColumn}>
+                {formatTimestamp(row.timestamp)}
               </td>
 
               <td
-                style={{
-                  textAlign: "right"
-                }}
+                className={`${panelStyles.compactValueColumn} ${panelStyles.basicConsumptionValue} ${panelStyles.numericValue}`}
               >
                 {row.consumption.toFixed(2)}
               </td>
