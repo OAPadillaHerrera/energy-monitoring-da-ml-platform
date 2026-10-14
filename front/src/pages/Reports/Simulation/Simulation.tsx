@@ -9,7 +9,12 @@ import {
 import {
   Activity,
   Gauge,
-  Zap
+  Zap,
+  Eye,
+  FileSpreadsheet,
+  FileText,
+  ChartNoAxesCombined,
+  Table
 } from "lucide-react";
 
 import layoutStyles from "../../../components/shared/styles/layoutStyles.module.css";
@@ -51,6 +56,10 @@ type VoltageRecord = {
   quality_flag: string;
 };
 
+type BasicMetricsData = {
+  consumption_by_system: Record<string, number>;
+};
+
 function Simulation() {
   const [mode, setMode] = useState("hourly");
 
@@ -59,6 +68,9 @@ function Simulation() {
 
   const [systemName, setSystemName] =
     useState("");
+
+  const [systemNames, setSystemNames] =
+    useState<string[]>([]);
 
   const [executionMessage, setExecutionMessage] =
     useState("");
@@ -80,6 +92,27 @@ function Simulation() {
 
   const [error, setError] =
     useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchSystemNames =
+      async (): Promise<void> => {
+        try {
+          const response =
+            await api.get<BasicMetricsData>("/metrics/basic");
+
+          setSystemNames(
+            Object.keys(
+              response.data.consumption_by_system ?? {}
+            )
+          );
+        } catch (err) {
+          console.error(err);
+          setSystemNames([]);
+        }
+      };
+
+    void fetchSystemNames();
+  }, []);
 
   useEffect(() => {
     if (
@@ -121,8 +154,6 @@ function Simulation() {
             }
 
             const response = await api.get(endpoint);
-
-            console.log("VOLTAGE RESPONSE:", response.data);
 
             if (mode === "hourly") {
               setHourlyData(
@@ -184,7 +215,7 @@ function Simulation() {
   }, [mode]);
 
   const handleSystemChange = (
-    event: ChangeEvent<HTMLInputElement>
+    event: ChangeEvent<HTMLSelectElement>
   ): void => {
     setSystemName(event.target.value);
   };
@@ -322,6 +353,7 @@ function Simulation() {
 
       <div className={tabStyles.tabs}>
         <button
+          type="button"
           className={
             mode === "hourly"
               ? tabStyles.reportsTabButtonActive
@@ -334,6 +366,7 @@ function Simulation() {
         </button>
 
         <button
+          type="button"
           className={
             mode === "events"
               ? tabStyles.reportsTabButtonActive
@@ -346,6 +379,7 @@ function Simulation() {
         </button>
 
         <button
+          type="button"
           className={
             mode === "daily"
               ? tabStyles.reportsTabButtonActive
@@ -358,6 +392,7 @@ function Simulation() {
         </button>
 
         <button
+          type="button"
           className={
             mode === "voltage"
               ? tabStyles.reportsTabButtonActive
@@ -492,86 +527,133 @@ function Simulation() {
         </div>
       </section>
 
-      <section className={controlStyles.controlContent}>
+      <section className={panelStyles.controlPanel}>
         <div className={panelStyles.panelHeader}>
           Report Configuration
         </div>
 
-        <div className={tabStyles.tabs}>
-          {mode !== "events" && (
-            <button
-              className={
-                viewMode === "chart"
-                  ? tabStyles.tabButtonActive
-                  : tabStyles.tabButton
-              }
-              onClick={() => setViewMode("chart")}
-            >
-              Chart View
-            </button>
-          )}
-
-          <button
-            className={
-              viewMode === "table"
-                ? tabStyles.tabButtonActive
-                : tabStyles.tabButton
-            }
-            onClick={() => setViewMode("table")}
-          >
-            Table View
-          </button>
-        </div>
-
-        {mode !== "voltage" &&
-          mode !== "events" && (
-            <div className={controlStyles.rangeInputs}>
-              <div className={controlStyles.inputGroup}>
-                <input
-                  type="text"
-                  className={controlStyles.input}
-                  placeholder="Optional System"
-                  value={systemName}
-                  onChange={handleSystemChange}
+        <div className={controlStyles.controlContent}>
+          <div className={tabStyles.tabs}>
+            {mode !== "events" && (
+              <button
+                type="button"
+                className={
+                  viewMode === "chart"
+                    ? tabStyles.reportsTabButtonActive
+                    : tabStyles.reportsTabButton
+                }
+                onClick={() => setViewMode("chart")}
+              >
+                <ChartNoAxesCombined
+                  className={tabStyles.reportsTabIcon}
                 />
+                Chart View
+              </button>
+            )}
 
-                <div className={controlStyles.inputLabel}>
-                  System Name
+            <button
+              type="button"
+              className={
+                viewMode === "table"
+                  ? tabStyles.reportsTabButtonActive
+                  : tabStyles.reportsTabButton
+              }
+              onClick={() => setViewMode("table")}
+            >
+              <Table
+                className={tabStyles.reportsTabIcon}
+              />
+              Table View
+            </button>
+          </div>
+
+          {mode !== "voltage" &&
+            mode !== "events" && (
+              <div className={controlStyles.rangeInputs}>
+                <div className={controlStyles.inputGroup}>
+                  <select
+                    className={`${controlStyles.input} ${controlStyles.systemSelect}`}
+                    value={systemName}
+                    onChange={handleSystemChange}
+                  >
+                    <option value="">
+                      All Systems
+                    </option>
+
+                    {systemNames.map((name) => (
+                      <option
+                        key={name}
+                        value={name}
+                      >
+                        {name}
+                      </option>
+                    ))}
+                  </select>
+
+                  <div className={controlStyles.inputLabel}>
+                    System Name
+                  </div>
                 </div>
               </div>
+            )}
+
+          <button
+            type="button"
+            className={controlStyles.damlViewButton}
+            onClick={handleGenerateReport}
+          >
+            <Eye
+              className={controlStyles.damlViewButtonIcon}
+              color="#000000"
+            />
+
+            {mode === "hourly" &&
+              "View Report"}
+
+            {mode === "events" &&
+              "View Report"}
+
+            {mode === "daily" &&
+              "View Report"}
+
+            {mode === "voltage" &&
+              "View Report"}
+          </button>
+
+          <div className={tabStyles.tabs}>
+            <button
+              type="button"
+              className={controlStyles.runButton}
+              onClick={handleExportCSV}
+            >
+              <FileSpreadsheet
+                className={controlStyles.runButtonIcon}
+                color="#000000"
+              />
+              Export CSV
+            </button>
+
+            <button
+              type="button"
+              className={controlStyles.runButton}
+              onClick={handleExportPDF}
+            >
+              <FileText
+                className={controlStyles.runButtonIcon}
+                color="#000000"
+              />
+              Export PDF
+            </button>
+          </div>
+
+          {executionMessage && (
+            <div className={controlStyles.executionInfo}>
+              <span>Report execution status:</span>
+
+              <strong>{executionMessage}</strong>
             </div>
           )}
-
-        <button
-          className={controlStyles.runButton}
-          onClick={handleGenerateReport}
-        >
-          Generate Report
-        </button>
-
-        <div className={tabStyles.tabs}>
-          <button
-            className={controlStyles.runButton}
-            onClick={handleExportCSV}
-          >
-            Export CSV
-          </button>
-
-          <button
-            className={controlStyles.runButton}
-            onClick={handleExportPDF}
-          >
-            Export PDF
-          </button>
         </div>
-
-        {executionMessage && (
-          <div className={controlStyles.executionInfo}>
-            <span>Report execution status:</span>
-
-            <strong>{executionMessage}</strong>
-          </div>
-        )}
       </section>
     </>
   );

@@ -16,7 +16,9 @@
 .damlTabButton,
 .damlTabButtonActive,
 .reportsTabButton,
-.reportsTabButtonActive {
+.reportsTabButtonActive,
+.reportsViewButton,
+.reportsViewButtonActive {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -28,13 +30,13 @@
   white-space: nowrap;
   cursor: pointer;
   transition:
-    transform .20s ease,
-    border-color .20s ease,
-    background .20s ease,
-    box-shadow .20s ease,
-    color .20s ease,
-    opacity .20s ease,
-    filter .20s ease;
+    transform 0.20s ease,
+    border-color 0.20s ease,
+    background 0.20s ease,
+    box-shadow 0.20s ease,
+    color 0.20s ease,
+    opacity 0.20s ease,
+    filter 0.20s ease;
 }
 
 .tabButton,
@@ -42,29 +44,29 @@
   height: 40px;
   padding: 0 18px;
   border-radius: 8px;
-  border: 1px solid rgba(0,194,255,.12);
-  background: rgba(8,28,52,.85);
+  border: 1px solid rgba(0, 194, 255, 0.12);
+  background: rgba(8, 28, 52, 0.85);
   gap: 10px;
-  color: rgba(255,255,255,.78);
+  color: rgba(255, 255, 255, 0.78);
   font-size: 16px;
-  letter-spacing: .8px;
+  letter-spacing: 0.8px;
 }
 
 .tabIcon {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  transition: transform .20s ease;
+  transition: transform 0.20s ease;
 }
 
 .tabButton:hover {
   transform: translateY(-2px);
-  border-color: rgba(0,194,255,.35);
-  background: rgba(10,34,64,.95);
+  border-color: rgba(0, 194, 255, 0.35);
+  background: rgba(10, 34, 64, 0.95);
   color: #FFFFFF;
   box-shadow:
-    inset 0 0 18px rgba(0,0,0,.35),
-    0 0 14px rgba(0,194,255,.18);
+    inset 0 0 18px rgba(0, 0, 0, 0.35),
+    0 0 14px rgba(0, 194, 255, 0.18);
 }
 
 .tabButton:hover .tabIcon {
@@ -73,10 +75,10 @@
 
 .tabButtonActive {
   transform: translateY(-2px);
-  border: 1px solid rgba(0,194,255,.40);
+  border: 1px solid rgba(0, 194, 255, 0.40);
   background: linear-gradient(90deg, #008CFF, #00C2FF);
   color: #FFFFFF;
-  box-shadow: 0 0 18px rgba(0,194,255,.35);
+  box-shadow: 0 0 18px rgba(0, 194, 255, 0.35);
 }
 
 .tabButtonActive .tabIcon {
@@ -84,8 +86,8 @@
 }
 
 .tabButtonActive:hover {
-  filter: brightness(.92);
-  box-shadow: 0 0 24px rgba(0,194,255,.45);
+  filter: brightness(0.92);
+  box-shadow: 0 0 24px rgba(0, 194, 255, 0.45);
 }
 
 .tabButtonActive:hover .tabIcon {
@@ -97,10 +99,10 @@
   height: 38px;
   padding: 0 16px;
   border-radius: 8px;
-  border: 1px solid rgba(0,194,255,.12);
-  background: rgba(8,28,52,.85);
+  border: 1px solid rgba(0, 194, 255, 0.12);
+  background: rgba(8, 28, 52, 0.85);
   gap: 10px;
-  color: rgba(255,255,255,.78);
+  color: rgba(255, 255, 255, 0.78);
   font-size: 14px;
   letter-spacing: 1px;
 }
@@ -110,17 +112,17 @@
   height: 16px;
   color: #FB923C;
   flex-shrink: 0;
-  transition: transform .20s ease;
+  transition: transform 0.20s ease;
 }
 
 .simulationTabButton:hover {
   transform: translateY(-2px);
-  border-color: rgba(251,146,60,.45);
-  background: rgba(10,34,64,.95);
+  border-color: rgba(251, 146, 60, 0.45);
+  background: rgba(10, 34, 64, 0.95);
   color: #FFFFFF;
   box-shadow:
-    inset 0 0 18px rgba(0,0,0,.35),
-    0 0 14px rgba(251,146,60,.18);
+    inset 0 0 18px rgba(0, 0, 0, 0.35),
+    0 0 14px rgba(251, 146, 60, 0.18);
 }
 
 .simulationTabButton:hover .simulationTabIcon {
@@ -129,10 +131,10 @@
 
 .simulationTabButtonActive {
   transform: translateY(-2px);
-  border: 1px solid rgba(251,146,60,.55);
+  border: 1px solid rgba(251, 146, 60, 0.55);
   background: linear-gradient(90deg, #008CFF, #00C2FF);
   color: #FFFFFF;
-  box-shadow: 0 0 18px rgba(0,194,255,.35);
+  box-shadow: 0 0 18px rgba(0, 194, 255, 0.35);
 }
 
 .simulationTabButtonActive .simulationTabIcon {
@@ -140,8 +142,8 @@
 }
 
 .simulationTabButtonActive:hover {
-  filter: brightness(.92);
-  box-shadow: 0 0 24px rgba(0,194,255,.45);
+  filter: brightness(0.92);
+  box-shadow: 0 0 24px rgba(0, 194, 255, 0.45);
 }
 
 .simulationTabButtonActive:hover .simulationTabIcon {
@@ -153,10 +155,10 @@
   height: 38px;
   padding: 0 16px;
   border-radius: 8px;
-  border: 1px solid rgba(167,139,250,.12);
-  background: rgba(8,28,52,.85);
+  border: 1px solid rgba(167, 139, 250, 0.12);
+  background: rgba(8, 28, 52, 0.85);
   gap: 10px;
-  color: rgba(255,255,255,.78);
+  color: rgba(255, 255, 255, 0.78);
   font-size: 14px;
   letter-spacing: 1px;
 }
@@ -166,17 +168,17 @@
   height: 16px;
   color: #A78BFA;
   flex-shrink: 0;
-  transition: transform .20s ease;
+  transition: transform 0.20s ease;
 }
 
 .damlTabButton:hover {
   transform: translateY(-2px);
-  border-color: rgba(167,139,250,.45);
-  background: rgba(10,34,64,.95);
+  border-color: rgba(167, 139, 250, 0.45);
+  background: rgba(10, 34, 64, 0.95);
   color: #FFFFFF;
   box-shadow:
-    inset 0 0 18px rgba(0,0,0,.35),
-    0 0 14px rgba(167,139,250,.18);
+    inset 0 0 18px rgba(0, 0, 0, 0.35),
+    0 0 14px rgba(167, 139, 250, 0.18);
 }
 
 .damlTabButton:hover .damlTabIcon {
@@ -185,10 +187,10 @@
 
 .damlTabButtonActive {
   transform: translateY(-2px);
-  border: 1px solid rgba(167,139,250,.55);
+  border: 1px solid rgba(167, 139, 250, 0.55);
   background: linear-gradient(90deg, #008CFF, #00C2FF);
   color: #FFFFFF;
-  box-shadow: 0 0 18px rgba(0,194,255,.35);
+  box-shadow: 0 0 18px rgba(0, 194, 255, 0.35);
 }
 
 .damlTabButtonActive .damlTabIcon {
@@ -196,8 +198,8 @@
 }
 
 .damlTabButtonActive:hover {
-  filter: brightness(.92);
-  box-shadow: 0 0 24px rgba(0,194,255,.45);
+  filter: brightness(0.92);
+  box-shadow: 0 0 24px rgba(0, 194, 255, 0.45);
 }
 
 .damlTabButtonActive:hover .damlTabIcon {
@@ -209,12 +211,12 @@
   height: 40px;
   padding: 0 18px;
   border-radius: 8px;
-  border: 1px solid rgba(0,194,255,.12);
-  background: rgba(8,28,52,.85);
+  border: 1px solid rgba(0, 194, 255, 0.12);
+  background: rgba(8, 28, 52, 0.85);
   gap: 10px;
-  color: rgba(255,255,255,.78);
+  color: rgba(255, 255, 255, 0.78);
   font-size: 16px;
-  letter-spacing: .8px;
+  letter-spacing: 0.8px;
 }
 
 .reportsTabIcon {
@@ -222,17 +224,17 @@
   height: 18px;
   color: #22C55E;
   flex-shrink: 0;
-  transition: transform .20s ease;
+  transition: transform 0.20s ease;
 }
 
 .reportsTabButton:hover {
   transform: translateY(-2px);
-  border-color: rgba(34,197,94,.45);
-  background: rgba(10,34,64,.95);
+  border-color: rgba(34, 197, 94, 0.45);
+  background: rgba(10, 34, 64, 0.95);
   color: #FFFFFF;
   box-shadow:
-    inset 0 0 18px rgba(0,0,0,.35),
-    0 0 14px rgba(34,197,94,.18);
+    inset 0 0 18px rgba(0, 0, 0, 0.35),
+    0 0 14px rgba(34, 197, 94, 0.18);
 }
 
 .reportsTabButton:hover .reportsTabIcon {
@@ -241,10 +243,10 @@
 
 .reportsTabButtonActive {
   transform: translateY(-2px);
-  border: 1px solid rgba(0,194,255,.40);
+  border: 1px solid rgba(0, 194, 255, 0.40);
   background: linear-gradient(90deg, #008CFF, #00C2FF);
   color: #FFFFFF;
-  box-shadow: 0 0 18px rgba(0,194,255,.35);
+  box-shadow: 0 0 18px rgba(0, 194, 255, 0.35);
 }
 
 .reportsTabButtonActive .reportsTabIcon {
@@ -252,11 +254,68 @@
 }
 
 .reportsTabButtonActive:hover {
-  filter: brightness(.92);
-  box-shadow: 0 0 24px rgba(0,194,255,.45);
+  filter: brightness(0.92);
+  box-shadow: 0 0 24px rgba(0, 194, 255, 0.45);
 }
 
 .reportsTabButtonActive:hover .reportsTabIcon {
+  transform: scale(1.18);
+}
+
+.reportsViewButton,
+.reportsViewButtonActive {
+  height: 40px;
+  padding: 0 18px;
+  gap: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  background: rgba(8, 28, 52, 0.85);
+  color: #FFFFFF;
+  font-size: 16px;
+  letter-spacing: 0.8px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.reportsViewButton svg,
+.reportsViewButtonActive svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: #22C55E;
+  transition: transform 0.20s ease;
+}
+
+.reportsViewButton:hover,
+.reportsViewButtonActive:hover {
+  transform: translateY(-2px);
+  border-color: rgba(34, 197, 94, 0.55);
+  background: rgba(10, 34, 64, 0.95);
+  color: #FFFFFF;
+  box-shadow:
+    inset 0 0 18px rgba(0, 0, 0, 0.35),
+    0 0 14px rgba(34, 197, 94, 0.18);
+}
+
+.reportsViewButton:hover svg,
+.reportsViewButtonActive:hover svg {
+  transform: scale(1.15);
+}
+
+.reportsViewButtonActive {
+  transform: translateY(-2px);
+  border: 1px solid rgba(34, 197, 94, 0.55);
+  background: linear-gradient(90deg, #008CFF, #00C2FF);
+  color: #FFFFFF;
+  box-shadow: 0 0 18px rgba(0, 194, 255, 0.35);
+}
+
+.reportsViewButtonActive:hover {
+  filter: brightness(0.92);
+  box-shadow: 0 0 24px rgba(34, 197, 94, 0.30);
+}
+
+.reportsViewButtonActive:hover svg {
   transform: scale(1.18);
 }
 
@@ -265,12 +324,12 @@
   height: 34px;
   padding: 0 14px;
   border-radius: 8px;
-  border: 1px solid rgba(0,194,255,.12);
-  background: rgba(8,28,52,.85);
+  border: 1px solid rgba(0, 194, 255, 0.12);
+  background: rgba(8, 28, 52, 0.85);
   gap: 8px;
-  color: rgba(255,255,255,.78);
+  color: rgba(255, 255, 255, 0.78);
   font-size: 13px;
-  letter-spacing: .8px;
+  letter-spacing: 0.8px;
 }
 
 .simulationModeIcon {
@@ -278,17 +337,17 @@
   height: 15px;
   color: #FB923C;
   flex-shrink: 0;
-  transition: transform .20s ease;
+  transition: transform 0.20s ease;
 }
 
 .simulationModeButton:hover {
   transform: translateY(-2px);
-  border-color: rgba(251,146,60,.45);
-  background: rgba(10,34,64,.95);
+  border-color: rgba(251, 146, 60, 0.45);
+  background: rgba(10, 34, 64, 0.95);
   color: #FFFFFF;
   box-shadow:
-    inset 0 0 18px rgba(0,0,0,.35),
-    0 0 14px rgba(251,146,60,.18);
+    inset 0 0 18px rgba(0, 0, 0, 0.35),
+    0 0 14px rgba(251, 146, 60, 0.18);
 }
 
 .simulationModeButton:hover .simulationModeIcon {
@@ -297,10 +356,10 @@
 
 .simulationModeButtonActive {
   transform: translateY(-2px);
-  border: 1px solid rgba(251,146,60,.55);
+  border: 1px solid rgba(251, 146, 60, 0.55);
   background: linear-gradient(90deg, #008CFF, #00C2FF);
   color: #FFFFFF;
-  box-shadow: 0 0 18px rgba(0,194,255,.35);
+  box-shadow: 0 0 18px rgba(0, 194, 255, 0.35);
 }
 
 .simulationModeButtonActive .simulationModeIcon {
@@ -308,8 +367,8 @@
 }
 
 .simulationModeButtonActive:hover {
-  filter: brightness(.92);
-  box-shadow: 0 0 24px rgba(0,194,255,.45);
+  filter: brightness(0.92);
+  box-shadow: 0 0 24px rgba(0, 194, 255, 0.45);
 }
 
 .simulationModeButtonActive:hover .simulationModeIcon {
@@ -383,6 +442,13 @@
 
   .reportsTabButton,
   .reportsTabButtonActive {
+    height: 34px;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+
+  .reportsViewButton,
+  .reportsViewButtonActive {
     height: 34px;
     padding: 0 14px;
     font-size: 14px;
