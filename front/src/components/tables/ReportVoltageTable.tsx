@@ -1,5 +1,7 @@
 
 
+import panelStyles from "../shared/styles/panelStyles.module.css";
+
 type VoltageRecord = {
   timestamp: string;
   voltage_120v: number;
@@ -11,7 +13,9 @@ type Props = {
   data: VoltageRecord[];
 };
 
-export default function ReportVoltageTable({ data }: Props) {
+export default function ReportVoltageTable({
+  data
+}: Props) {
   const rows = [...data]
     .map((item) => ({
       ...item,
@@ -25,58 +29,77 @@ export default function ReportVoltageTable({ data }: Props) {
     )
     .slice(-72);
 
-  if (rows.length === 0) {
-    return <div>No voltage data available.</div>;
-  }
-
-  const formatTimestamp = (timestamp: string): string => {
+  const formatTimestamp = (
+    timestamp: string
+  ): string => {
     const date = new Date(timestamp);
 
-    const formattedDate = date.toLocaleDateString("en-CA", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    });
+    const formattedDate =
+      date.toLocaleDateString("en-CA", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      });
 
-    const formattedTime = date.toLocaleTimeString("en-GB", {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
+    const formattedTime =
+      date.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
 
     return `${formattedDate} ${formattedTime}`;
   };
 
+  if (rows.length === 0) {
+    return (
+      <div className={panelStyles.placeholderText}>
+        No voltage data available.
+      </div>
+    );
+  }
+
   return (
     <div
+      className={panelStyles.tableContainer}
       style={{
         width: "100%",
-        marginTop: "20px",
-        overflowX: "auto"
+        minWidth: 0,
+        alignSelf: "stretch"
       }}
     >
       <table
+        className={`${panelStyles.dataTable} ${panelStyles.compactDataTable}`}
         style={{
           width: "100%",
-          borderCollapse: "collapse",
-          fontSize: "14px",
-          tableLayout: "fixed" 
+          minWidth: 0,
+          tableLayout: "fixed"
         }}
       >
+        <colgroup>
+          <col style={{ width: "40%" }} />
+          <col style={{ width: "20%" }} />
+          <col style={{ width: "20%" }} />
+          <col style={{ width: "20%" }} />
+        </colgroup>
+
         <thead>
-          <tr style={{ borderBottom: "1px solid #333" }}>
-            <th style={{ textAlign: "left", width: "40%" }}>
-              Date
+          <tr>
+            <th
+              className={panelStyles.compactSystemColumn}
+              style={{ textAlign: "left" }}
+            >
+              Timestamp
             </th>
 
-            <th style={{ textAlign: "right", width: "20%" }}>
+            <th style={{ textAlign: "right" }}>
               120V
             </th>
 
-            <th style={{ textAlign: "right", width: "20%" }}>
+            <th style={{ textAlign: "right" }}>
               240V
             </th>
 
-            <th style={{ textAlign: "center", width: "20%" }}>
+            <th style={{ textAlign: "right" }}>
               Quality
             </th>
           </tr>
@@ -84,11 +107,11 @@ export default function ReportVoltageTable({ data }: Props) {
 
         <tbody>
           {rows.map((row) => (
-            <tr
-              key={row.timestamp}
-              style={{ borderBottom: "1px solid #222" }}
-            >
-              <td style={{ textAlign: "left" }}>
+            <tr key={row.timestamp}>
+              <td
+                className={panelStyles.compactSystemColumn}
+                style={{ textAlign: "left" }}
+              >
                 {formatTimestamp(row.timestamp)}
               </td>
 
@@ -100,7 +123,7 @@ export default function ReportVoltageTable({ data }: Props) {
                 {row.voltage_240v.toFixed(2)}
               </td>
 
-              <td style={{ textAlign: "center" }}>
+              <td style={{ textAlign: "right" }}>
                 {row.quality_flag}
               </td>
             </tr>
@@ -110,3 +133,4 @@ export default function ReportVoltageTable({ data }: Props) {
     </div>
   );
 }
+
