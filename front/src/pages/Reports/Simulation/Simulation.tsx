@@ -411,7 +411,7 @@ function Simulation() {
             "Hourly Energy Consumption"}
 
           {mode === "events" &&
-            "System Events Report"}
+            "System Events"}
 
           {mode === "daily" &&
             "Daily Energy Consumption Report"}
