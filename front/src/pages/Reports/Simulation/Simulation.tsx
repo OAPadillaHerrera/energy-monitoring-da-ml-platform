@@ -557,7 +557,7 @@ function Simulation() {
             <button
               type="button"
               className={
-                viewMode === "table"
+                mode === "events"
                   ? tabStyles.reportsTabButtonFixed
                   : viewMode === "table"
                     ? tabStyles.reportsTabButtonActive
@@ -665,9 +665,6 @@ function Simulation() {
 }
 
 export default Simulation;
-
-
-
 
 
 
