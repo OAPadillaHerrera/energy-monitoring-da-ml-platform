@@ -45,7 +45,6 @@ const chartContainerStyle: CSSProperties = {
 export default function ReportHourlyChart({
   data
 }: Props) {
-
   const sorted = Object.entries(data)
     .map(
       ([label, value]) =>
@@ -121,7 +120,12 @@ export default function ReportHourlyChart({
         bodyColor: "#FFFFFF",
         callbacks: {
           title: (tooltipItems) => {
-            return tooltipItems[0].label;
+            const label = String(tooltipItems[0].label);
+
+            return label.replace(
+              /^(\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}):\d{2}$/,
+              "$1"
+            );
           },
           label: (context) => {
             const value = context.parsed.y;
@@ -199,6 +203,7 @@ export default function ReportHourlyChart({
     </div>
   );
 }
+
 
 
 

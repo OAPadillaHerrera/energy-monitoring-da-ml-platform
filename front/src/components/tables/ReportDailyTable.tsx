@@ -1,83 +1,87 @@
 
 
+import panelStyles from "../shared/styles/panelStyles.module.css";
+
 type Props = {
   data: Record<string, number>;
 };
 
-function groupByHour(data: Record<string, number>) {
-  const hours = Array(24).fill(0);
-  const counts = Array(24).fill(0);
-
-  Object.entries(data).forEach(([timestamp, value]) => {
-    const date = new Date(timestamp);
-
-    if (isNaN(date.getTime())) return;
-
-    const hour = date.getHours(); // 👈 igual que tu gráfica
-
-    hours[hour] += Number(value);
-    counts[hour] += 1;
-  });
-
-  return hours.map((sum, i) =>
-    counts[i] ? sum / counts[i] : 0
-  );
-}
-
-export default function StationEnergyByHourTable({
+export default function ReportDailyTable({
   data
 }: Props) {
 
-  const hourly = groupByHour(data);
+  const rows = Object.entries(data)
+    .map(
+      ([timestamp, consumption]) => ({
+        timestamp,
+        consumption: Number(consumption)
+      })
+    )
+    .sort(
+      (a, b) =>
+        a.timestamp.localeCompare(b.timestamp)
+    )
+    .slice(-30);
 
-  const rows = Array.from({ length: 24 }, (_, hour) => ({
-    hour,
-    value: hourly[hour]
-  }));
+  const formatDate = (
+    timestamp: string
+  ): string => {
+    if (/^\d{4}-\d{2}-\d{2}/.test(timestamp)) {
+      return timestamp.slice(0, 10);
+    }
+
+    const date = new Date(timestamp);
+
+    if (Number.isNaN(date.getTime())) {
+      return timestamp;
+    }
+
+    return date.toLocaleDateString("en-CA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      timeZone: "UTC"
+    });
+  };
+
+  if (rows.length === 0) {
+    return (
+      <div className={panelStyles.placeholderText}>
+        No daily data available.
+      </div>
+    );
+  }
 
   return (
-    <div
-      style={{
-        width: "100%",
-        marginTop: "20px",
-        overflowX: "auto"
-      }}
-    >
+    <div className={panelStyles.tableContainer}>
       <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          fontSize: "14px",
-          minWidth: "320px"
-        }}
+        className={`${panelStyles.dataTable} ${panelStyles.compactDataTable}`}
       >
         <thead>
-          <tr
-            style={{
-              textAlign: "left",
-              borderBottom: "1px solid #333"
-            }}
-          >
-            <th>Hour</th>
+          <tr>
+            <th className={panelStyles.compactSystemColumn}>
+              Date
+            </th>
 
-            <th style={{ textAlign: "right" }}>
-              Avg Energy (kWh)
+            <th
+              className={`${panelStyles.compactValueColumn} ${panelStyles.basicConsumptionHeader} ${panelStyles.numericHeader}`}
+            >
+              Avg Consumption (kWh)
             </th>
           </tr>
         </thead>
 
         <tbody>
           {rows.map((row) => (
-            <tr
-              key={row.hour}
-              style={{
-                borderBottom: "1px solid #222"
-              }}
-            >
-              <td>{row.hour}:00</td>
+            <tr key={row.timestamp}>
+              <td className={panelStyles.compactSystemColumn}>
+                {formatDate(row.timestamp)}
+              </td>
 
-              <td style={{ textAlign: "right" }}>
-                {row.value.toFixed(2)}
+              <td
+                className={`${panelStyles.compactValueColumn} ${panelStyles.basicConsumptionValue} ${panelStyles.numericValue}`}
+              >
+                {row.consumption.toFixed(2)}
               </td>
             </tr>
           ))}

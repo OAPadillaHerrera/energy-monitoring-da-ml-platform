@@ -72,7 +72,7 @@ export default function ReportHourlyTable({
           <tr>
 
             <th className={panelStyles.compactSystemColumn}>
-              Date
+              Timestamp
             </th>
 
             <th
@@ -112,3 +112,6 @@ export default function ReportHourlyTable({
     </div>
   );
 }
+
+
+
