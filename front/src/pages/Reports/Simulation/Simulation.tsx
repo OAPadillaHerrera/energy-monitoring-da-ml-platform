@@ -414,7 +414,7 @@ function Simulation() {
             "System Events"}
 
           {mode === "daily" &&
-            "Daily Energy Consumption Report"}
+            "Daily Energy Consumption"}
 
           {mode === "voltage" &&
             "Voltage Report"}
