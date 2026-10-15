@@ -558,8 +558,10 @@ function Simulation() {
               type="button"
               className={
                 viewMode === "table"
-                  ? tabStyles.reportsTabButtonActive
-                  : tabStyles.reportsTabButton
+                  ? tabStyles.reportsTabButtonFixed
+                  : viewMode === "table"
+                    ? tabStyles.reportsTabButtonActive
+                    : tabStyles.reportsTabButton
               }
               onClick={() => setViewMode("table")}
             >
@@ -663,6 +665,10 @@ function Simulation() {
 }
 
 export default Simulation;
+
+
+
+
 
 
 
