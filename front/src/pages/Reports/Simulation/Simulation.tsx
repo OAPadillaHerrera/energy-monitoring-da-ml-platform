@@ -417,7 +417,7 @@ function Simulation() {
             "Daily Energy Consumption"}
 
           {mode === "voltage" &&
-            "Voltage Report"}
+            "Voltage"}
         </div>
 
         <div
