@@ -8,7 +8,8 @@ import {
   LineElement,
   Tooltip,
   Legend,
-  Filler
+  Filler,
+  type ChartOptions
 } from "chart.js";
 
 import { Line } from "react-chartjs-2";
@@ -34,184 +35,166 @@ type Props = {
   data: VoltageRecord[];
 };
 
+const CHART_FONT = "Cascadia Code";
+
+function formatTimestamp(timestamp: string): string {
+  return timestamp
+    .replace("T", " ")
+    .replace(
+      /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}):\d{2}$/,
+      "$1"
+    );
+}
+
 export default function ReportVoltageChart({
   data
 }: Props) {
-
-  const grouped = new Map<
-    string,
-    { v120: number[]; v240: number[] }
-  >();
-
-  data.forEach((item) => {
-
-    const day =
-      item.timestamp.split("T")[0];
-
-    if (!grouped.has(day)) {
-
-      grouped.set(day, {
-        v120: [],
-        v240: []
-      });
-    }
-
-    grouped.get(day)!.v120.push(
-      Number(item.voltage_120v)
-    );
-
-    grouped.get(day)!.v240.push(
-      Number(item.voltage_240v)
-    );
-  });
-
-  const avg = (values: number[]) =>
-    values.length
-      ? values.reduce(
-          (a, b) => a + b,
-          0
-        ) / values.length
-      : 0;
-
-  const rows = Array.from(
-    grouped.entries()
-  )
-    .map(([day, values]) => ({
-      day,
-      voltage120: avg(values.v120),
-      voltage240: avg(values.v240)
-    }))
+  const latestRecords = [...data]
     .sort(
       (a, b) =>
-        new Date(a.day).getTime() -
-        new Date(b.day).getTime()
-    );
+        new Date(a.timestamp).getTime() -
+        new Date(b.timestamp).getTime()
+    )
+    .slice(-72);
 
   const chartData = {
-
-    labels: rows.map(
-      (row) => row.day
+    labels: latestRecords.map((item) =>
+      formatTimestamp(item.timestamp)
     ),
-
     datasets: [
       {
-        label: "120V (Avg)",
-
-        data: rows.map(
-          (row) => row.voltage120
+        data: latestRecords.map((item) =>
+          Number(item.voltage_120v)
         ),
-
         borderColor: "#00c2ff",
-
-        backgroundColor:
-          "rgba(0,194,255,0.18)",
-
+        backgroundColor: "rgba(0, 194, 255, 0.18)",
         borderWidth: 2,
-
         tension: 0.35,
-
         fill: true,
-
-        pointStyle: "rect",
-
+        pointStyle: "rect" as const,
         pointRadius: 5,
-
-        pointHoverRadius: 6,
-
-        pointBackgroundColor:
-          "#00c2ff",
-
-        pointBorderWidth: 0
+        pointHoverRadius: 8,
+        pointBackgroundColor: "#00FF88",
+        pointHoverBackgroundColor: "rgba(0, 194, 255, 0)",
+        pointBorderColor: "#00c2ff",
+        pointHoverBorderColor: "#00c2ff",
+        pointBorderWidth: 1,
+        pointHoverBorderWidth: 2
       },
-
       {
-        label: "240V (Avg)",
-
-        data: rows.map(
-          (row) => row.voltage240
+        data: latestRecords.map((item) =>
+          Number(item.voltage_240v)
         ),
-
-        borderColor: "#ffb020",
-
-        backgroundColor:
-          "rgba(255,176,32,0.18)",
-
+        borderColor: "#00FF88",
+        backgroundColor: "rgba(0, 255, 136, 0.18)",
         borderWidth: 2,
-
         tension: 0.35,
-
         fill: true,
-
-        pointStyle: "rect",
-
+        pointStyle: "rect" as const,
         pointRadius: 5,
-
-        pointHoverRadius: 6,
-
-        pointBackgroundColor:
-          "#ffb020",
-
-        pointBorderWidth: 0
+        pointHoverRadius: 8,
+        pointBackgroundColor: "#00c2ff",
+        pointHoverBackgroundColor: "rgba(0, 255, 136, 0)",
+        pointBorderColor: "#00FF88",
+        pointHoverBorderColor: "#00FF88",
+        pointBorderWidth: 1,
+        pointHoverBorderWidth: 2
       }
     ]
   };
 
-  const options = {
-
+  const options: ChartOptions<"line"> = {
     responsive: true,
-
     maintainAspectRatio: false,
-
     interaction: {
-      mode: "index" as const,
+      mode: "index",
       intersect: false
     },
-
     plugins: {
-
       legend: {
-        display: true
+        display: false
       },
-
       tooltip: {
-
         enabled: true,
-
-        displayColors: false,
-
+        displayColors: true,
+        backgroundColor: "rgba(0, 0, 0, 0.90)",
+        padding: 14,
+        titleFont: {
+          family: CHART_FONT,
+          size: 16,
+          weight: 400
+        },
+        bodyFont: {
+          family: CHART_FONT,
+          size: 15,
+          weight: 400
+        },
+        titleColor: "#FFFFFF",
+        bodyColor: "#FFFFFF",
         callbacks: {
+          title: (tooltipItems) =>
+            formatTimestamp(
+              String(tooltipItems[0].label)
+            ),
+          label: (context) => {
+            const value = context.parsed.y;
 
-          label: (
-            context: any
-          ) =>
-            `${context.parsed.y.toFixed(2)} V`
+            return `Voltage: ${
+              value === null ? "0.00" : value.toFixed(2)
+            } V`;
+          }
         }
       }
     },
-
     scales: {
-
       x: {
-
+        title: {
+          display: true,
+          text: "Date",
+          color: "#FFFFFF",
+          font: {
+            family: CHART_FONT,
+            size: 16,
+            weight: 400
+          },
+          padding: {
+            top: 12
+          }
+        },
         ticks: {
           maxRotation: 0,
+          minRotation: 0,
           autoSkip: true,
-          maxTicksLimit: 12
+          maxTicksLimit: 12,
+          color: "rgba(255, 255, 255, 0.70)",
+          font: {
+            family: CHART_FONT,
+            size: 15,
+            weight: 400
+          }
         },
-
         grid: {
-          color:
-            "rgba(255,255,255,0.04)"
+          display: true,
+          color: "rgba(255, 255, 255, 0.25)",
+          lineWidth: 1
         }
       },
-
       y: {
-
         beginAtZero: false,
-
+        ticks: {
+          color: "rgba(255, 255, 255, 0.70)",
+          font: {
+            family: CHART_FONT,
+            size: 15,
+            weight: 400
+          },
+          callback: (value) =>
+            `${Number(value).toLocaleString()} V`
+        },
         grid: {
-          color:
-            "rgba(255,255,255,0.05)"
+          display: true,
+          color: "rgba(255, 255, 255, 0.25)",
+          lineWidth: 1
         }
       }
     }
@@ -222,6 +205,8 @@ export default function ReportVoltageChart({
       style={{
         width: "100%",
         height: "100%",
+        minWidth: 0,
+        overflow: "hidden",
         position: "relative"
       }}
     >
@@ -232,3 +217,4 @@ export default function ReportVoltageChart({
     </div>
   );
 }
+
