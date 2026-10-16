@@ -2,12 +2,9 @@
 
 import panelStyles from "../shared/styles/panelStyles.module.css";
 
-type VoltageRecord = {
-  timestamp: string;
-  voltage_120v: number;
-  voltage_240v: number;
-  quality_flag: string;
-};
+import type {
+  VoltageRecord
+} from "../../pages/Reports/Simulation/types";
 
 type Props = {
   data: VoltageRecord[];
@@ -133,4 +130,5 @@ export default function ReportVoltageTable({
     </div>
   );
 }
+
 

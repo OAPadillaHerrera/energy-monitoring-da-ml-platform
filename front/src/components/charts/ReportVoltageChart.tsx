@@ -14,6 +14,10 @@ import {
 
 import { Line } from "react-chartjs-2";
 
+import type {
+  VoltageRecord
+} from "../../pages/Reports/Simulation/types";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -23,13 +27,6 @@ ChartJS.register(
   Legend,
   Filler
 );
-
-type VoltageRecord = {
-  timestamp: string;
-  voltage_120v: number;
-  voltage_240v: number;
-  quality_flag: string;
-};
 
 type Props = {
   data: VoltageRecord[];
@@ -217,4 +214,3 @@ export default function ReportVoltageChart({
     </div>
   );
 }
-
