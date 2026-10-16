@@ -45,6 +45,7 @@ import {
 
 import type {
   BasicMetricsData,
+  ConsumptionData,
   SimulationMode,
   SystemEventRecord,
   ViewMode,
@@ -63,12 +64,12 @@ function Simulation() {
   const [executionMessage, setExecutionMessage] = useState("");
 
   const [hourlyData, setHourlyData] =
-    useState<Record<string, number> | null>(null);
+    useState<ConsumptionData | null>(null);
 
   const [eventData, setEventData] = useState<SystemEventRecord[]>([]);
 
   const [dailyData, setDailyData] =
-    useState<Record<string, number> | null>(null);
+    useState<ConsumptionData | null>(null);
 
   const [voltageData, setVoltageData] =
     useState<VoltageRecord[] | null>(null);
@@ -609,8 +610,4 @@ function Simulation() {
 }
 
 export default Simulation;
-
-
-
-
 
