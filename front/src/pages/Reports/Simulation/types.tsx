@@ -8,6 +8,8 @@ export type SimulationMode =
 
 export type ViewMode = "chart" | "table";
 
+export type ConsumptionData = Record<string, number>;
+
 export type SystemEventRecord = {
   timestamp: string;
   system_id: string;

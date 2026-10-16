@@ -2,8 +2,12 @@
 
 import panelStyles from "../shared/styles/panelStyles.module.css";
 
+import type {
+  ConsumptionData
+} from "../../pages/Reports/Simulation/types";
+
 type Props = {
-  data: Record<string, number>;
+  data: ConsumptionData;
 };
 
 export default function ReportDailyTable({
@@ -90,3 +94,4 @@ export default function ReportDailyTable({
     </div>
   );
 }
+

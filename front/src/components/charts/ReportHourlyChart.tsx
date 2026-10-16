@@ -18,6 +18,10 @@ import {
 
 import { Line } from "react-chartjs-2";
 
+import type {
+  ConsumptionData
+} from "../../pages/Reports/Simulation/types";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -29,7 +33,7 @@ ChartJS.register(
 );
 
 type Props = {
-  data: Record<string, number>;
+  data: ConsumptionData;
 };
 
 const CHART_FONT = "Cascadia Code";
@@ -203,6 +207,7 @@ export default function ReportHourlyChart({
     </div>
   );
 }
+
 
 
 
