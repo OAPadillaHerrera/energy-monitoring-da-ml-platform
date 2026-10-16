@@ -43,43 +43,29 @@ import {
   exportVoltagePDF
 } from "../../../services/reports/simulationExportPDF";
 
-type SystemEventRecord = {
-  timestamp: string;
-  system_id: string;
-  event_type: string;
-};
-
-type VoltageRecord = {
-  timestamp: string;
-  voltage_120v: number;
-  voltage_240v: number;
-  quality_flag: string;
-};
-
-type BasicMetricsData = {
-  consumption_by_system: Record<string, number>;
-};
+import type {
+  BasicMetricsData,
+  SimulationMode,
+  SystemEventRecord,
+  ViewMode,
+  VoltageRecord
+} from "./types";
 
 function Simulation() {
-  const [mode, setMode] = useState("hourly");
+  const [mode, setMode] = useState<SimulationMode>("hourly");
 
-  const [viewMode, setViewMode] =
-    useState("chart");
+  const [viewMode, setViewMode] = useState<ViewMode>("chart");
 
-  const [systemName, setSystemName] =
-    useState("");
+  const [systemName, setSystemName] = useState("");
 
-  const [systemNames, setSystemNames] =
-    useState<string[]>([]);
+  const [systemNames, setSystemNames] = useState<string[]>([]);
 
-  const [executionMessage, setExecutionMessage] =
-    useState("");
+  const [executionMessage, setExecutionMessage] = useState("");
 
   const [hourlyData, setHourlyData] =
     useState<Record<string, number> | null>(null);
 
-  const [eventData, setEventData] =
-    useState<SystemEventRecord[]>([]);
+  const [eventData, setEventData] = useState<SystemEventRecord[]>([]);
 
   const [dailyData, setDailyData] =
     useState<Record<string, number> | null>(null);
@@ -87,112 +73,92 @@ function Simulation() {
   const [voltageData, setVoltageData] =
     useState<VoltageRecord[] | null>(null);
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [error, setError] =
-    useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchSystemNames =
-      async (): Promise<void> => {
-        try {
-          const response =
-            await api.get<BasicMetricsData>("/metrics/basic");
+    const fetchSystemNames = async (): Promise<void> => {
+      try {
+        const response = await api.get<BasicMetricsData>("/metrics/basic");
 
-          setSystemNames(
-            Object.keys(
-              response.data.consumption_by_system ?? {}
-            )
-          );
-        } catch (err) {
-          console.error(err);
-          setSystemNames([]);
-        }
-      };
+        setSystemNames(
+          Object.keys(response.data.consumption_by_system ?? {})
+        );
+      } catch (err) {
+        console.error(err);
+        setSystemNames([]);
+      }
+    };
 
     void fetchSystemNames();
   }, []);
 
   useEffect(() => {
-    if (
-      mode !== "hourly" &&
-      mode !== "events" &&
-      mode !== "daily" &&
-      mode !== "voltage"
-    ) {
-      return;
-    }
-
     const timeoutId = setTimeout(() => {
-      const fetchReportData =
-        async (): Promise<void> => {
-          try {
-            setLoading(true);
-            setError(null);
+      const fetchReportData = async (): Promise<void> => {
+        try {
+          setLoading(true);
+          setError(null);
 
-            let endpoint = "";
+          let endpoint = "";
 
-            if (mode === "hourly") {
-              endpoint = systemName.trim()
-                ? `/metrics/system?name=${encodeURIComponent(systemName)}`
-                : "/metrics/station/hourly";
-            }
-
-            if (mode === "events") {
-              endpoint = "/simulation/system-events";
-            }
-
-            if (mode === "daily") {
-              endpoint = systemName.trim()
-                ? `/metrics/system?name=${encodeURIComponent(systemName)}&interval=daily`
-                : "/metrics/station/daily";
-            }
-
-            if (mode === "voltage") {
-              endpoint = "/simulation/voltage";
-            }
-
-            const response = await api.get(endpoint);
-
-            if (mode === "hourly") {
-              setHourlyData(
-                response.data.energy_by_hour ?? null
-              );
-            }
-
-            if (mode === "events") {
-              setEventData(response.data ?? []);
-            }
-
-            if (mode === "daily") {
-              setDailyData(
-                response.data.daily_energy ?? null
-              );
-            }
-
-            if (mode === "voltage") {
-              setVoltageData(response.data ?? []);
-            }
-          } catch (err) {
-            console.error(err);
-
-            setHourlyData(null);
-            setEventData([]);
-            setDailyData(null);
-            setVoltageData(null);
-
-            setError(
-              mode === "events"
-                ? "Unable to load event records."
-                : systemName.trim()
-                  ? "System not found."
-                  : "Unable to load hourly report data."
-            );
-          } finally {
-            setLoading(false);
+          if (mode === "hourly") {
+            endpoint = systemName.trim()
+              ? `/metrics/system?name=${encodeURIComponent(systemName)}`
+              : "/metrics/station/hourly";
           }
-        };
+
+          if (mode === "events") {
+            endpoint = "/simulation/system-events";
+          }
+
+          if (mode === "daily") {
+            endpoint = systemName.trim()
+              ? `/metrics/system?name=${encodeURIComponent(systemName)}&interval=daily`
+              : "/metrics/station/daily";
+          }
+
+          if (mode === "voltage") {
+            endpoint = "/simulation/voltage";
+          }
+
+          const response = await api.get(endpoint);
+
+          if (mode === "hourly") {
+            setHourlyData(response.data.energy_by_hour ?? null);
+          }
+
+          if (mode === "events") {
+            setEventData(response.data ?? []);
+          }
+
+          if (mode === "daily") {
+            setDailyData(response.data.daily_energy ?? null);
+          }
+
+          if (mode === "voltage") {
+            setVoltageData(response.data ?? []);
+          }
+        } catch (err) {
+          console.error(err);
+
+          setHourlyData(null);
+          setEventData([]);
+          setDailyData(null);
+          setVoltageData(null);
+
+          setError(
+            mode === "events"
+              ? "Unable to load event records."
+              : systemName.trim()
+                ? "System not found."
+                : "Unable to load hourly report data."
+          );
+        } finally {
+          setLoading(false);
+        }
+      };
 
       void fetchReportData();
     }, 700);
@@ -246,9 +212,7 @@ function Simulation() {
     }
 
     if (mode === "voltage") {
-      setExecutionMessage(
-        "Voltage report generated successfully."
-      );
+      setExecutionMessage("Voltage report generated successfully.");
     }
   };
 
@@ -286,9 +250,7 @@ function Simulation() {
     if (mode === "voltage" && voltageData) {
       exportVoltageCSV(voltageData);
 
-      setExecutionMessage(
-        "Voltage CSV exported successfully."
-      );
+      setExecutionMessage("Voltage CSV exported successfully.");
 
       return;
     }
@@ -332,9 +294,7 @@ function Simulation() {
     if (mode === "voltage" && voltageData) {
       exportVoltagePDF(voltageData);
 
-      setExecutionMessage(
-        "Voltage PDF exported successfully."
-      );
+      setExecutionMessage("Voltage PDF exported successfully.");
 
       return;
     }
@@ -407,17 +367,13 @@ function Simulation() {
 
       <section className={panelStyles.chartPanel}>
         <div className={panelStyles.panelHeader}>
-          {mode === "hourly" &&
-            "Hourly Energy Consumption"}
+          {mode === "hourly" && "Hourly Energy Consumption"}
 
-          {mode === "events" &&
-            "System Events"}
+          {mode === "events" && "System Events"}
 
-          {mode === "daily" &&
-            "Daily Energy Consumption"}
+          {mode === "daily" && "Daily Energy Consumption"}
 
-          {mode === "voltage" &&
-            "Voltage"}
+          {mode === "voltage" && "Voltage"}
         </div>
 
         <div
@@ -565,9 +521,7 @@ function Simulation() {
               }
               onClick={() => setViewMode("table")}
             >
-              <Table
-                className={tabStyles.reportsTabIcon}
-              />
+              <Table className={tabStyles.reportsTabIcon} />
               Table View
             </button>
           </div>
@@ -581,15 +535,10 @@ function Simulation() {
                     value={systemName}
                     onChange={handleSystemChange}
                   >
-                    <option value="">
-                      All Systems
-                    </option>
+                    <option value="">All Systems</option>
 
                     {systemNames.map((name) => (
-                      <option
-                        key={name}
-                        value={name}
-                      >
+                      <option key={name} value={name}>
                         {name}
                       </option>
                     ))}
@@ -612,17 +561,13 @@ function Simulation() {
               color="#000000"
             />
 
-            {mode === "hourly" &&
-              "View Report"}
+            {mode === "hourly" && "View Report"}
 
-            {mode === "events" &&
-              "View Report"}
+            {mode === "events" && "View Report"}
 
-            {mode === "daily" &&
-              "View Report"}
+            {mode === "daily" && "View Report"}
 
-            {mode === "voltage" &&
-              "View Report"}
+            {mode === "voltage" && "View Report"}
           </button>
 
           <div className={tabStyles.tabs}>
@@ -654,7 +599,6 @@ function Simulation() {
           {executionMessage && (
             <div className={controlStyles.executionInfo}>
               <span>Report execution status:</span>
-
               <strong>{executionMessage}</strong>
             </div>
           )}
@@ -665,6 +609,7 @@ function Simulation() {
 }
 
 export default Simulation;
+
 
 
 
