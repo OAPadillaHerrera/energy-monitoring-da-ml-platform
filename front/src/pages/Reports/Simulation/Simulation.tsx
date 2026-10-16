@@ -22,11 +22,8 @@ import panelStyles from "../../../components/shared/styles/panelStyles.module.cs
 import tabStyles from "../../../components/shared/styles/tabStyles.module.css";
 import controlStyles from "../../../components/shared/styles/controlStyles.module.css";
 import api from "../../../services/api";
-import ReportHourlyChart from "../../../components/charts/ReportHourlyChart";
-import ReportHourlyTable from "../../../components/tables/ReportHourlyTable";
+import Consumption from "./Consumption";
 import SimulationSystemEventsTable from "../../../components/tables/SimulationSystemEventsTable";
-import ReportDailyChart from "../../../components/charts/ReportDailyChart";
-import ReportDailyTable from "../../../components/tables/ReportDailyTable";
 import ReportVoltageChart from "../../../components/charts/ReportVoltageChart";
 import ReportVoltageTable from "../../../components/tables/ReportVoltageTable";
 
@@ -36,6 +33,7 @@ import {
   exportHourlyCSV,
   exportVoltageCSV
 } from "../../../services/reports/simulationExportCSV";
+
 import {
   exportDailyPDF,
   exportEventPDF,
@@ -52,21 +50,36 @@ import type {
   VoltageRecord
 } from "./types";
 
+type HourlyReportResponse = {
+  energy_by_hour?: ConsumptionData | null;
+  avg_hourly_profile?: ConsumptionData | null;
+};
+
+type DailyReportResponse = {
+  daily_energy?: ConsumptionData | null;
+};
+
 function Simulation() {
-  const [mode, setMode] = useState<SimulationMode>("hourly");
+  const [mode, setMode] =
+    useState<SimulationMode>("hourly");
 
-  const [viewMode, setViewMode] = useState<ViewMode>("chart");
+  const [viewMode, setViewMode] =
+    useState<ViewMode>("chart");
 
-  const [systemName, setSystemName] = useState("");
+  const [systemName, setSystemName] =
+    useState("");
 
-  const [systemNames, setSystemNames] = useState<string[]>([]);
+  const [systemNames, setSystemNames] =
+    useState<string[]>([]);
 
-  const [executionMessage, setExecutionMessage] = useState("");
+  const [executionMessage, setExecutionMessage] =
+    useState("");
 
   const [hourlyData, setHourlyData] =
     useState<ConsumptionData | null>(null);
 
-  const [eventData, setEventData] = useState<SystemEventRecord[]>([]);
+  const [eventData, setEventData] =
+    useState<SystemEventRecord[]>([]);
 
   const [dailyData, setDailyData] =
     useState<ConsumptionData | null>(null);
@@ -74,20 +87,25 @@ function Simulation() {
   const [voltageData, setVoltageData] =
     useState<VoltageRecord[] | null>(null);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] =
+    useState(false);
 
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] =
+    useState<string | null>(null);
 
   useEffect(() => {
     const fetchSystemNames = async (): Promise<void> => {
       try {
-        const response = await api.get<BasicMetricsData>("/metrics/basic");
+        const response =
+          await api.get<BasicMetricsData>("/metrics/basic");
 
         setSystemNames(
-          Object.keys(response.data.consumption_by_system ?? {})
+          Object.keys(
+            response.data.consumption_by_system ?? {}
+          )
         );
-      } catch (err) {
-        console.error(err);
+      } catch (err: unknown) {
+        console.error("Failed to load system names:", err);
         setSystemNames([]);
       }
     };
@@ -96,125 +114,176 @@ function Simulation() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+
     const timeoutId = setTimeout(() => {
       const fetchReportData = async (): Promise<void> => {
         try {
           setLoading(true);
           setError(null);
 
-          let endpoint = "";
-
           if (mode === "hourly") {
-            endpoint = systemName.trim()
-              ? `/metrics/system?name=${encodeURIComponent(systemName)}`
+            const endpoint = systemName.trim()
+              ? `/metrics/system?name=${encodeURIComponent(
+                  systemName.trim()
+                )}`
               : "/metrics/station/hourly";
+
+            const response =
+              await api.get<HourlyReportResponse>(endpoint);
+
+            if (cancelled) {
+              return;
+            }
+
+            setHourlyData(
+              response.data.energy_by_hour ??
+                response.data.avg_hourly_profile ??
+                null
+            );
+
+            return;
           }
 
           if (mode === "events") {
-            endpoint = "/simulation/system-events";
-          }
+            const response =
+              await api.get<SystemEventRecord[]>(
+                "/simulation/system-events"
+              );
 
-          if (mode === "daily") {
-            endpoint = systemName.trim()
-              ? `/metrics/system?name=${encodeURIComponent(systemName)}&interval=daily`
-              : "/metrics/station/daily";
-          }
+            if (cancelled) {
+              return;
+            }
 
-          if (mode === "voltage") {
-            endpoint = "/simulation/voltage";
-          }
-
-          const response = await api.get(endpoint);
-
-          if (mode === "hourly") {
-            setHourlyData(response.data.energy_by_hour ?? null);
-          }
-
-          if (mode === "events") {
             setEventData(response.data ?? []);
+            return;
           }
 
           if (mode === "daily") {
-            setDailyData(response.data.daily_energy ?? null);
+            const endpoint = systemName.trim()
+              ? `/metrics/system?name=${encodeURIComponent(
+                  systemName.trim()
+                )}&interval=daily`
+              : "/metrics/station/daily";
+
+            const response =
+              await api.get<DailyReportResponse>(endpoint);
+
+            if (cancelled) {
+              return;
+            }
+
+            setDailyData(
+              response.data.daily_energy ?? null
+            );
+
+            return;
           }
 
           if (mode === "voltage") {
+            const response =
+              await api.get<VoltageRecord[]>(
+                "/simulation/voltage"
+              );
+
+            if (cancelled) {
+              return;
+            }
+
             setVoltageData(response.data ?? []);
           }
-        } catch (err) {
-          console.error(err);
+        } catch (err: unknown) {
+          if (cancelled) {
+            return;
+          }
+
+          console.error("Failed to load report data:", err);
 
           setHourlyData(null);
           setEventData([]);
           setDailyData(null);
           setVoltageData(null);
 
-          setError(
-            mode === "events"
-              ? "Unable to load event records."
-              : systemName.trim()
+          if (mode === "events") {
+            setError("Unable to load event records.");
+          } else if (mode === "voltage") {
+            setError("Unable to load voltage report data.");
+          } else if (mode === "daily") {
+            setError(
+              systemName.trim()
+                ? "System not found."
+                : "Unable to load daily report data."
+            );
+          } else {
+            setError(
+              systemName.trim()
                 ? "System not found."
                 : "Unable to load hourly report data."
-          );
+            );
+          }
         } finally {
-          setLoading(false);
+          if (!cancelled) {
+            setLoading(false);
+          }
         }
       };
 
       void fetchReportData();
     }, 700);
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
   }, [mode, systemName]);
 
   useEffect(() => {
     if (mode === "events") {
       setViewMode("table");
+      return;
     }
 
-    if (
-      mode === "hourly" ||
-      mode === "daily" ||
-      mode === "voltage"
-    ) {
-      setViewMode("chart");
-    }
+    setViewMode("chart");
   }, [mode]);
 
   const handleSystemChange = (
     event: ChangeEvent<HTMLSelectElement>
   ): void => {
     setSystemName(event.target.value);
+    setExecutionMessage("");
   };
 
   const handleGenerateReport = (): void => {
     if (mode === "hourly") {
       setExecutionMessage(
         systemName.trim()
-          ? `Hourly Consumption report generated for ${systemName}.`
+          ? `Hourly Consumption report generated for ${systemName.trim()}.`
           : "Hourly Consumption report generated for all systems."
       );
+      return;
     }
 
     if (mode === "events") {
       setExecutionMessage(
         systemName.trim()
-          ? `System Events report generated for ${systemName}.`
+          ? `System Events report generated for ${systemName.trim()}.`
           : "System Events report generated for all systems."
       );
+      return;
     }
 
     if (mode === "daily") {
       setExecutionMessage(
         systemName.trim()
-          ? `Daily Consumption report generated for ${systemName}.`
+          ? `Daily Consumption report generated for ${systemName.trim()}.`
           : "Daily Consumption report generated for all systems."
       );
+      return;
     }
 
-    if (mode === "voltage") {
-      setExecutionMessage("Voltage report generated successfully.");
-    }
+    setExecutionMessage(
+      "Voltage report generated successfully."
+    );
   };
 
   const handleExportCSV = (): void => {
@@ -224,7 +293,6 @@ function Simulation() {
       setExecutionMessage(
         "Hourly Consumption CSV exported successfully."
       );
-
       return;
     }
 
@@ -234,7 +302,6 @@ function Simulation() {
       setExecutionMessage(
         "System Events CSV exported successfully."
       );
-
       return;
     }
 
@@ -244,15 +311,15 @@ function Simulation() {
       setExecutionMessage(
         "Daily Consumption CSV exported successfully."
       );
-
       return;
     }
 
     if (mode === "voltage" && voltageData) {
       exportVoltageCSV(voltageData);
 
-      setExecutionMessage("Voltage CSV exported successfully.");
-
+      setExecutionMessage(
+        "Voltage CSV exported successfully."
+      );
       return;
     }
 
@@ -268,7 +335,6 @@ function Simulation() {
       setExecutionMessage(
         "Hourly Consumption PDF exported successfully."
       );
-
       return;
     }
 
@@ -278,7 +344,6 @@ function Simulation() {
       setExecutionMessage(
         "System Events PDF exported successfully."
       );
-
       return;
     }
 
@@ -288,15 +353,15 @@ function Simulation() {
       setExecutionMessage(
         "Daily Consumption PDF exported successfully."
       );
-
       return;
     }
 
     if (mode === "voltage" && voltageData) {
       exportVoltagePDF(voltageData);
 
-      setExecutionMessage("Voltage PDF exported successfully.");
-
+      setExecutionMessage(
+        "Voltage PDF exported successfully."
+      );
       return;
     }
 
@@ -369,11 +434,8 @@ function Simulation() {
       <section className={panelStyles.chartPanel}>
         <div className={panelStyles.panelHeader}>
           {mode === "hourly" && "Hourly Energy Consumption"}
-
           {mode === "events" && "System Events"}
-
           {mode === "daily" && "Daily Energy Consumption"}
-
           {mode === "voltage" && "Voltage"}
         </div>
 
@@ -398,25 +460,13 @@ function Simulation() {
 
           {!loading &&
             !error &&
-            mode === "hourly" &&
-            hourlyData &&
-            viewMode === "chart" && (
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%"
-                }}
-              >
-                <ReportHourlyChart data={hourlyData} />
-              </div>
-            )}
-
-          {!loading &&
-            !error &&
-            mode === "hourly" &&
-            hourlyData &&
-            viewMode === "table" && (
-              <ReportHourlyTable data={hourlyData} />
+            (mode === "hourly" || mode === "daily") && (
+              <Consumption
+                mode={mode}
+                viewMode={viewMode}
+                hourlyData={hourlyData}
+                dailyData={dailyData}
+              />
             )}
 
           {!loading &&
@@ -426,29 +476,6 @@ function Simulation() {
                 events={eventData}
                 dateLabel="Date"
               />
-            )}
-
-          {!loading &&
-            !error &&
-            mode === "daily" &&
-            dailyData &&
-            viewMode === "chart" && (
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%"
-                }}
-              >
-                <ReportDailyChart data={dailyData} />
-              </div>
-            )}
-
-          {!loading &&
-            !error &&
-            mode === "daily" &&
-            dailyData &&
-            viewMode === "table" && (
-              <ReportDailyTable data={dailyData} />
             )}
 
           {!loading &&
@@ -476,10 +503,26 @@ function Simulation() {
 
           {!loading &&
             !error &&
-            mode !== "hourly" &&
-            mode !== "events" &&
-            mode !== "daily" &&
-            mode !== "voltage" && (
+            !hourlyData &&
+            mode === "hourly" && (
+              <span className={panelStyles.placeholderText}>
+                Waiting for report generation...
+              </span>
+            )}
+
+          {!loading &&
+            !error &&
+            !dailyData &&
+            mode === "daily" && (
+              <span className={panelStyles.placeholderText}>
+                Waiting for report generation...
+              </span>
+            )}
+
+          {!loading &&
+            !error &&
+            !voltageData &&
+            mode === "voltage" && (
               <span className={panelStyles.placeholderText}>
                 Waiting for report generation...
               </span>
@@ -561,14 +604,7 @@ function Simulation() {
               className={controlStyles.damlViewButtonIcon}
               color="#000000"
             />
-
-            {mode === "hourly" && "View Report"}
-
-            {mode === "events" && "View Report"}
-
-            {mode === "daily" && "View Report"}
-
-            {mode === "voltage" && "View Report"}
+            View Report
           </button>
 
           <div className={tabStyles.tabs}>
@@ -610,4 +646,3 @@ function Simulation() {
 }
 
 export default Simulation;
-
